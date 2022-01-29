@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="task_main">
     <div class="task_header">
       <div class="left_header">
         <span>总任务数:{{taskNum}}</span>
@@ -117,6 +117,9 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.task_main{
+  padding: 20px;
+}
 .task_header{
   display: flex;
   flex-direction: row;
@@ -125,7 +128,7 @@ export default {
   padding-right: 50px;
   height: 100px;
   background: #f3f3f3;
-  border: 1px solid black;
+  border: 1px solid #f3f3f3;
   .el-divider--vertical{
     height: 4em;
   }

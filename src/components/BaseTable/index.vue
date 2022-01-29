@@ -7,6 +7,7 @@
     :row-key="getRowKeys"
     :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
     :expand-row-keys="['root']"
+    :header-cell-style="{background:'#f6f6f6'}"
     class="base-table"
     v-bind="$attrs"
     v-on="$listeners"

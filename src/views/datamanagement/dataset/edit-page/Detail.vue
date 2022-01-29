@@ -8,15 +8,15 @@
   >
     <main>
       <div>
-        <el-form label-position="right" label-width="100px">
-          <el-form-item label="数据集名称">
-            <el-input placeholder="请输入" style="width: 200px"/>
+        <el-form label-position="right" label-width="100px" :model="ruleForm" :rules="rule" ref="ruleForm">
+          <el-form-item label="数据集名称" class="item" prop="set_name">
+            <el-input v-model="ruleForm.set_name" placeholder="请输入" style="width: 200px;"/>
           </el-form-item>
-          <el-form-item label="描述">
-            <el-input placeholder="请输入" style="width: 200px"/>
+          <el-form-item label="描述" prop="describe">
+            <el-input v-model="ruleForm.describe" placeholder="请输入" style="width: 200px"/>
           </el-form-item>
-          <el-form-item label="数据源名称">
-            <el-select v-model="SourceValue" placeholder="请选择">
+          <el-form-item label="数据源名称" prop="source_name">
+            <el-select v-model="ruleForm.source_name" placeholder="请选择">
               <el-option
                 v-for="item in SourceOption"
                 :key="item.value"
@@ -25,8 +25,8 @@
               />
             </el-select>
           </el-form-item>
-          <el-form-item label="schema名称">
-            <el-select v-model="SchemaValue" placeholder="请选择">
+          <el-form-item label="schema名称" prop="schema_name">
+            <el-select v-model="ruleForm.schema_name" placeholder="请选择">
               <el-option
                 v-for="item in SchemaOption"
                 :key="item.value"
@@ -35,8 +35,8 @@
               />
             </el-select>
           </el-form-item>
-          <el-form-item label="表名称">
-            <el-select v-model="tableValue" placeholder="请选择">
+          <el-form-item label="表名称" prop="table_name">
+            <el-select v-model="ruleForm.table_name" placeholder="请选择">
               <el-option
                 v-for="item in tableOption"
                 :key="item.value"
@@ -46,23 +46,75 @@
             </el-select>
           </el-form-item>
         </el-form>
-        <Fieldinfo />
+        <div class="field_main">
+          <div class="field_head">
+            <span>字段信息</span>
+            <el-divider/>
+          </div>
+          <el-tabs type="border-card">
+            <el-tab-pane label="选择模式">
+              <div>
+                <el-form label-position="right" label-width="100px" :model="ruleForm" :rules="rule" ref="ruleForms">
+                  <el-form-item label="id" prop="id">
+                    <el-select v-model="ruleForm.id" placeholder="请选择">
+                      <el-option
+                        v-for="item in FirstOption"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value"
+                      />
+                    </el-select>
+                  </el-form-item>
+                  <el-form-item label="doc" prop="doc" >
+                    <el-select v-model="ruleForm.doc" placeholder="请选择">
+                      <el-option
+                        v-for="item in SecondOption"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value"
+                      />
+                    </el-select>
+                  </el-form-item>
+                  <el-form-item label="其他">
+                    <el-checkbox-group v-model="checkList">
+                      <el-checkbox label="pid"/>
+                      <el-checkbox label="name"/>
+                      <el-checkbox label="age"/>
+                      <el-checkbox label="desc"/>
+                    </el-checkbox-group>
+                  </el-form-item>
+                </el-form>
+              </div>
+            </el-tab-pane>
+            <el-tab-pane label="代码模式">
+              <div>
+                <div>
+                  <el-input
+                    type="textarea"
+                    placeholder="请输入内容"
+                    limit="10"
+                    show-word-limit
+                    :autosize="{ minRows: 8.5, maxRows: 20 }"
+                  />
+                </div>
+              </div>
+            </el-tab-pane>
+          </el-tabs>
+        </div>
       </div>
     </main>
     <span slot="footer" class="dialog-footer">
       <el-button @click="dialogVisible = false">取 消</el-button>
-      <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+      <el-button type="primary" @click="handleAdd">确 定</el-button>
     </span>
   </el-dialog>
 </template>
 
 <script>
-import Fieldinfo from './components/Fieldinfo.vue'
 
 export default {
   name: 'Detail',
   components: {
-    Fieldinfo
   },
   props: {
     info: {
@@ -81,21 +133,68 @@ export default {
           label: 'test'
         }
       ],
-      SourceValue: '',
       SchemaOption: [
         {
           value: 'test',
           label: 'test'
         }
       ],
-      SchemaValue: '',
       tableOption: [
         {
           value: 'test',
           label: 'test'
         }
       ],
-      tableValue: ''
+
+
+      FirstOption: [
+        {
+          value: 'test',
+          label: 'test'
+        }
+      ],
+      SecondOption: [
+        {
+          value: 'test',
+          label: 'test'
+        }
+      ],
+      checkList: [],
+
+      active: true,
+
+      ruleForm:{
+        set_name:'',
+        describe:'',
+        source_name:'',
+        schema_name:'',
+        table_name:'',
+        id:'',
+        doc:''
+      },
+      rule:{
+        set_name: [
+          { required: true, message: '请输入数据集名称', trigger: 'blur' },
+        ],
+        describe: [
+          { required: true, message: '请输入描述', trigger: 'blur' },
+        ],
+        source_name: [
+          { required: true, message: '选择不能为空', trigger: 'blur' },
+        ],
+        schema_name: [
+          { required: true, message: '选择不能为空', trigger: 'blur' },
+        ],
+        table_name: [
+          { required: true, message: '选择不能为空', trigger: 'blur' },
+        ],
+        id: [
+          { required: true, message: '请选择id', trigger: 'blur' },
+        ],
+        doc: [
+          { required: true, message: '请选择doc', trigger: 'blur' },
+        ],
+      }
     }
   },
   computed: {},
@@ -104,13 +203,36 @@ export default {
       // this.props.info.value = res
       // console.log(props.info.value)
       this.dialogVisible = true
-    }
+    },
+    handleAdd() {
+      const p1=new Promise((resolve,reject)=>{
+        this.$refs['ruleForm'].validate((valid) => {
+          if (valid) {
+            resolve()
+          }
+        });
+      })
+      const p2=new Promise((resolve,reject)=>{
+        this.$refs['ruleForms'].validate((valid) => {
+          if (valid) {
+            resolve()
+          }
+        });
+      })
+      Promise.all([p1,p2]).then(()=>{
+        this.dialogVisible=false
+      })
+    },
   }
 }
 </script>
 
 <style scoped lang="scss">
-.detail{
+.field_main {
+  .field_head {
+    font-weight: bold;
+    color: black;
+  }
 
 }
 </style>
