@@ -12,7 +12,7 @@
     >
       <el-form :model="ruleForm" :rules="rule" ref="ruleForm">
         <el-form-item label="数据库类型" label-width="150px" prop="database_type">
-          <el-select v-model="ruleForm.database_type" placeholder="请选择" style="width: 100%" size="small">
+          <el-select v-model="ruleForm.database_type" placeholder="请选择数据库类型" style="width: 100%" size="small">
             <el-option
               v-for="item in TypeOption"
               :key="item.value"
@@ -22,19 +22,19 @@
           </el-select>
         </el-form-item>
         <el-form-item label="数据源名称" label-width="150px" size="small" prop="source_name">
-          <el-input v-model="ruleForm.source_name" placeholder="请输入"/>
+          <el-input v-model="ruleForm.source_name" placeholder="请输入数据源名称"/>
         </el-form-item>
-        <el-form-item label="描述" label-width="150px" size="small" prop="describe">
-          <el-input v-model="ruleForm.describe" placeholder="请输入"/>
+        <el-form-item label="描述" label-width="150px" size="small">
+          <el-input v-model="ruleForm.describe" placeholder="请输入描述"/>
         </el-form-item>
         <el-form-item label="连接串" label-width="150px" size="small" prop="connect">
-          <el-input v-model="ruleForm.connect" placeholder="请输入"/>
+          <el-input v-model="ruleForm.connect" placeholder="请输入连接串"/>
         </el-form-item>
         <el-form-item label="用户名" label-width="150px" size="small" prop="username">
-          <el-input v-model="ruleForm.username" placeholder="请输入"/>
+          <el-input v-model="ruleForm.username" placeholder="请输入用户名"/>
         </el-form-item>
         <el-form-item label="密码" label-width="150px" size="small" prop="password">
-          <el-input v-model="ruleForm.password" type="password" placeholder="请输入"/>
+          <el-input v-model="ruleForm.password" type="password" placeholder="请输入密码"/>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -178,6 +178,9 @@ export default {
 </script>
 
 <style scoped>
+/deep/.el-form-item__label{
+  font-weight: normal;
+}
 .source_main{
   padding: 20px;
 }

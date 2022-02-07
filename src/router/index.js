@@ -89,6 +89,12 @@ export const constantRoutes = [
         name: 'Taskresult',
         meta: { title: '任务执行结果', icon: 'link', affix: true }
       },
+      {
+        path: 'taskstate',
+        component: () => import('@/views/taskmanagement/taskstate/index'),
+        name: 'Taskstate',
+        meta: { title: '任务执行日志', icon: 'link', affix: true }
+      },
     ]
   },
   // 404 page must be placed at the end !!!

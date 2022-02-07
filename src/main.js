@@ -15,6 +15,13 @@ import router from './router'
 import '@/icons' // icon
 import '@/permission' // permission control
 
+import VueCodemirror from 'vue-codemirror'
+
+// require styles
+import 'codemirror/lib/codemirror.css'
+
+import hljs from 'highlight.js'
+import 'highlight.js/styles/idea.css'  //这里有多个样式，自己可以根据需要切换
 /**
  * If you don't want to use mock-server
  * you want to use MockJs for mock api
@@ -30,6 +37,8 @@ if (process.env.NODE_ENV === 'production') {
 
 // set ElementUI lang to EN
 Vue.use(ElementUI, { locale })
+Vue.use(hljs.vuePlugin)
+Vue.use(VueCodemirror)
 // 如果想要中文版 element-ui，按如下方式声明
 // Vue.use(ElementUI)
 

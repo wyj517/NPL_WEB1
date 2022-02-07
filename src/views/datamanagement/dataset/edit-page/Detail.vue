@@ -10,13 +10,13 @@
       <div>
         <el-form label-position="right" label-width="100px" :model="ruleForm" :rules="rule" ref="ruleForm">
           <el-form-item label="数据集名称" class="item" prop="set_name">
-            <el-input v-model="ruleForm.set_name" placeholder="请输入" style="width: 200px;"/>
+            <el-input v-model="ruleForm.set_name" placeholder="请输入数据集名称" style="width: 200px;"/>
           </el-form-item>
-          <el-form-item label="描述" prop="describe">
-            <el-input v-model="ruleForm.describe" placeholder="请输入" style="width: 200px"/>
+          <el-form-item label="描述">
+            <el-input v-model="ruleForm.describe" placeholder="请输入描述" style="width: 200px"/>
           </el-form-item>
           <el-form-item label="数据源名称" prop="source_name">
-            <el-select v-model="ruleForm.source_name" placeholder="请选择">
+            <el-select v-model="ruleForm.source_name" placeholder="请选择数据源名称">
               <el-option
                 v-for="item in SourceOption"
                 :key="item.value"
@@ -26,7 +26,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label="schema名称" prop="schema_name">
-            <el-select v-model="ruleForm.schema_name" placeholder="请选择">
+            <el-select v-model="ruleForm.schema_name" placeholder="请选择schema名称">
               <el-option
                 v-for="item in SchemaOption"
                 :key="item.value"
@@ -36,7 +36,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label="表名称" prop="table_name">
-            <el-select v-model="ruleForm.table_name" placeholder="请选择">
+            <el-select v-model="ruleForm.table_name" placeholder="请选择表名称">
               <el-option
                 v-for="item in tableOption"
                 :key="item.value"

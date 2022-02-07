@@ -1,19 +1,23 @@
-
 <template>
   <div class="operation-area">
-        <div class="title">
-          <span>
+    <div class="title">
+      <div>
+         <span style="font-size: 14px">
             {{ title === "" ? $route.meta.title : title }}:
-          </span>
-          <el-input  placeholder="输入关键字" style="width: 200px"/>
-          <el-button v-if="showSearch" type="primary" @click="createSearch" style="margin-left: 20px">搜索</el-button>
-          <el-button
-            v-if="showCreate"
-            type="primary"
-            @click="createData"
-          >新增{{ buttonTitle }}</el-button>
-          <slot name="button" />
-        </div>
+         </span>
+        <el-input placeholder="输入关键字" style="width: 200px"/>
+        <el-button v-if="showSearch" type="primary" @click="createSearch" style="margin-left: 20px" plain>搜索</el-button>
+      </div>
+      <div>
+        <el-button
+          v-if="showCreate"
+          type="primary"
+          @click="createData"
+        >新增{{ buttonTitle }}
+        </el-button>
+      </div>
+      <slot name="button"/>
+    </div>
   </div>
 </template>
 
@@ -68,7 +72,11 @@ export default {
 </script>
 
 <style scoped>
-.operation-area{
-   margin: 20px 0 0 0px;
+.operation-area {
+  margin: 20px 0 0 0px;
+}
+.title{
+  display: flex;
+  justify-content: space-between;
 }
 </style>

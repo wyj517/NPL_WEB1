@@ -2,14 +2,35 @@
   <div class="task_main">
     <div class="task_header">
       <div class="left_header">
-        <span>总任务数:{{taskNum}}</span>
-        <el-progress :text-inside="true" :stroke-width="26" :percentage="70"></el-progress>
+        <div class="left_number">
+          <span class="font">总任务数 </span>
+          <span style="font-size: 30px">{{ taskNum }}</span>
+        </div>
+        <el-progress :text-inside="true" :stroke-width="15" :percentage="70" color="#13ce66"></el-progress>
       </div>
-      <el-divider direction="vertical" />
+      <el-divider direction="vertical"/>
       <div class="right_header">
-        <span>正在执行数:{{executionNum}}</span>
-        <span>执行成功数:{{successNum}}</span>
-        <span>执行失败:{{errorNum}}</span>
+        <div class="right_title">
+          <div style="display: flex;align-items: center">
+            <div class="icon_title" style="background: #0d85fc"></div>
+            <span style="">正在执行数</span>
+          </div>
+          <span>{{ executionNum }}</span>
+        </div>
+        <div class="right_title">
+          <div style="display: flex;align-items: center">
+            <div class="icon_title" style="background: #13ce66"></div>
+            <span>执行成功数</span>
+          </div>
+          <span>{{ successNum }}</span>
+        </div>
+        <div class="right_title">
+          <div style="display: flex;align-items: center">
+            <div class="icon_title" style="background: #ff4949"></div>
+            <span>执行失败</span>
+          </div>
+          <span>{{ errorNum }}</span>
+        </div>
       </div>
     </div>
     <ListHeader title="任务名称"/>
@@ -106,10 +127,10 @@ export default {
         }
       ],
 
-      taskNum:'258',
-      executionNum:'20',
-      successNum:'180',
-      errorNum:'18'
+      taskNum: '258',
+      executionNum: '20',
+      successNum: '180',
+      errorNum: '18'
 
     }
   }
@@ -117,10 +138,11 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.task_main{
+.task_main {
   padding: 20px;
 }
-.task_header{
+
+.task_header {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -129,17 +151,52 @@ export default {
   height: 100px;
   background: #f3f3f3;
   border: 1px solid #f3f3f3;
-  .el-divider--vertical{
+
+  .el-divider--vertical {
     height: 4em;
   }
-  .right_header{
-    span:nth-child(1){
-      margin-left: 10px;
-    }
-    span:nth-child(2),
-    span:nth-child(3){
+
+  .right_header {
+    display: flex;
+
+    .right_title {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      height: 50px;
       margin-left: 50px;
+      color: #929fb2;
+
+      .icon_title {
+        width: 10px;
+        height: 10px;
+        position: relative;
+        left: -10px;
+      }
     }
+  }
+
+  .left_header {
+    ::v-deep .el-progress-bar__outer {
+      border-radius: 0;
+      background-color: #ff4949;
+    }
+
+    ::v-deep .el-progress-bar__inner {
+      border-radius: 0;
+    }
+
+    .left_number {
+      .font {
+        position: relative;
+        top: -10px;
+        color: #929fb2;
+        font-size: 13px;
+      }
+    }
+
+    margin-right: 70px;
   }
 }
 </style>
