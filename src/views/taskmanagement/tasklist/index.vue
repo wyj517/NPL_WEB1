@@ -33,7 +33,7 @@
         </div>
       </div>
     </div>
-    <ListHeader title="任务名称"/>
+    <ListHeader title="任务名称" :showCreate="false"/>
     <BaseTable v-loading="loading" :height="height" :columns="columns" :data="tableData"/>
   </div>
 </template>
@@ -42,6 +42,7 @@
 import BaseTable from '@/components/BaseTable'
 import {parseTime} from "@/utils";
 import ListHeader from "@/components/ListHeader";
+import router from "@/router";
 
 export default {
   name: "index",
@@ -57,7 +58,18 @@ export default {
         {label: '创建人', key: 'creator'},
         {
           label: '执行状态',
-          render: (h, params) => <el-link>●{params.row.state}</el-link>
+          render: (h, params) => {
+            return h(
+              'el-link',
+              {
+                props: {
+                  underline:false,
+                  type:'success'
+                },
+              },
+              '●执行状态'
+            )
+          }
         },
         {
           label: '开始执行时间',
@@ -86,6 +98,7 @@ export default {
                     },
                     on: {
                       click: () => {
+                        this.$router.push("tasklist/taskresult")
                       }
                     }
                   },
@@ -99,6 +112,7 @@ export default {
                     },
                     on: {
                       click: () => {
+                        this.$router.push("tasklist/taskstate")
                       }
                     }
                   },

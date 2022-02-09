@@ -1,7 +1,7 @@
 import request from '@/utils/request'
 
 //返回数据集清单
-export function list (params) {
+export function SetList (params) {
   return request({
     url: '/nlp/datas/get_datas',
     params

@@ -5,14 +5,15 @@
          <span style="font-size: 14px">
             {{ title === "" ? $route.meta.title : title }}:
          </span>
-        <el-input placeholder="输入关键字" style="width: 200px"/>
-        <el-button v-if="showSearch" type="primary" @click="createSearch" style="margin-left: 20px" plain>搜索</el-button>
+        <el-input placeholder="输入关键字" size="small" style="width: 200px"/>
+        <el-button v-if="showSearch" type="primary" @click="createSearch" size="small" style="margin-left: 20px" plain>搜索</el-button>
       </div>
       <div>
         <el-button
           v-if="showCreate"
           type="primary"
           @click="createData"
+          size="small"
         >新增{{ buttonTitle }}
         </el-button>
       </div>

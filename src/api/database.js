@@ -1,42 +1,45 @@
 import request from '@/utils/request'
 
 //返回数据源清单
-export function list (params) {
+export function SourceList (params) {
   return request({
     url: '/nlp/ds/get_ds',
     params
   })
 }
 //新增数据源
-export function create (data) {
+export function SourceCreate (data) {
   return request({
     url: '/nlp/ds/create_ds',
     data,
-    method: 'post'
   })
 }
 
 //获取数据源详情
-export function detail (data) {
+export function SourceDetail (data) {
   return request({
     url: '/nlp/ds/get_ds_detail',
     data,
-    method: 'post'
   })
 }
 //编辑数据源
-export function update (data) {
+export function SourceUpdate (data) {
   return request({
     url: '/nlp/ds/update_ds_detail',
     data,
-    method: 'post'
   })
 }
 //删除数据源
-export function remove (data) {
+export function SourceRemove (data) {
   return request({
     url: '/nlp/ds/delete_ds',
     data,
-    method: 'POST'
+  })
+}
+//测试数据源连接
+export function SourceTest (data) {
+  return request({
+    url: '/nlp/ds/test_ds',
+    data,
   })
 }

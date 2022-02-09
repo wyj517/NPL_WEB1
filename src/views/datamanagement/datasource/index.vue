@@ -1,18 +1,18 @@
 <template>
   <div class="source_main">
-    <ListHeader title="数据集名称" @handle-create="openAddDialog"/>
+    <ListHeader title="数据集名称" @handle-create="AddSource"/>
     <BaseTable v-loading="loading" :height="height" :columns="columns" :data="tableData"/>
 
     <el-dialog
       :visible.sync="dialogVisible"
-      title="新增数据源"
+      :title="dialogtitle"
       width="700px"
       top="5vh"
       class="detail"
     >
       <el-form :model="ruleForm" :rules="rule" ref="ruleForm">
-        <el-form-item label="数据库类型" label-width="150px" prop="database_type">
-          <el-select v-model="ruleForm.database_type" placeholder="请选择数据库类型" style="width: 100%" size="small">
+        <el-form-item label="数据库类型" label-width="150px" prop="ds_type">
+          <el-select v-model="ruleForm.ds_type" placeholder="请选择数据库类型" style="width: 100%" size="small">
             <el-option
               v-for="item in TypeOption"
               :key="item.value"
@@ -21,24 +21,24 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item label="数据源名称" label-width="150px" size="small" prop="source_name">
-          <el-input v-model="ruleForm.source_name" placeholder="请输入数据源名称"/>
+        <el-form-item label="数据源名称" label-width="150px" size="small" prop="ds_name">
+          <el-input v-model="ruleForm.ds_name" placeholder="请输入数据源名称"/>
         </el-form-item>
         <el-form-item label="描述" label-width="150px" size="small">
-          <el-input v-model="ruleForm.describe" placeholder="请输入描述"/>
+          <el-input v-model="ruleForm.des" placeholder="请输入描述"/>
         </el-form-item>
-        <el-form-item label="连接串" label-width="150px" size="small" prop="connect">
-          <el-input v-model="ruleForm.connect" placeholder="请输入连接串"/>
+        <el-form-item label="连接串" label-width="150px" size="small" prop="conn_str">
+          <el-input v-model="ruleForm.conn_str" placeholder="请输入连接串"/>
         </el-form-item>
-        <el-form-item label="用户名" label-width="150px" size="small" prop="username">
-          <el-input v-model="ruleForm.username" placeholder="请输入用户名"/>
+        <el-form-item label="用户名" label-width="150px" size="small" prop="user_name">
+          <el-input v-model="ruleForm.user_name" placeholder="请输入用户名"/>
         </el-form-item>
         <el-form-item label="密码" label-width="150px" size="small" prop="password">
           <el-input v-model="ruleForm.password" type="password" placeholder="请输入密码"/>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" class="conn">测试连接</el-button>
+        <el-button type="primary" class="conn" @click="startSource">测试连接</el-button>
         <el-button @click="dialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="handleAdd">确 定</el-button>
       </span>
@@ -49,6 +49,7 @@
 <script>
 import BaseTable from '@/components/BaseTable'
 import ListHeader from '@/components/ListHeader'
+import {SourceList,SourceRemove,SourceTest,SourceDetail,SourceUpdate,SourceCreate} from '@/api/database'
 
 export default {
   name: "index",
@@ -60,10 +61,10 @@ export default {
     columns() {
       const arr = [
         // 表格列项
-        {label: '数据源名称', key: 'source_name', width: '150'},
-        {label: '中文名', key: 'name'},
-        {label: '数据源类型', key: 'source_type', width: '150'},
-        {label: '数据源URL', key: 'source_url'},
+        {label: '数据源名称', key: 'ds_name', width: '150'},
+        {label: '描述', key: 'des'},
+        {label: '数据源类型', key: 'ds_type', width: '150'},
+        {label: '连接串', key: 'conn_str'},
         {
           label: '操作',
           width: '160',
@@ -80,7 +81,7 @@ export default {
                     },
                     on: {
                       click: () => {
-                        this.openAddDialog()
+                        this.openAddDialog(row.id)
                       }
                     }
                   },
@@ -94,7 +95,7 @@ export default {
                     },
                     on: {
                       click: () => {
-                        this.CopyTask(row.id)
+                        this.openDialog(row.id)
                       }
                     }
                   },
@@ -111,11 +112,10 @@ export default {
   data() {
     return {
       dialogVisible: false,
+      dialogtitle:'',
       loading: false,
       height: null,
-      tableData: [
-        {source_name: '热词数据', name: '数据源名称1', source_type: 'MYSQL', source_url: '192.168.0.123:8088'}
-      ],
+      tableData: [],
       TypeOption: [
         {
           value: 'MySQL',
@@ -132,28 +132,20 @@ export default {
       ],
 
       ruleForm:{
-        database_type:'',
-        source_name:'',
-        describe:'',
-        connect:'',
-        username:'',
-        password:''
+
       },
 
       rule:{
-        database_type: [
+        ds_type: [
           { required: true, message: '请选择数据库类型', trigger: 'blur' },
         ],
-        source_name: [
+        ds_name: [
           { required: true, message: '数据源名称不能为空', trigger: 'blur' },
         ],
-        describe: [
-          { required: true, message: '描述不能为空', trigger: 'blur' },
-        ],
-        connect: [
+        conn_str: [
           { required: true, message: '连接串不能为空', trigger: 'blur' },
         ],
-        username: [
+        user_name: [
           { required: true, message: '用户名不能为空', trigger: 'blur' },
         ],
         password: [
@@ -163,16 +155,89 @@ export default {
     }
   },
   methods: {
-    openAddDialog() {
+    openAddDialog(id) {
+      console.log(id)
+      //编辑
+      this.dialogtitle = "编辑数据源";
+      this.dialogVisible = true
+      let data={
+        ds_id:id
+      }
+      SourceDetail(data).then(res=>{
+        this.ruleForm=res.data
+      })
+    },
+    AddSource(){
+      //新增
+      this.dialogtitle = "新增数据源";
+      this.ruleForm={}
       this.dialogVisible = true
     },
     handleAdd() {
       this.$refs['ruleForm'].validate((valid) => {
         if (valid) {
+          if (this.dialogtitle==='新增数据源'){
+            console.log(this.ruleForm)
+            SourceCreate(this.ruleForm).then(res=>{
+              this.$message({
+                type: 'success',
+                message: `新增成功`
+              });
+            })
+          }else {
+            console.log(this.ruleForm)
+            SourceUpdate(this.ruleForm).then(res=>{
+              this.$message({
+                type: 'success',
+                message: `编辑成功`
+              });
+            })
+          }
           this.dialogVisible=false
         }
       });
     },
+    getList(){
+      let params={
+        page:1,
+        page_size:10,
+        total_flg:'',
+        query_str:'',
+      }
+      SourceList(params).then(res=>{
+        this.tableData=res.data
+      })
+    },
+    deleteSource(id){
+
+    },
+    openDialog(id){
+      this.$alert('确实删除吗？', '删除', {
+        confirmButtonText: '确定',
+        callback: action => {
+          let data={
+            ds_id:id
+          }
+          SourceRemove(data).then(res=>{
+            this.$message({
+              type: 'success',
+              message: `删除成功`
+            });
+          })
+        }
+      });
+    },
+    startSource(){
+      SourceTest().then(res=>{
+        this.$message({
+          type: 'success',
+          message: `测试连接`
+        });
+      })
+    }
+  },
+  mounted() {
+    this.getList()
   }
 }
 </script>

@@ -1,7 +1,7 @@
 <template>
   <div class="set_main">
-    <ListHeader title="数据源名称" @handle-create="openDialog" />
-    <BaseTable v-loading="loading" :height="height" :columns="columns" :data="tableData" />
+    <ListHeader title="数据源名称" @handle-create="openDialog"/>
+    <BaseTable v-loading="loading" :height="height" :columns="columns" :data="tableData"/>
 
     <Details
       ref="dialogRef"
@@ -18,7 +18,8 @@ import BaseTable from '@/components/BaseTable'
 import ListHeader from '@/components/ListHeader'
 import Details from './edit-page/Detail.vue'
 import Task from './perform-task/task.vue'
-import { parseTime } from '@/utils'
+import {parseTime} from '@/utils'
+import {SetList} from '@/api/dataset'
 
 export default {
   name: 'Index',
@@ -41,29 +42,27 @@ export default {
       dialogVisible: true,
       loading: false,
       height: null,
-      tableData: [
-        { set_name: '热词数据', data_source: '数据源名称', describe: '热词数据npl', creator: '李四', createDate: '2022-1-2' }
-      ]
+      tableData: [],
     }
   },
   computed: {
     columns() {
       const arr = [
         // 表格列项
-        { label: '数据集名称', key: 'set_name', width: '200' },
-        { label: '数据源', key: 'data_source' },
-        { label: '描述', key: 'describe' },
-        { label: '创建者', key: 'creator', width: '120' },
+        {label: '数据集名称', key: 'datas_name', width: '200'},
+        {label: '数据源', key: 'ds_name'},
+        {label: '描述', key: 'des'},
+        {label: '创建者', key: 'create_user_name', width: '120'},
         {
           label: '创建时间',
           width: '180px',
-          render: (h, params) => <span>{parseTime(params.row.createDate)}</span>
+          render: (h, params) => <span>{parseTime(params.row.create_time)}</span>
         },
         {
           label: '操作',
           width: '160',
           fixed: 'right',
-          render: (h, { row }) => {
+          render: (h, {row}) => {
             return h(
               'div',
               [
@@ -121,18 +120,33 @@ export default {
     openDialog() {
       this.$refs.dialogRef.opendialog()
     },
-    openTask(){
+    openTask() {
       this.$refs.taskDialogRef.opendialog()
+    },
+    getSet() {
+      let params = {
+        page: 1,
+        page_size: 10,
+        total_flg: '',
+        query_str: ''
+      }
+      SetList(params).then(res => {
+        this.tableData=res.data
+      })
     }
+  },
+  mounted() {
+    this.getSet()
   }
 }
 </script>
 
 <style scoped>
-.set_main{
+.set_main {
   padding: 20px;
 }
-/deep/.el-form-item__label{
+
+/deep/ .el-form-item__label {
   font-weight: normal;
 }
 </style>

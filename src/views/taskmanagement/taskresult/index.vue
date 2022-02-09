@@ -5,30 +5,30 @@
       <div class="row-bg">
         <el-row type="flex" class="row-bg" justify="space-around">
           <el-col :span="6" >
-            <span>数据集:dataset1</span>
+            <span>数据集：dataset1</span>
           </el-col>
           <el-col :span="6">
-            <span>数据源:dataset1</span>
+            <span>数据源：dataset1</span>
           </el-col>
           <el-col :span="6">
-            <span>数据类型:mysql</span>
+            <span>数据类型：mysql</span>
           </el-col>
           <el-col :span="6">
-            <span>数据类型:mysql</span>
+            <span>数据类型：mysql</span>
           </el-col>
         </el-row>
         <el-row type="flex" class="row-bg" justify="space-around" >
           <el-col :sm="6" >
-            <span>schena名称:dataset1</span>
+            <span>schena名称：dataset1</span>
           </el-col>
           <el-col :sm="6">
-            <span>业务描述:dataset1</span>
+            <span>业务描述：dataset1</span>
           </el-col>
           <el-col :sm="6">
-            <span>创建人:mysql</span>
+            <span>创建人：mysql</span>
           </el-col>
           <el-col :sm="6">
-            <span>创建时间:mysql</span>
+            <span>创建时间：mysql</span>
           </el-col>
         </el-row>
       </div>

@@ -57,13 +57,13 @@ export const constantRoutes = [
         path: 'dataset',
         component: () => import('@/views/datamanagement/dataset/index'),
         name: 'Dataset',
-        meta: { title: '数据集管理', icon: 'table', affix: true }
+        meta: {title: '数据集管理', icon: 'table', affix: true}
       },
       {
         path: 'datasource',
         component: () => import('@/views/datamanagement/datasource/index'),
         name: 'Datasource',
-        meta: { title: '数据源管理', icon: 'table', affix: true }
+        meta: {title: '数据源管理', icon: 'table', affix: true}
       }
     ]
   },
@@ -81,29 +81,33 @@ export const constantRoutes = [
         path: 'tasklist',
         component: () => import('@/views/taskmanagement/tasklist/index'),
         name: 'Tasklist',
-        meta: { title: '任务列表', icon: 'link', affix: true }
-      },
-      {
-        path: 'taskresult',
-        component: () => import('@/views/taskmanagement/taskresult/index'),
-        name: 'Taskresult',
-        meta: { title: '任务执行结果', icon: 'link', affix: true }
-      },
-      {
-        path: 'taskstate',
-        component: () => import('@/views/taskmanagement/taskstate/index'),
-        name: 'Taskstate',
-        meta: { title: '任务执行日志', icon: 'link', affix: true }
+        meta: {title: '任务列表', icon: 'link', affix: true},
+        children:[
+          {
+            path: 'taskresult',
+            component: () => import('@/views/taskmanagement/taskresult/index'),
+            name: 'Taskresult',
+            hidden: true,
+            meta: {title: '任务执行结果', icon: 'link', affix: true}
+          },
+          {
+            path: 'taskstate',
+            component: () => import('@/views/taskmanagement/taskstate/index'),
+            name: 'Taskstate',
+            hidden: true,
+            meta: {title: '任务执行日志', icon: 'link', affix: true}
+          },
+        ]
       },
     ]
   },
   // 404 page must be placed at the end !!!
-  { path: '*', redirect: '/404', hidden: true }
+  {path: '*', redirect: '/404', hidden: true}
 ]
 
 const createRouter = () => new Router({
   // mode: 'history', // require service support
-  scrollBehavior: () => ({ y: 0 }),
+  scrollBehavior: () => ({y: 0}),
   routes: constantRoutes
 })
 
