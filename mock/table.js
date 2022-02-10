@@ -46,14 +46,14 @@ module.exports = [
       return {
         code: 20000,
         data: {
-            id: '1',
-            ds_name: '数据源名称3',
-            des: '描述3',
-            create_time: '1650052653',
-            ds_type: 'ORACLE',
-            conn_str: '连接串',
-            user_name: 'admin',
-            password: '123',
+          id: '1',
+          ds_name: '数据源名称3',
+          des: '描述3',
+          create_time: '1650052653',
+          ds_type: 'ORACLE',
+          conn_str: '连接串',
+          user_name: 'admin',
+          password: '123',
         },
         message: "数据源清单",
         counts: 1,
@@ -164,21 +164,67 @@ module.exports = [
             id: '1',
             datas_name: '数据集名称1',
             des: '描述',
-            ds_name:'数据源名称',
-            create_user_name:'管理员1',
+            ds_name: '数据源名称',
+            create_user_name: '管理员1',
             create_time: '1650052653',
           },
           {
             id: '2',
             datas_name: '数据集名称2',
             des: '描述',
-            ds_name:'数据源名称',
-            create_user_name:'管理员2',
+            ds_name: '数据源名称',
+            create_user_name: '管理员2',
             create_time: '1650052653',
           },
         ],
         message: "数据集清单",
         counts: 2,
+        success: 'success'
+      };
+    },
+  },
+
+  //任务列表
+  {
+    url: "/nlp/task/get_task",
+    type: "get",
+    response: (_) => {
+      return {
+        code: 20000,
+        data: [
+          {
+            id: '1',
+            task_name: '任务名称1',
+            sts: '执行失败',
+            create_user: '创建1',
+            create_time: '1650052653',
+            end_time: '1650052653',
+            use_time: '200'
+          },
+          {
+            id: '2',
+            task_name: '任务名称2',
+            sts: '执行成功',
+            create_user: '创建2',
+            create_time: '1650052653',
+            end_time: '1650052653',
+            use_time: '200'
+          },
+          {
+            id: '3',
+            task_name: '任务名称3',
+            sts: '执行中',
+            create_user: '创建3',
+            create_time: '1650052653',
+            end_time: '1650052653',
+            use_time: '200'
+          },
+        ],
+        counts: '3',
+        cntSuccess:'1',
+        cntError:'1',
+        cntRun:'1',
+        message: "数据源清单",
         success: 'success'
       };
     },

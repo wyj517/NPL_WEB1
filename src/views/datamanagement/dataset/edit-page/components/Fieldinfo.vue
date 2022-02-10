@@ -2,7 +2,7 @@
   <div class="field_main">
     <div class="field_head">
       <span>字段信息</span>
-      <el-divider/>
+      <el-divider />
     </div>
     <el-tabs type="border-card">
       <el-tab-pane label="选择模式">
@@ -30,10 +30,10 @@
             </el-form-item>
             <el-form-item label="其他">
               <el-checkbox-group v-model="checkList">
-                <el-checkbox label="pid"/>
-                <el-checkbox label="name"/>
-                <el-checkbox label="age"/>
-                <el-checkbox label="desc"/>
+                <el-checkbox label="pid" />
+                <el-checkbox label="name" />
+                <el-checkbox label="age" />
+                <el-checkbox label="desc" />
               </el-checkbox-group>
             </el-form-item>
           </el-form>

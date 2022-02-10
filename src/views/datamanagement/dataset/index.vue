@@ -1,7 +1,7 @@
 <template>
   <div class="set_main">
-    <ListHeader title="数据源名称" @handle-create="openDialog"/>
-    <BaseTable v-loading="loading" :height="height" :columns="columns" :data="tableData"/>
+    <ListHeader title="数据源名称" @handle-create="openDialog" />
+    <BaseTable v-loading="loading" :height="height" :columns="columns" :data="tableData" />
 
     <Details
       ref="dialogRef"
@@ -18,8 +18,8 @@ import BaseTable from '@/components/BaseTable'
 import ListHeader from '@/components/ListHeader'
 import Details from './edit-page/Detail.vue'
 import Task from './perform-task/task.vue'
-import {parseTime} from '@/utils'
-import {SetList} from '@/api/dataset'
+import { parseTime } from '@/utils'
+import { SetList } from '@/api/dataset'
 
 export default {
   name: 'Index',
@@ -42,17 +42,17 @@ export default {
       dialogVisible: true,
       loading: false,
       height: null,
-      tableData: [],
+      tableData: []
     }
   },
   computed: {
     columns() {
       const arr = [
         // 表格列项
-        {label: '数据集名称', key: 'datas_name', width: '200'},
-        {label: '数据源', key: 'ds_name'},
-        {label: '描述', key: 'des'},
-        {label: '创建者', key: 'create_user_name', width: '120'},
+        { label: '数据集名称', key: 'datas_name', width: '200' },
+        { label: '数据源', key: 'ds_name' },
+        { label: '描述', key: 'des' },
+        { label: '创建者', key: 'create_user_name', width: '120' },
         {
           label: '创建时间',
           width: '180px',
@@ -62,7 +62,7 @@ export default {
           label: '操作',
           width: '160',
           fixed: 'right',
-          render: (h, {row}) => {
+          render: (h, { row }) => {
             return h(
               'div',
               [
@@ -116,6 +116,9 @@ export default {
       return arr
     }
   },
+  mounted() {
+    this.getSet()
+  },
   methods: {
     openDialog() {
       this.$refs.dialogRef.opendialog()
@@ -124,19 +127,16 @@ export default {
       this.$refs.taskDialogRef.opendialog()
     },
     getSet() {
-      let params = {
+      const params = {
         page: 1,
         page_size: 10,
         total_flg: '',
         query_str: ''
       }
       SetList(params).then(res => {
-        this.tableData=res.data
+        this.tableData = res.data
       })
     }
-  },
-  mounted() {
-    this.getSet()
   }
 }
 </script>

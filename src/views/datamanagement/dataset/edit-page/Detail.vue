@@ -8,12 +8,12 @@
   >
     <main>
       <div>
-        <el-form label-position="right" label-width="100px" :model="ruleForm" :rules="rule" ref="ruleForm">
+        <el-form ref="ruleForm" label-position="right" label-width="100px" :model="ruleForm" :rules="rule">
           <el-form-item label="数据集名称" class="item" prop="set_name">
-            <el-input v-model="ruleForm.set_name" placeholder="请输入数据集名称" style="width: 200px;"/>
+            <el-input v-model="ruleForm.set_name" placeholder="请输入数据集名称" style="width: 200px;" />
           </el-form-item>
           <el-form-item label="描述">
-            <el-input v-model="ruleForm.describe" placeholder="请输入描述" style="width: 200px"/>
+            <el-input v-model="ruleForm.describe" placeholder="请输入描述" style="width: 200px" />
           </el-form-item>
           <el-form-item label="数据源名称" prop="source_name">
             <el-select v-model="ruleForm.source_name" placeholder="请选择数据源名称">
@@ -49,12 +49,12 @@
         <div class="field_main">
           <div class="field_head">
             <span>字段信息</span>
-            <el-divider/>
+            <el-divider />
           </div>
           <el-tabs type="border-card">
             <el-tab-pane label="选择模式">
               <div>
-                <el-form label-position="right" label-width="100px" :model="ruleForm" :rules="rule" ref="ruleForms">
+                <el-form ref="ruleForms" label-position="right" label-width="100px" :model="ruleForm" :rules="rule">
                   <el-form-item label="id" prop="id">
                     <el-select v-model="ruleForm.id" placeholder="请选择">
                       <el-option
@@ -65,7 +65,7 @@
                       />
                     </el-select>
                   </el-form-item>
-                  <el-form-item label="doc" prop="doc" >
+                  <el-form-item label="doc" prop="doc">
                     <el-select v-model="ruleForm.doc" placeholder="请选择">
                       <el-option
                         v-for="item in SecondOption"
@@ -77,10 +77,10 @@
                   </el-form-item>
                   <el-form-item label="其他">
                     <el-checkbox-group v-model="checkList">
-                      <el-checkbox label="pid"/>
-                      <el-checkbox label="name"/>
-                      <el-checkbox label="age"/>
-                      <el-checkbox label="desc"/>
+                      <el-checkbox label="pid" />
+                      <el-checkbox label="name" />
+                      <el-checkbox label="age" />
+                      <el-checkbox label="desc" />
                     </el-checkbox-group>
                   </el-form-item>
                 </el-form>
@@ -114,8 +114,7 @@
 
 export default {
   name: 'Detail',
-  components: {
-  },
+  components: {},
   props: {
     info: {
       type: Object,
@@ -146,7 +145,6 @@ export default {
         }
       ],
 
-
       FirstOption: [
         {
           value: 'test',
@@ -163,37 +161,37 @@ export default {
 
       active: true,
 
-      ruleForm:{
-        set_name:'',
-        describe:'',
-        source_name:'',
-        schema_name:'',
-        table_name:'',
-        id:'',
-        doc:''
+      ruleForm: {
+        set_name: '',
+        describe: '',
+        source_name: '',
+        schema_name: '',
+        table_name: '',
+        id: '',
+        doc: ''
       },
-      rule:{
+      rule: {
         set_name: [
-          { required: true, message: '请输入数据集名称', trigger: 'blur' },
+          { required: true, message: '请输入数据集名称', trigger: 'blur' }
         ],
         describe: [
-          { required: true, message: '请输入描述', trigger: 'blur' },
+          { required: true, message: '请输入描述', trigger: 'blur' }
         ],
         source_name: [
-          { required: true, message: '选择不能为空', trigger: 'blur' },
+          { required: true, message: '选择不能为空', trigger: 'blur' }
         ],
         schema_name: [
-          { required: true, message: '选择不能为空', trigger: 'blur' },
+          { required: true, message: '选择不能为空', trigger: 'blur' }
         ],
         table_name: [
-          { required: true, message: '选择不能为空', trigger: 'blur' },
+          { required: true, message: '选择不能为空', trigger: 'blur' }
         ],
         id: [
-          { required: true, message: '请选择id', trigger: 'blur' },
+          { required: true, message: '请选择id', trigger: 'blur' }
         ],
         doc: [
-          { required: true, message: '请选择doc', trigger: 'blur' },
-        ],
+          { required: true, message: '请选择doc', trigger: 'blur' }
+        ]
       }
     }
   },
@@ -205,24 +203,24 @@ export default {
       this.dialogVisible = true
     },
     handleAdd() {
-      const p1=new Promise((resolve,reject)=>{
+      const p1 = new Promise((resolve, reject) => {
         this.$refs['ruleForm'].validate((valid) => {
           if (valid) {
             resolve()
           }
-        });
+        })
       })
-      const p2=new Promise((resolve,reject)=>{
+      const p2 = new Promise((resolve, reject) => {
         this.$refs['ruleForms'].validate((valid) => {
           if (valid) {
             resolve()
           }
-        });
+        })
       })
-      Promise.all([p1,p2]).then(()=>{
-        this.dialogVisible=false
+      Promise.all([p1, p2]).then(() => {
+        this.dialogVisible = false
       })
-    },
+    }
   }
 }
 </script>

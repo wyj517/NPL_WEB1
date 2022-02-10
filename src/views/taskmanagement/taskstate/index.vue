@@ -1,13 +1,13 @@
 <template>
   <div class="main">
     <div class="title">
-      <div style="width: 3px; height: 20px;background: skyblue;margin-right: 10px"></div>
+      <div style="width: 3px; height: 20px;background: skyblue;margin-right: 10px" />
       <span>任务名称</span>
     </div>
     <div class="task_log">
       <el-tabs v-model="activeName" type="card">
         <el-tab-pane label="运行日志" name="first">
-          <BaseTable v-loading="loading" :height="height" :columns="columns" :data="tableData"/>
+          <BaseTable v-loading="loading" :height="height" :columns="columns" :data="tableData" />
         </el-tab-pane>
         <el-tab-pane label="任务时间轴" name="second">
           <div class="block">
@@ -40,85 +40,46 @@
 
 <script>
 import BaseTable from '@/components/BaseTable'
+
 export default {
-  name: "index",
-  computed: {
-    columns() {
-      const arr = [
-        // 表格列项
-        {label: '日志采集时间', key: 'log_time', width: '150'},
-        {label: '状态', key: 'state',width: '150'},
-        {label: '日志内容', key: 'log_content'},
-        // {
-        //   label: '操作',
-        //   width: '160',
-        //   fixed: 'right',
-        //   render: (h, {row}) => {
-        //     return h(
-        //       'div',
-        //       [
-        //         h(
-        //           'el-button',
-        //           {
-        //             props: {
-        //               type: 'text'
-        //             },
-        //             on: {
-        //               click: () => {
-        //                 this.openAddDialog()
-        //               }
-        //             }
-        //           },
-        //           '编写'
-        //         ),
-        //         h(
-        //           'el-button',
-        //           {
-        //             props: {
-        //               type: 'text'
-        //             },
-        //             on: {
-        //               click: () => {
-        //                 this.CopyTask(row.id)
-        //               }
-        //             }
-        //           },
-        //           '删除'
-        //         ),
-        //       ]
-        //     )
-        //   }
-        // }
-      ]
-      return arr
-    }
+  name: 'Index',
+  components: {
+    BaseTable
   },
-  data(){
-    return{
+  data() {
+    return {
       activeName: 'first',
       loading: false,
       height: null,
       tableData: [
-        {log_time: '2022/01/01', state: 'NORMAL', log_content: '123'}
-      ],
+        { log_time: '2022/01/01', state: 'NORMAL', log_content: '123' }
+      ]
     }
   },
-  components:{
-    BaseTable
+  computed: {
+    columns() {
+      const arr = [
+        // 表格列项
+        { label: '日志采集时间', key: 'log_time', width: '150' },
+        { label: '状态', key: 'state', width: '150' },
+        { label: '日志内容', key: 'log_content' }
+      ]
+      return arr
+    }
   },
-  methods: {
-
-  }
+  methods: {}
 }
 </script>
 
 <style scoped lang="scss">
-.main{
+.main {
   padding: 20px;
-  .title{
+
+  .title {
     display: flex;
   }
-  .task_log{
+
+  .task_log {
     margin-top: 50px;
   }
 }

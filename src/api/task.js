@@ -1,7 +1,7 @@
 
 import request from "@/utils/request";
 //任务列表
-export function list (params) {
+export function taskList (params) {
   return request({
     url: '/nlp/task/get_task',
     params

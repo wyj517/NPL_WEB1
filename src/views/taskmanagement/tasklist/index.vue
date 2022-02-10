@@ -6,56 +6,69 @@
           <span class="font">总任务数 </span>
           <span style="font-size: 30px">{{ taskNum }}</span>
         </div>
-        <el-progress :text-inside="true" :stroke-width="15" :percentage="70" color="#13ce66"></el-progress>
+        <el-progress :text-inside="true" :stroke-width="15" :percentage="70" color="#13ce66" />
       </div>
-      <el-divider direction="vertical"/>
+      <el-divider direction="vertical" />
       <div class="right_header">
         <div class="right_title">
           <div style="display: flex;align-items: center">
-            <div class="icon_title" style="background: #0d85fc"></div>
+            <div class="icon_title" style="background: #0d85fc" />
             <span style="">正在执行数</span>
           </div>
           <span>{{ executionNum }}</span>
         </div>
         <div class="right_title">
           <div style="display: flex;align-items: center">
-            <div class="icon_title" style="background: #13ce66"></div>
+            <div class="icon_title" style="background: #13ce66" />
             <span>执行成功数</span>
           </div>
           <span>{{ successNum }}</span>
         </div>
         <div class="right_title">
           <div style="display: flex;align-items: center">
-            <div class="icon_title" style="background: #ff4949"></div>
+            <div class="icon_title" style="background: #ff4949" />
             <span>执行失败</span>
           </div>
           <span>{{ errorNum }}</span>
         </div>
       </div>
     </div>
-    <ListHeader title="任务名称" :showCreate="false"/>
-    <BaseTable v-loading="loading" :height="height" :columns="columns" :data="tableData"/>
+    <ListHeader title="任务名称" :show-create="false" />
+    <BaseTable v-loading="loading" :height="height" :columns="columns" :data="tableData" />
   </div>
 </template>
 
 <script>
 import BaseTable from '@/components/BaseTable'
-import {parseTime} from "@/utils";
-import ListHeader from "@/components/ListHeader";
-import router from "@/router";
+import { parseTime } from '@/utils'
+import ListHeader from '@/components/ListHeader'
+import { taskList } from '@/api/task'
 
 export default {
-  name: "index",
+  name: 'Index',
   components: {
     BaseTable,
-    ListHeader,
+    ListHeader
+  },
+  data() {
+    return {
+      loading: false,
+      height: null,
+      tableData: [],
+
+      taskNum: '258',
+      executionNum: '20',
+      successNum: '180',
+      errorNum: '18'
+
+    }
   },
   computed: {
     columns() {
       const arr = [
         // 表格列项
-        {label: '任务名称', key: 'task_name', width: '150'},
-        {label: '创建人', key: 'creator'},
+        { label: '任务名称', key: 'task_name', width: '150' },
+        { label: '创建人', key: 'create_user' },
         {
           label: '执行状态',
           render: (h, params) => {
@@ -63,30 +76,30 @@ export default {
               'el-link',
               {
                 props: {
-                  underline:false,
-                  type:'success'
-                },
+                  underline: false,
+                  type: params.row.sts === '执行成功' ? 'success' : params.row.sts === '执行失败' ? 'danger' : 'primary'
+                }
               },
-              '●执行状态'
+              '●' + params.row.sts
             )
           }
         },
         {
           label: '开始执行时间',
           width: '180px',
-          render: (h, params) => <span>{parseTime(params.row.createDate)}</span>
+          render: (h, params) => <span>{parseTime(params.row.create_time)}</span>
         },
         {
           label: '结束执行时间',
           width: '180px',
-          render: (h, params) => <span>{parseTime(params.row.finishDate)}</span>
+          render: (h, params) => <span>{parseTime(params.row.end_time)}</span>
         },
-        {label: '执行时长', key: 'time'},
+        { label: '执行时长', key: 'use_time' },
         {
           label: '操作',
           width: '160',
           fixed: 'right',
-          render: (h, {row}) => {
+          render: (h, { row }) => {
             return h(
               'div',
               [
@@ -98,7 +111,7 @@ export default {
                     },
                     on: {
                       click: () => {
-                        this.$router.push("tasklist/taskresult")
+                        this.$router.push('taskstate')
                       }
                     }
                   },
@@ -112,12 +125,12 @@ export default {
                     },
                     on: {
                       click: () => {
-                        this.$router.push("tasklist/taskstate")
+                        this.$router.push('taskresult')
                       }
                     }
                   },
                   '查询结果'
-                ),
+                )
               ]
             )
           }
@@ -126,26 +139,24 @@ export default {
       return arr
     }
   },
-  data() {
-    return {
-      loading: false,
-      height: null,
-      tableData: [
-        {
-          task_name: '任务名称1',
-          creator: '张三',
-          state: '执行成功',
-          createDate: '1350052653',
-          finishDate: '1350052653',
-          time: '200'
-        }
-      ],
-
-      taskNum: '258',
-      executionNum: '20',
-      successNum: '180',
-      errorNum: '18'
-
+  mounted() {
+    this.getList()
+  },
+  methods: {
+    getList() {
+      const params = {
+        page: 1,
+        page_size: 10,
+        total_flg: '',
+        task_name: ''
+      }
+      taskList(params).then(res => {
+        this.tableData = res.data
+        this.taskNum = res.counts
+        this.successNum = res.cntSuccess
+        this.errorNum = res.cntError
+        this.executionNum = res.cntRun
+      })
     }
   }
 }

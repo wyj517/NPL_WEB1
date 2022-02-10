@@ -4,7 +4,7 @@
       <span style="color: #146ba6;">任务结果名称1</span>
       <div class="row-bg">
         <el-row type="flex" class="row-bg" justify="space-around">
-          <el-col :span="6" >
+          <el-col :span="6">
             <span>数据集：dataset1</span>
           </el-col>
           <el-col :span="6">
@@ -17,8 +17,8 @@
             <span>数据类型：mysql</span>
           </el-col>
         </el-row>
-        <el-row type="flex" class="row-bg" justify="space-around" >
-          <el-col :sm="6" >
+        <el-row type="flex" class="row-bg" justify="space-around">
+          <el-col :sm="6">
             <span>schena名称：dataset1</span>
           </el-col>
           <el-col :sm="6">
@@ -35,29 +35,45 @@
     </div>
     <div class="excel">
       <span class="title_excel">分析结果:</span>
-      <ListHeader title="关键字" :showCreate="false"/>
-      <BaseTable v-loading="loading" :height="height" :columns="columns" :data="tableData"/>
+      <ListHeader title="关键字" :show-create="false" />
+      <BaseTable v-loading="loading" :height="height" :columns="columns" :data="tableData" />
     </div>
   </div>
 </template>
 
 <script>
-import ListHeader from "@/components/ListHeader";
-import BaseTable from "@/components/BaseTable";
-import {parseTime} from "@/utils";
+import ListHeader from '@/components/ListHeader'
+import BaseTable from '@/components/BaseTable'
+import { parseTime } from '@/utils'
 
 export default {
-  name: "index",
+  name: 'Index',
   components: {
     ListHeader,
     BaseTable
+  },
+  data() {
+    return {
+      loading: false,
+      height: null,
+      tableData: [
+        {
+          task_name: '任务名称1',
+          creator: '张三',
+          state: '执行成功',
+          createDate: '1350052653',
+          finishDate: '1350052653',
+          time: '200'
+        }
+      ]
+    }
   },
   computed: {
     columns() {
       const arr = [
         // 表格列项
-        {label: '任务名称', key: 'task_name', width: '150'},
-        {label: '创建人', key: 'creator'},
+        { label: '任务名称', key: 'task_name', width: '150' },
+        { label: '创建人', key: 'creator' },
         {
           label: '执行状态',
           render: (h, params) => <el-link>●{params.row.state}</el-link>
@@ -72,12 +88,12 @@ export default {
           width: '180px',
           render: (h, params) => <span>{parseTime(params.row.finishDate)}</span>
         },
-        {label: '执行时长', key: 'time'},
+        { label: '执行时长', key: 'time' },
         {
           label: '操作',
           width: '160',
           fixed: 'right',
-          render: (h, {row}) => {
+          render: (h, { row }) => {
             return h(
               'div',
               [
@@ -106,7 +122,7 @@ export default {
                     }
                   },
                   '保存'
-                ),
+                )
               ]
             )
           }
@@ -114,42 +130,30 @@ export default {
       ]
       return arr
     }
-  },
-  data(){
-    return{
-      loading: false,
-      height: null,
-      tableData: [
-        {
-          task_name: '任务名称1',
-          creator: '张三',
-          state: '执行成功',
-          createDate: '1350052653',
-          finishDate: '1350052653',
-          time: '200'
-        }
-      ],
-    }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-.result_main{
+.result_main {
   padding: 20px;
 }
+
 .result_header {
   padding: 20px;
   height: 120px;
   background: #f3f3f3;
   border: 1px solid #f3f3f3;
 }
-.row-bg{
+
+.row-bg {
   margin-top: 15px;
 }
-.excel{
+
+.excel {
   margin-top: 20px;
-  .title_excel{
+
+  .title_excel {
     font-weight: 600;
   }
 }
