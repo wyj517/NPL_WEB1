@@ -31,11 +31,7 @@ export default {
       tableData: [
         { log_time: '2022/01/01', state: 'NORMAL', log_content: '123' }
       ],
-      code: 'logger.debug("debug")\n' +
-        'logger.info("info")\n' +
-        'logger.warning("warning")\n' +
-        'logger.error("error")\n' +
-        'logger.critical("critiacl")',
+      code: '2022-01-07 16:44:32   任务taskname1 开始执行 message:xxxxx',
       cmOptions: {
         // codemirror options
         tabSize: 2, // 缩进

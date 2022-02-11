@@ -76,7 +76,18 @@ export default {
         { label: '创建人', key: 'creator' },
         {
           label: '执行状态',
-          render: (h, params) => <el-link>●{params.row.state}</el-link>
+          render: (h, params) => {
+            return h(
+              'el-link',
+              {
+                props: {
+                  underline: false,
+                  type: params.row.state === '执行成功' ? 'success' : params.row.sts === '执行失败' ? 'danger' : 'primary'
+                }
+              },
+              '●' + params.row.state
+            )
+          }
         },
         {
           label: '开始执行时间',
