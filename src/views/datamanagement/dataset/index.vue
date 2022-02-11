@@ -19,7 +19,7 @@ import ListHeader from '@/components/ListHeader'
 import Details from './edit-page/Detail.vue'
 import Task from './perform-task/task.vue'
 import { parseTime } from '@/utils'
-import { SetList } from '@/api/dataset'
+import { setList } from '@/api/dataset'
 
 export default {
   name: 'Index',
@@ -133,7 +133,7 @@ export default {
         total_flg: '',
         query_str: ''
       }
-      SetList(params).then(res => {
+      setList(params).then(res => {
         this.tableData = res.data
       })
     }

@@ -7,31 +7,7 @@
     <div class="task_log">
       <el-tabs v-model="activeName" type="card">
         <el-tab-pane label="运行日志" name="first">
-          <BaseTable v-loading="loading" :height="height" :columns="columns" :data="tableData" />
-        </el-tab-pane>
-        <el-tab-pane label="任务时间轴" name="second">
-          <div class="block">
-            <el-timeline>
-              <el-timeline-item timestamp="2018/4/12" placement="top">
-                <el-card>
-                  <h4>步骤一</h4>
-                  <p>任务 执行于 2018/4/12 20:46</p>
-                </el-card>
-              </el-timeline-item>
-              <el-timeline-item timestamp="2018/4/3" placement="top">
-                <el-card>
-                  <h4>步骤一</h4>
-                  <p>任务 执行于 2018/4/3 20:46</p>
-                </el-card>
-              </el-timeline-item>
-              <el-timeline-item timestamp="2018/4/2" placement="top">
-                <el-card>
-                  <h4>步骤一</h4>
-                  <p>任务 执行于 2018/4/2 20:46</p>
-                </el-card>
-              </el-timeline-item>
-            </el-timeline>
-          </div>
+          <codemirror v-model="code" :options="cmOptions" />
         </el-tab-pane>
       </el-tabs>
     </div>
@@ -39,12 +15,13 @@
 </template>
 
 <script>
-import BaseTable from '@/components/BaseTable'
-
+import { codemirror } from 'vue-codemirror'
+import 'codemirror/mode/python/python.js'
+import 'codemirror/theme/base16-light.css'
 export default {
   name: 'Index',
   components: {
-    BaseTable
+    codemirror
   },
   data() {
     return {
@@ -53,7 +30,32 @@ export default {
       height: null,
       tableData: [
         { log_time: '2022/01/01', state: 'NORMAL', log_content: '123' }
-      ]
+      ],
+      code: 'logger.debug("debug")\n' +
+        'logger.info("info")\n' +
+        'logger.warning("warning")\n' +
+        'logger.error("error")\n' +
+        'logger.critical("critiacl")',
+      cmOptions: {
+        // codemirror options
+        tabSize: 2, // 缩进
+        mode: 'python', // 语言
+        theme: 'base16-light', // 主题
+        lineNumbers: true,
+        line: true,
+        readOnly: true, // 只读
+        indentWithTabs: true,
+        smartIndent: true,
+        matchBrackets: true,
+        hintOptions: { // 自定义提示选项
+          tables: {
+            users: ['name', 'score', 'birthDate'],
+            countries: ['name', 'population', 'size']
+          }
+        },
+        extraKeys: { 'Ctrl': 'autocomplete' }// 自定义快捷键
+        // more codemirror options, 更多 codemirror 的高级配置...
+      }
     }
   },
   computed: {

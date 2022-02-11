@@ -1,6 +1,6 @@
 <template>
   <div class="source_main">
-    <ListHeader title="数据集名称" @handle-create="AddSource" />
+    <ListHeader title="数据集名称" @handle-create="addSource" />
     <BaseTable v-loading="loading" :height="height" :columns="columns" :data="tableData" />
 
     <el-dialog
@@ -49,7 +49,7 @@
 <script>
 import BaseTable from '@/components/BaseTable'
 import ListHeader from '@/components/ListHeader'
-import { SourceList, SourceRemove, SourceTest, SourceDetail, SourceUpdate, SourceCreate } from '@/api/database'
+import { sourceList, sourceRemove, sourceTest, sourceDetail, sourceUpdate, sourceCreate } from '@/api/database'
 
 export default {
   name: 'Index',
@@ -164,11 +164,11 @@ export default {
       const data = {
         ds_id: id
       }
-      SourceDetail(data).then(res => {
+      sourceDetail(data).then(res => {
         this.ruleForm = res.data
       })
     },
-    AddSource() {
+    addSource() {
       // 新增
       this.dialogtitle = '新增数据源'
       this.ruleForm = {}
@@ -179,18 +179,18 @@ export default {
         if (valid) {
           if (this.dialogtitle === '新增数据源') {
             console.log(this.ruleForm)
-            SourceCreate(this.ruleForm).then(res => {
+            sourceCreate(this.ruleForm).then(res => {
               this.$message({
-                type: 'success',
-                message: `新增成功`
+                type: res.success === 'success' ? 'success' : 'error',
+                message: res.success === 'success' ? `编辑成功` : `编辑失败`
               })
             })
           } else {
             console.log(this.ruleForm)
-            SourceUpdate(this.ruleForm).then(res => {
+            sourceUpdate(this.ruleForm).then(res => {
               this.$message({
-                type: 'success',
-                message: `编辑成功`
+                type: res.success === 'success' ? 'success' : 'error',
+                message: res.success === 'success' ? `编辑成功` : `编辑失败`
               })
             })
           }
@@ -205,7 +205,7 @@ export default {
         total_flg: '',
         query_str: ''
       }
-      SourceList(params).then(res => {
+      sourceList(params).then(res => {
         this.tableData = res.data
       })
     },
@@ -219,7 +219,7 @@ export default {
           const data = {
             ds_id: id
           }
-          SourceRemove(data).then(res => {
+          sourceRemove(data).then(res => {
             this.$message({
               type: 'success',
               message: `删除成功`
@@ -229,7 +229,7 @@ export default {
       })
     },
     startSource() {
-      SourceTest().then(res => {
+      sourceTest().then(res => {
         this.$message({
           type: 'success',
           message: `测试连接`
