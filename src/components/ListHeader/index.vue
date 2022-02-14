@@ -2,11 +2,11 @@
   <div class="operation-area">
     <div class="title">
       <div>
-         <span style="font-size: 14px">
-            {{ title === '' ? $route.meta.title : title }}:
-         </span>
-        <el-input placeholder="输入关键字" size="small" style="width: 200px" v-model="search" />
-        <el-button v-if="showSearch" type="primary" @click="createSearch" size="small" style="margin-left: 20px" plain>
+        <span style="font-size: 14px">
+          {{ title === '' ? $route.meta.title : title }}:
+        </span>
+        <el-input v-model="search" placeholder="输入关键字" size="small" style="width: 200px" />
+        <el-button v-if="showSearch" type="primary" size="small" style="margin-left: 20px" plain @click="createSearch">
           搜索
         </el-button>
       </div>
@@ -14,8 +14,8 @@
         <el-button
           v-if="showCreate"
           type="primary"
-          @click="createData"
           size="small"
+          @click="createData"
         >新增{{ buttonTitle }}
         </el-button>
       </div>

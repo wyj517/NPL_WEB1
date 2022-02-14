@@ -55,13 +55,13 @@ export const constantRoutes = [
     children: [
       {
         path: 'dataset',
-        component: () => import('@/views/datamanagement/dataset/index'),
+        component: () => import('@/views/data-management/dataset/index'),
         name: 'Dataset',
         meta: { title: '数据集管理', icon: 'table', affix: true }
       },
       {
         path: 'datasource',
-        component: () => import('@/views/datamanagement/datasource/index'),
+        component: () => import('@/views/data-management/datasource/index'),
         name: 'Datasource',
         meta: { title: '数据源管理', icon: 'table', affix: true }
       }
@@ -79,21 +79,21 @@ export const constantRoutes = [
     children: [
       {
         path: 'tasklist',
-        component: () => import('@/views/taskmanagement/tasklist/index'),
+        component: () => import('@/views/task-management/tasklist/index'),
         name: 'Tasklist',
         meta: { title: '任务列表', icon: 'link', affix: true },
         children: []
       },
       {
         path: 'taskresult',
-        component: () => import('@/views/taskmanagement/taskresult/index'),
+        component: () => import('@/views/task-management/taskresult/index'),
         name: 'Taskresult',
         hidden: true,
         meta: { title: '任务执行结果', icon: 'link', affix: true }
       },
       {
         path: 'taskstate',
-        component: () => import('@/views/taskmanagement/taskstate/index'),
+        component: () => import('@/views/task-management/taskstate/index'),
         name: 'Taskstate',
         hidden: true,
         meta: { title: '任务执行日志', icon: 'link', affix: true }

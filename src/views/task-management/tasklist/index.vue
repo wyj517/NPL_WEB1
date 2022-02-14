@@ -52,7 +52,7 @@ export default {
   },
   data() {
     return {
-      search:'',
+      search: '',
       loading: false,
       height: null,
       tableData: [],
