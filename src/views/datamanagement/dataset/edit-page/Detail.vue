@@ -90,6 +90,7 @@
               <div>
                 <div>
                   <el-input
+                    v-model="ruleForm.code"
                     type="textarea"
                     placeholder="请输入内容"
                     limit="10"
@@ -168,7 +169,8 @@ export default {
         schema_name: '',
         table_name: '',
         id: '',
-        doc: ''
+        doc: '',
+        code: ''
       },
       rule: {
         set_name: [

@@ -33,7 +33,7 @@
         </div>
       </div>
     </div>
-    <ListHeader title="任务名称" :show-create="false" />
+    <ListHeader title="任务名称" :show-create="false" :search="search" />
     <BaseTable v-loading="loading" :height="height" :columns="columns" :data="tableData" />
   </div>
 </template>
@@ -52,6 +52,7 @@ export default {
   },
   data() {
     return {
+      search:'',
       loading: false,
       height: null,
       tableData: [],

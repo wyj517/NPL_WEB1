@@ -1,6 +1,6 @@
 <template>
   <div class="source_main">
-    <ListHeader title="数据集名称" @handle-create="addSource" />
+    <ListHeader title="数据集名称" @handle-create="addSource" :search="search" />
     <BaseTable v-loading="loading" :height="height" :columns="columns" :data="tableData" />
 
     <el-dialog
@@ -59,6 +59,7 @@ export default {
   },
   data() {
     return {
+      search:'',
       dialogVisible: false,
       dialogtitle: '',
       loading: false,

@@ -1,6 +1,6 @@
 <template>
   <div class="set_main">
-    <ListHeader title="数据源名称" @handle-create="openDialog" />
+    <ListHeader title="数据源名称" @handle-create="openDialog" :search="search" />
     <BaseTable v-loading="loading" :height="height" :columns="columns" :data="tableData" />
 
     <Details
@@ -39,6 +39,7 @@ export default {
   },
   data() {
     return {
+      search:'',
       dialogVisible: true,
       loading: false,
       height: null,

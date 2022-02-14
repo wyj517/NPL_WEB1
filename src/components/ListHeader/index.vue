@@ -3,10 +3,12 @@
     <div class="title">
       <div>
          <span style="font-size: 14px">
-            {{ title === "" ? $route.meta.title : title }}:
+            {{ title === '' ? $route.meta.title : title }}:
          </span>
-        <el-input placeholder="输入关键字" size="small" style="width: 200px"/>
-        <el-button v-if="showSearch" type="primary" @click="createSearch" size="small" style="margin-left: 20px" plain>搜索</el-button>
+        <el-input placeholder="输入关键字" size="small" style="width: 200px" v-model="search" />
+        <el-button v-if="showSearch" type="primary" @click="createSearch" size="small" style="margin-left: 20px" plain>
+          搜索
+        </el-button>
       </div>
       <div>
         <el-button
@@ -17,7 +19,7 @@
         >新增{{ buttonTitle }}
         </el-button>
       </div>
-      <slot name="button"/>
+      <slot name="button" />
     </div>
   </div>
 </template>
@@ -56,6 +58,10 @@ export default {
     showBack: {
       type: Boolean,
       default: false
+    },
+    search: {
+      type: String,
+      default: ''
     }
   },
   methods: {
@@ -76,7 +82,8 @@ export default {
 .operation-area {
   margin: 20px 0 0 0px;
 }
-.title{
+
+.title {
   display: flex;
   justify-content: space-between;
 }

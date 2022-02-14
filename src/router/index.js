@@ -69,9 +69,9 @@ export const constantRoutes = [
   },
   // 任务
   {
-    path: '',
+    path: '/task',
     component: Layout,
-    redirect: '/tasklist',
+    redirect: '/task/tasklist',
     meta: {
       title: '任务管理',
       icon: 'tree'
