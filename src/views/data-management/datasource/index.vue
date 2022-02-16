@@ -214,19 +214,25 @@ export default {
 
     },
     openDialog(id) {
-      this.$alert('确实删除吗？', '删除', {
+      this.$confirm('确实删除吗？', '删除', {
         confirmButtonText: '确定',
-        callback: action => {
-          const data = {
-            ds_id: id
-          }
-          sourceRemove(data).then(res => {
-            this.$message({
-              type: 'success',
-              message: `删除成功`
-            })
-          })
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        const data = {
+          ds_id: id
         }
+        sourceRemove(data).then(res => {
+          this.$message({
+            type: 'success',
+            message: `删除成功`
+          })
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
       })
     },
     startSource() {

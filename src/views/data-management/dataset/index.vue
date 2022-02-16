@@ -1,6 +1,6 @@
 <template>
   <div class="set_main">
-    <ListHeader :search="search" title="数据源名称" @handle-create="openDialog" />
+    <ListHeader :search="search" title="数据源名称" @handle-create="openAddDialog" />
     <BaseTable v-loading="loading" :height="height" :columns="columns" :data="tableData" />
 
     <Details
@@ -20,6 +20,7 @@ import Details from './edit-page/Detail.vue'
 import Task from './perform-task/task.vue'
 import { parseTime } from '@/utils'
 import { setList } from '@/api/dataset'
+import { sourceRemove } from '@/api/database'
 
 export default {
   name: 'Index',
@@ -89,7 +90,7 @@ export default {
                     },
                     on: {
                       click: () => {
-                        this.CopyTask(row.id)
+                        this.handleDelete(row.id)
                       }
                     }
                   },
@@ -124,6 +125,9 @@ export default {
     openDialog() {
       this.$refs.dialogRef.opendialog()
     },
+    openAddDialog() {
+      this.$refs.dialogRef.openAddDialog()
+    },
     openTask() {
       this.$refs.taskDialogRef.opendialog()
     },
@@ -136,6 +140,28 @@ export default {
       }
       setList(params).then(res => {
         this.tableData = res.data
+      })
+    },
+    handleDelete(id) {
+      this.$confirm('确实删除吗？', '删除', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        const data = {
+          ds_id: id
+        }
+        sourceRemove(data).then(res => {
+          this.$message({
+            type: 'success',
+            message: `删除成功`
+          })
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
       })
     }
   }

@@ -151,7 +151,31 @@ module.exports = [
     },
   },
 
-
+  //数据集详情
+  {
+    url: "/nlp/datas/get_datas_detail",
+    type: "get",
+    response: (_) => {
+      return {
+        code: 20000,
+        data: [
+          {
+            id: '1',
+            datas_name: '数据集名称1',
+            des: '描述',
+            ds_name: 'test',
+            schema_name: 'test',
+            table_name: 'test',
+            id_filed:'test',
+            doc_field:'test'
+          },
+        ],
+        message: "数据集清单",
+        counts: 1,
+        success: 'success'
+      };
+    },
+  },
   //数据集列表
   {
     url: "/nlp/datas/get_datas",

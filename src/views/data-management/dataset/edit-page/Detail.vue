@@ -10,13 +10,13 @@
       <div>
         <el-form ref="ruleForm" label-position="right" label-width="100px" :model="ruleForm" :rules="rule">
           <el-form-item label="数据集名称" class="item" prop="set_name">
-            <el-input v-model="ruleForm.set_name" placeholder="请输入数据集名称" style="width: 200px;" />
+            <el-input v-model="ruleForm.datas_name" placeholder="请输入数据集名称" style="width: 200px;" />
           </el-form-item>
           <el-form-item label="描述">
-            <el-input v-model="ruleForm.describe" placeholder="请输入描述" style="width: 200px" />
+            <el-input v-model="ruleForm.des" placeholder="请输入描述" style="width: 200px" />
           </el-form-item>
           <el-form-item label="数据源名称" prop="source_name">
-            <el-select v-model="ruleForm.source_name" placeholder="请选择数据源名称">
+            <el-select v-model="ruleForm.ds_name" placeholder="请选择数据源名称">
               <el-option
                 v-for="item in SourceOption"
                 :key="item.value"
@@ -56,7 +56,7 @@
               <div>
                 <el-form ref="ruleForms" label-position="right" label-width="100px" :model="ruleForm" :rules="rule">
                   <el-form-item label="id" prop="id">
-                    <el-select v-model="ruleForm.id" placeholder="请选择">
+                    <el-select v-model="ruleForm.id_filed" placeholder="请选择">
                       <el-option
                         v-for="item in FirstOption"
                         :key="item.value"
@@ -66,7 +66,7 @@
                     </el-select>
                   </el-form-item>
                   <el-form-item label="doc" prop="doc">
-                    <el-select v-model="ruleForm.doc" placeholder="请选择">
+                    <el-select v-model="ruleForm.doc_field" placeholder="请选择">
                       <el-option
                         v-for="item in SecondOption"
                         :key="item.value"
@@ -112,6 +112,7 @@
 </template>
 
 <script>
+import { setDetail } from '@/api/dataset'
 
 export default {
   name: 'Detail',
@@ -202,6 +203,15 @@ export default {
     opendialog(res) {
       // this.props.info.value = res
       // console.log(props.info.value)
+      this.dialogVisible = true
+      setDetail().then(res => {
+        this.ruleForm = res.data[0]
+      })
+    },
+    openAddDialog(res) {
+      // this.props.info.value = res
+      // console.log(props.info.value)
+      this.ruleForm = {}
       this.dialogVisible = true
     },
     handleAdd() {

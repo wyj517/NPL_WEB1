@@ -8,8 +8,16 @@ export function setList(params) {
   })
 }
 
+// 获取数据集详情
+export function setDetail(data) {
+  return request({
+    url: '/nlp/datas/get_datas_detail',
+    data
+  })
+}
+
 // 编辑数据集
-export function detail(params) {
+export function editor(params) {
   return request({
     url: '/nlp/datas/update_datas_detail',
     params
