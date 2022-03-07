@@ -2,7 +2,15 @@
   <div class="source_main">
     <ListHeader :search="search" title="数据集名称" @handle-create="addSource" />
     <BaseTable v-loading="loading" :height="height" :columns="columns" :data="tableData" />
+    <!--    <div class="block" style="margin-top:15px;">-->
+    <!--      <el-pagination align='right' @size-change="" @current-change=""-->
+    <!--                     :current-page="page"-->
 
+    <!--                     :page-size="pageSize"-->
+
+    <!--                     :total="total">-->
+    <!--      </el-pagination>-->
+    <!--    </div>-->
     <el-dialog
       :visible.sync="dialogVisible"
       :title="dialogtitle"
@@ -38,7 +46,7 @@
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" class="conn" @click="startSource">测试连接</el-button>
+        <el-button type="primary" class="conn" @click="startSource(ruleForm.id)">测试连接</el-button>
         <el-button @click="dialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="handleAdd">确 定</el-button>
       </span>
@@ -59,6 +67,9 @@ export default {
   },
   data() {
     return {
+      // page:'',
+      // pageSize:'',
+      // total:'',
       search: '',
       dialogVisible: false,
       dialogtitle: '',
@@ -67,12 +78,12 @@ export default {
       tableData: [],
       TypeOption: [
         {
-          value: 'MySQL',
-          label: 'MySQL'
+          value: 'MYSQL',
+          label: 'MYSQL'
         },
         {
-          value: 'Oracle',
-          label: 'Oracle'
+          value: 'ORACLE',
+          label: 'ORACLE'
         },
         {
           value: 'SQLServer',
@@ -158,7 +169,6 @@ export default {
   },
   methods: {
     openAddDialog(id) {
-      console.log(id)
       // 编辑
       this.dialogtitle = '编辑数据源'
       this.dialogVisible = true
@@ -166,7 +176,7 @@ export default {
         ds_id: id
       }
       sourceDetail(data).then(res => {
-        this.ruleForm = res.data
+        this.ruleForm = res.data.data
       })
     },
     addSource() {
@@ -179,20 +189,22 @@ export default {
       this.$refs['ruleForm'].validate((valid) => {
         if (valid) {
           if (this.dialogtitle === '新增数据源') {
-            console.log(this.ruleForm)
+            this.ruleForm.id=''
             sourceCreate(this.ruleForm).then(res => {
               this.$message({
-                type: res.success === 'success' ? 'success' : 'error',
-                message: res.success === 'success' ? `编辑成功` : `编辑失败`
+                type: res.data.success === true ? 'success' : 'error',
+                message: res.data.success === true ? `新增成功` : `新增失败`
               })
+              this.getList()
             })
           } else {
             console.log(this.ruleForm)
             sourceUpdate(this.ruleForm).then(res => {
               this.$message({
-                type: res.success === 'success' ? 'success' : 'error',
-                message: res.success === 'success' ? `编辑成功` : `编辑失败`
+                type: res.data.success === true ? 'success' : 'error',
+                message: res.data.success === true ? `编辑成功` : `编辑失败`
               })
+              this.getList()
             })
           }
           this.dialogVisible = false
@@ -200,14 +212,14 @@ export default {
       })
     },
     getList() {
-      const params = {
+      const data = {
         page: 1,
         page_size: 10,
-        total_flg: '',
+        total_flg: false,
         query_str: ''
       }
-      sourceList(params).then(res => {
-        this.tableData = res.data
+      sourceList(data).then(res => {
+        this.tableData = res.data.data
       })
     },
     deleteSource(id) {
@@ -224,9 +236,10 @@ export default {
         }
         sourceRemove(data).then(res => {
           this.$message({
-            type: 'success',
-            message: `删除成功`
+            type: res.data.success === true ? 'success' : 'error',
+            message: res.data.success === true ? `删除成功` : `删除失败`
           })
+          this.getList()
         })
       }).catch(() => {
         this.$message({
@@ -235,8 +248,12 @@ export default {
         })
       })
     },
-    startSource() {
-      sourceTest().then(res => {
+    startSource(id) {
+      const data = {
+        ds_id: id
+      }
+      sourceTest(data).then(res => {
+        console.log(res)
         this.$message({
           type: 'success',
           message: `测试连接`

@@ -18,7 +18,7 @@ import BaseTable from '@/components/BaseTable'
 import ListHeader from '@/components/ListHeader'
 import Details from './edit-page/Detail.vue'
 import Task from './perform-task/task.vue'
-import { parseTime } from '@/utils'
+import { formatDates } from '@/utils'
 import { setList } from '@/api/dataset'
 import { sourceRemove } from '@/api/database'
 
@@ -58,7 +58,7 @@ export default {
         {
           label: '创建时间',
           width: '180px',
-          render: (h, params) => <span>{parseTime(params.row.create_time)}</span>
+          render: (h, params) => <span>{formatDates(params.row.create_time)}</span>
         },
         {
           label: '操作',
@@ -132,14 +132,14 @@ export default {
       this.$refs.taskDialogRef.opendialog()
     },
     getSet() {
-      const params = {
+      const data = {
         page: 1,
         page_size: 10,
-        total_flg: '',
+        total_flg: false,
         query_str: ''
       }
-      setList(params).then(res => {
-        this.tableData = res.data
+      setList(data).then(res => {
+        this.tableData = res.data.data
       })
     },
     handleDelete(id) {

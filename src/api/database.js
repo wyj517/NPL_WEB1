@@ -1,10 +1,11 @@
 import request from '@/utils/request'
 
 // 返回数据源清单
-export function sourceList(params) {
+export function sourceList(data) {
   return request({
     url: '/nlp/ds/get_ds',
-    params
+    method: 'post',
+    data
   })
 }
 
@@ -12,6 +13,7 @@ export function sourceList(params) {
 export function sourceCreate(data) {
   return request({
     url: '/nlp/ds/create_ds',
+    method: 'post',
     data
   })
 }
@@ -20,6 +22,7 @@ export function sourceCreate(data) {
 export function sourceDetail(data) {
   return request({
     url: '/nlp/ds/get_ds_detail',
+    method: 'post',
     data
   })
 }
@@ -28,6 +31,7 @@ export function sourceDetail(data) {
 export function sourceUpdate(data) {
   return request({
     url: '/nlp/ds/update_ds_detail',
+    method: 'post',
     data
   })
 }
@@ -36,6 +40,7 @@ export function sourceUpdate(data) {
 export function sourceRemove(data) {
   return request({
     url: '/nlp/ds/delete_ds',
+    method: 'post',
     data
   })
 }
@@ -44,6 +49,7 @@ export function sourceRemove(data) {
 export function sourceTest(data) {
   return request({
     url: '/nlp/ds/test_ds',
+    method: 'post',
     data
   })
 }

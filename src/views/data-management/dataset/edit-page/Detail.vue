@@ -19,7 +19,7 @@
             <el-select v-model="ruleForm.ds_name" placeholder="请选择数据源名称">
               <el-option
                 v-for="item in SourceOption"
-                :key="item.value"
+                :key="item.id"
                 :label="item.label"
                 :value="item.value"
               />
@@ -112,7 +112,7 @@
 </template>
 
 <script>
-import { setDetail } from '@/api/dataset'
+import { setDetail, setField, setSchema, setTable, setDsList } from '@/api/dataset'
 
 export default {
   name: 'Detail',
@@ -199,6 +199,9 @@ export default {
     }
   },
   computed: {},
+  mounted() {
+    this.getDsName()
+  },
   methods: {
     opendialog(res) {
       // this.props.info.value = res
@@ -232,6 +235,35 @@ export default {
       Promise.all([p1, p2]).then(() => {
         this.dialogVisible = false
       })
+    },
+    getDsName() {
+      setDsList().then(res => {
+        console.log(res)
+        this.SourceOption = this.getOption(res.data.data)
+        console.log(this.SourceOption)
+      })
+    },
+    getSchemaName() {
+      // console.log(this.ruleForm.ds_name)
+      // const data = {
+      //   ds_id:id
+      // }
+      // setSchema(data).then(res=>{
+      //   console.log(res)
+      // })
+    },
+    getTableName() {
+
+    },
+    getFiledInfo() {
+
+    },
+    getOption(data) {
+      let option = []
+      for (let i = 0; i < data.length; i++) {
+        option.push({ value: data[i].ds_name, label: data[i].ds_name, id: data[i].id })
+      }
+      return option
     }
   }
 }
