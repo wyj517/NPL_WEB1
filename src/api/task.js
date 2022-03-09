@@ -1,18 +1,20 @@
 import request from '@/utils/request'
 
 // 任务列表
-export function taskList(params) {
+export function taskList(data) {
   return request({
     url: '/nlp/task/get_task',
-    params
+    method: 'post',
+    data
   })
 }
 
 // 返回任务细节
-export function detail(id) {
+export function detail(data) {
   return request({
     url: '/nlp/task/get_task_detail',
-    id
+    method: 'post',
+    data
   })
 }
 
@@ -20,14 +22,7 @@ export function detail(id) {
 export function create(data) {
   return request({
     url: '/nlp/task/create_task',
+    method: 'post',
     data
   })
 }
-
-// 删除数据集
-// export function list (params) {
-//   return request({
-//     url: '/nlp/task/get_task',
-//     params
-//   })
-// }

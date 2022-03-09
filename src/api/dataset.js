@@ -19,64 +19,63 @@ export function setDetail(data) {
 }
 
 // 编辑数据集
-export function editor(params) {
+export function setEditor(data) {
   return request({
     url: '/nlp/datas/update_datas_detail',
     method: 'post',
-    params
+    data
   })
 }
 
 // 新增数据集
-export function setCreate(params) {
+export function setCreate(data) {
   return request({
     url: '/nlp/datas/create_datas',
     method: 'post',
-    params
+    data
   })
 }
 
 // 删除数据集
-export function setRemove(params) {
+export function setRemove(data) {
   return request({
     url: '/nlp/datas/delete_datas',
     method: 'post',
-    params
+    data
   })
 }
 
 // 新增数据集时返回数据集清单
-export function setDsList(params) {
+export function setDsList() {
   return request({
     url: '/nlp/datas/get_datas_ds',
-    method: 'post',
-    params
+    method: 'post'
   })
 }
 
 // 新增数据集时返回schema清单
-export function setSchema(params) {
+export function setSchema(data) {
   return request({
     url: '/nlp/datas/get_datas_schema',
     method: 'post',
-    params
+    data
   })
 }
 
 // 新增数据集时返回table清单
-export function setTable(params) {
+export function setTable(data) {
   return request({
     url: '/nlp/datas/get_datas_table',
     method: 'post',
-    params
+    data
   })
 }
 
 // 新增数据集时返回field清单
-export function setField(params) {
+export function setField(data) {
   return request({
     url: '/nlp/datas/get_datas_field',
     method: 'post',
-    params
+    data
   })
 }

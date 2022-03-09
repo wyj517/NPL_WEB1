@@ -6,6 +6,7 @@
     <Details
       ref="dialogRef"
       :info="info"
+      @refresh="getSet"
     />
     <Task
       ref="taskDialogRef"
@@ -19,8 +20,7 @@ import ListHeader from '@/components/ListHeader'
 import Details from './edit-page/Detail.vue'
 import Task from './perform-task/task.vue'
 import { formatDates } from '@/utils'
-import { setList } from '@/api/dataset'
-import { sourceRemove } from '@/api/database'
+import { setList, setRemove } from '@/api/dataset'
 
 export default {
   name: 'Index',
@@ -76,7 +76,7 @@ export default {
                     },
                     on: {
                       click: () => {
-                        this.openDialog()
+                        this.openDialog(row.id)
                       }
                     }
                   },
@@ -120,10 +120,11 @@ export default {
   },
   mounted() {
     this.getSet()
+    this.height = document.body.offsetHeight - 70 - 70 - 62 - 35 - 20 - 60
   },
   methods: {
-    openDialog() {
-      this.$refs.dialogRef.opendialog()
+    openDialog(id) {
+      this.$refs.dialogRef.opendialog(id)
     },
     openAddDialog() {
       this.$refs.dialogRef.openAddDialog()
@@ -149,13 +150,14 @@ export default {
         type: 'warning'
       }).then(() => {
         const data = {
-          ds_id: id
+          datas_id: id
         }
-        sourceRemove(data).then(res => {
+        setRemove(data).then(res => {
           this.$message({
-            type: 'success',
-            message: `删除成功`
+            type: res.data.success === true ? 'success' : 'error',
+            message: res.data.success === true ? `删除成功` : `删除失败`
           })
+          this.getSet()
         })
       }).catch(() => {
         this.$message({

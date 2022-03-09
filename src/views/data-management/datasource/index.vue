@@ -2,15 +2,17 @@
   <div class="source_main">
     <ListHeader :search="search" title="数据集名称" @handle-create="addSource" />
     <BaseTable v-loading="loading" :height="height" :columns="columns" :data="tableData" />
-    <!--    <div class="block" style="margin-top:15px;">-->
-    <!--      <el-pagination align='right' @size-change="" @current-change=""-->
-    <!--                     :current-page="page"-->
-
-    <!--                     :page-size="pageSize"-->
-
-    <!--                     :total="total">-->
-    <!--      </el-pagination>-->
-    <!--    </div>-->
+    <el-pagination
+      align="right"
+      style="padding: 20px"
+      :current-page.sync="page.currentPage"
+      :page-sizes="[10, 20, 100, 200]"
+      :page-size="page.pageSize"
+      layout="total, sizes, prev, pager, next"
+      :total="page.total"
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+    />
     <el-dialog
       :visible.sync="dialogVisible"
       :title="dialogtitle"
@@ -67,8 +69,12 @@ export default {
   },
   data() {
     return {
-      // page:'',
-      // pageSize:'',
+      page: {
+        currentPage: 1,
+        pageSize: 20,
+        query_str: '',
+        total: ''
+      },
       // total:'',
       search: '',
       dialogVisible: false,
@@ -166,8 +172,20 @@ export default {
   },
   mounted() {
     this.getList()
+    this.height = document.body.offsetHeight - 70 - 70 - 62 - 35 - 20
   },
   methods: {
+    // 每页条数改变时触发 选择一页显示多少行
+    handleSizeChange(val) {
+      this.page.currentPage = 1
+      this.page.pageSize = val
+      this.getList(this.page)
+    },
+    // 当前页改变时触发 跳转其他页
+    handleCurrentChange(val) {
+      this.page.currentPage = val
+      this.getList()
+    },
     openAddDialog(id) {
       // 编辑
       this.dialogtitle = '编辑数据源'
@@ -189,7 +207,7 @@ export default {
       this.$refs['ruleForm'].validate((valid) => {
         if (valid) {
           if (this.dialogtitle === '新增数据源') {
-            this.ruleForm.id=''
+            this.ruleForm.id = ''
             sourceCreate(this.ruleForm).then(res => {
               this.$message({
                 type: res.data.success === true ? 'success' : 'error',
@@ -213,13 +231,14 @@ export default {
     },
     getList() {
       const data = {
-        page: 1,
-        page_size: 10,
-        total_flg: false,
-        query_str: ''
+        page: this.page.currentPage,
+        page_size: this.page.pageSize,
+        total_flg: true,
+        query_str: this.page.query_str
       }
       sourceList(data).then(res => {
         this.tableData = res.data.data
+        this.page.total = res.data.counts
       })
     },
     deleteSource(id) {

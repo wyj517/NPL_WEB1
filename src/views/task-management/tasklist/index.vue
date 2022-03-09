@@ -40,7 +40,7 @@
 
 <script>
 import BaseTable from '@/components/BaseTable'
-import { parseTime } from '@/utils'
+import { formatDates } from '@/utils'
 import ListHeader from '@/components/ListHeader'
 import { taskList } from '@/api/task'
 
@@ -78,22 +78,22 @@ export default {
               {
                 props: {
                   underline: false,
-                  type: params.row.sts === '执行成功' ? 'success' : params.row.sts === '执行失败' ? 'danger' : 'primary'
+                  type: params.row.sts === '0' ? 'success' : params.row.sts === '1' ? 'danger' : 'primary'
                 }
               },
-              '●' + params.row.sts
+              '●' + (params.row.sts === '0' ? '执行成功' : params.row.sts === '1' ? '执行失败' : '正在执行')
             )
           }
         },
         {
           label: '开始执行时间',
           width: '180px',
-          render: (h, params) => <span>{parseTime(params.row.create_time)}</span>
+          render: (h, params) => <span>{formatDates(params.row.create_time)}</span>
         },
         {
           label: '结束执行时间',
           width: '180px',
-          render: (h, params) => <span>{parseTime(params.row.end_time)}</span>
+          render: (h, params) => <span>{formatDates(params.row.end_time)}</span>
         },
         { label: '执行时长', key: 'use_time' },
         {
@@ -146,17 +146,17 @@ export default {
   methods: {
     getList() {
       const params = {
-        page: 1,
-        page_size: 10,
-        total_flg: '',
-        task_name: ''
+        'page': 1,
+        'page_size': 10,
+        'total_flg': true,
+        'task_name': ''
       }
       taskList(params).then(res => {
-        this.tableData = res.data
-        this.taskNum = res.counts
-        this.successNum = res.cntSuccess
-        this.errorNum = res.cntError
-        this.executionNum = res.cntRun
+        this.tableData = res.data.data
+        this.taskNum = res.data.counts
+        this.successNum = res.data.cntSuccess
+        this.errorNum = res.data.cntError
+        this.executionNum = res.data.cntRun
       })
     }
   }
