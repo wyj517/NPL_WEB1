@@ -77,7 +77,7 @@
                   </el-form-item>
                   <el-form-item label="其他">
                     <el-checkbox-group v-model="ruleForm.other_field">
-                      <el-checkbox v-for="(lb,i) in ruleForm.other_field " :label="lb" :key="i" />
+                      <el-checkbox v-for="(lb,i) in ruleForm.other_field " :key="i" :label="lb" />
                     </el-checkbox-group>
                   </el-form-item>
                 </el-form>
@@ -138,7 +138,7 @@ export default {
       ruleForm: {
         datas_name: '',
         des: '',
-        ds_name:'',
+        ds_name: '',
         source_name: '',
         schema_name: '',
         table_name: '',
@@ -146,8 +146,8 @@ export default {
         doc_field: '',
         sql_str: '',
         other_field: [
-          "des",
-          "ds_type"
+          'des',
+          'ds_type'
         ]
       },
       rule: {
@@ -192,7 +192,7 @@ export default {
         console.log(res.data.data)
         this.ruleForm.datas_name = res.data.data.datas_name
         this.ruleForm.des = res.data.data.des
-        this.ruleForm.other_field=res.data.data.other_field
+        this.ruleForm.other_field = res.data.data.other_field
       })
       this.datas_id = id
     },
@@ -252,7 +252,7 @@ export default {
             doc_field: this.ruleForm.doc_field,
             // other_field: this.ruleForm.other_field,
             other_field: [
-              "des"
+              'des'
             ],
             sql_str: this.ruleForm.sql_str,
             create_user_id: 1,
