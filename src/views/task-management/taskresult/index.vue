@@ -84,7 +84,7 @@
         </el-table-column>
       </el-table>
       <div style="margin-top: 20px">
-        <el-button @click="toggleSelection([tableData[0], tableData[1], tableData[2]])">搜索结果全部选择</el-button>
+        <el-button @click="toggleSelection([tableData[0], tableData[1], tableData[2]])" type="primary">搜索结果全部选择</el-button>
       </div>
     </div>
     <el-dialog
