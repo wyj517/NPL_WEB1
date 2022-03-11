@@ -62,7 +62,7 @@ export default {
         },
         {
           label: '操作',
-          width: '160',
+          width: '',
           fixed: 'right',
           render: (h, { row }) => {
             return h(
@@ -108,7 +108,31 @@ export default {
                       }
                     }
                   },
-                  '执行'
+                  '创建任务'
+                ),
+                h(
+                  'el-button',
+                  {
+                    props: {
+                      type: 'text'
+                    },
+                    on: {
+                      click: () => {}
+                    }
+                  },
+                  '分析列表'
+                ),
+                h(
+                  'el-button',
+                  {
+                    props: {
+                      type: 'text'
+                    },
+                    on: {
+                      click: () => {}
+                    }
+                  },
+                  '数据标签'
                 )
               ]
             )

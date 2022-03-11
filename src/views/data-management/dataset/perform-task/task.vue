@@ -21,8 +21,29 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item label="算法内容">
-          <codemirror v-model="code" :options="cmOptions" />
+        <el-form-item label="算法参数">
+<!--          <codemirror v-model="code" :options="cmOptions" />-->
+          <div>
+            参数名1
+            <el-input
+              placeholer="请输入参数名"
+              v-model="parameter.paraOne">
+            </el-input>
+          </div>
+          <div>
+            参数名3
+            <el-input
+              placeholer="请输入参数名"
+              v-model="parameter.paraTwo">
+            </el-input>
+          </div>
+          <div>
+            参数名4
+            <el-input
+              placeholer="请输入参数名"
+              v-model="parameter.paraThree">
+            </el-input>
+          </div>
         </el-form-item>
       </el-form>
     </main>
@@ -35,7 +56,6 @@
 </template>
 
 <script>
-import { codemirror } from 'vue-codemirror'
 import 'codemirror/theme/base16-light.css'
 import 'codemirror/mode/javascript/javascript.js'
 import 'codemirror/mode/css/css.js'
@@ -60,7 +80,7 @@ import 'codemirror/addon/hint/xml-hint.js'
 export default {
   name: 'Task',
   components: {
-    codemirror
+
   },
   props: {},
   data() {
@@ -72,28 +92,13 @@ export default {
           label: 'test'
         }
       ],
+
       DataValue: '',
       editorText: '',
-      code: 'select * from',
-      cmOptions: {
-        // codemirror options
-        tabSize: 2, // 缩进
-        mode: 'sql', // 语言
-        theme: 'base16-light', // 主题
-        lineNumbers: true,
-        line: true,
-        readOnly: true, // 只读
-        indentWithTabs: true,
-        smartIndent: true,
-        matchBrackets: true,
-        hintOptions: { // 自定义提示选项
-          tables: {
-            users: ['name', 'score', 'birthDate'],
-            countries: ['name', 'population', 'size']
-          }
-        },
-        extraKeys: { 'Ctrl': 'autocomplete' }// 自定义快捷键
-        // more codemirror options, 更多 codemirror 的高级配置...
+      parameter: {
+        paraOne: '',
+        paraTwo:'',
+        paraThree:''
       }
     }
   },

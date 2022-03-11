@@ -48,56 +48,84 @@
         </el-form>
         <div class="field_main">
           <div class="field_head">
-            <span>字段信息</span>
+            <span>where语句</span>
             <el-divider />
           </div>
-          <el-tabs type="border-card">
-            <el-tab-pane label="选择模式">
-              <div>
-                <el-form ref="ruleForms" label-position="right" label-width="100px" :model="ruleForm" :rules="rule">
-                  <el-form-item label="id" prop="doc_field">
-                    <el-select v-model="ruleForm.id_field" placeholder="请选择" filterable>
-                      <el-option
-                        v-for="item in FirstOption"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value"
-                      />
-                    </el-select>
-                  </el-form-item>
-                  <el-form-item label="doc" prop="doc_field">
-                    <el-select v-model="ruleForm.doc_field" placeholder="请选择" filterable>
-                      <el-option
-                        v-for="item in SecondOption"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value"
-                      />
-                    </el-select>
-                  </el-form-item>
-                  <el-form-item label="其他">
-                    <el-checkbox-group v-model="ruleForm.other_field">
-                      <el-checkbox v-for="(lb,i) in ruleForm.other_field " :key="i" :label="lb" />
-                    </el-checkbox-group>
-                  </el-form-item>
-                </el-form>
-              </div>
-            </el-tab-pane>
-            <el-tab-pane label="代码模式">
-              <div>
-                <div>
-                  <el-input
-                    v-model="ruleForm.sql_str"
-                    type="textarea"
-                    placeholder="请输入内容"
-                    limit="10"
-                    show-word-limit
-                    :autosize="{ minRows: 8.5, maxRows: 20 }"
-                  />
-                </div>
-              </div>
-            </el-tab-pane>
-          </el-tabs>
+          <div>
+            <div>
+              <el-input
+                v-model="ruleForm.sql_str"
+                type="textarea"
+                placeholder="请输入内容"
+                limit="10"
+                show-word-limit
+                :autosize="{ minRows: 8.5, maxRows: 20 }"
+              />
+            </div>
+          </div>
+          <div>
+            <el-button type="primary" class="conn">测试连接</el-button>
+          </div>
+          <div>
+            <el-table
+              :data="caseData"
+              border
+              style="width: 100%">
+              <el-table-column
+                prop="date"
+                label="id"
+                width="">
+              </el-table-column>
+              <el-table-column
+                prop="name"
+                label="doc"
+                width="">
+              </el-table-column>
+              <el-table-column
+                prop=""
+                label=""
+                width="">
+              </el-table-column>
+              <el-table-column
+                prop=""
+                label=""
+                width="">
+              </el-table-column>
+            </el-table>
+          </div>
+          <!--          <el-tabs type="border-card">-->
+          <!--            <el-tab-pane label="选择模式">-->
+          <!--              <div>-->
+          <!--                <el-form ref="ruleForms" label-position="right" label-width="100px" :model="ruleForm" :rules="rule">-->
+          <!--                  <el-form-item label="id" prop="doc_field">-->
+          <!--                    <el-select v-model="ruleForm.id_field" placeholder="请选择" filterable>-->
+          <!--                      <el-option-->
+          <!--                        v-for="item in FirstOption"-->
+          <!--                        :key="item.value"-->
+          <!--                        :label="item.label"-->
+          <!--                        :value="item.value"-->
+          <!--                      />-->
+          <!--                    </el-select>-->
+          <!--                  </el-form-item>-->
+          <!--                  <el-form-item label="doc" prop="doc_field">-->
+          <!--                    <el-select v-model="ruleForm.doc_field" placeholder="请选择" filterable>-->
+          <!--                      <el-option-->
+          <!--                        v-for="item in SecondOption"-->
+          <!--                        :key="item.value"-->
+          <!--                        :label="item.label"-->
+          <!--                        :value="item.value"-->
+          <!--                      />-->
+          <!--                    </el-select>-->
+          <!--                  </el-form-item>-->
+          <!--                  <el-form-item label="其他">-->
+          <!--                    <el-checkbox-group v-model="ruleForm.other_field">-->
+          <!--                      <el-checkbox v-for="(lb,i) in ruleForm.other_field " :key="i" :label="lb" />-->
+          <!--                    </el-checkbox-group>-->
+          <!--                  </el-form-item>-->
+          <!--                </el-form>-->
+          <!--              </div>-->
+          <!--            </el-tab-pane>-->
+          <!--          </el-tabs>-->
         </div>
       </div>
     </main>
@@ -109,7 +137,7 @@
 </template>
 
 <script>
-import { setDetail, setField, setSchema, setTable, setDsList, setCreate, setEditor } from '@/api/dataset'
+import {setDetail, setField, setSchema, setTable, setDsList, setCreate, setEditor} from '@/api/dataset'
 
 export default {
   name: 'Detail',
@@ -132,6 +160,20 @@ export default {
       FirstOption: [],
       SecondOption: [],
       checkList: [],
+      caseData: [
+        {
+          id: 'test',
+          doc: 'test'
+        },
+        {
+          id: 'test',
+          doc: 'test'
+        },
+        {
+          id: 'test',
+          doc: 'test'
+        }
+      ],
 
       active: true,
 
@@ -152,25 +194,25 @@ export default {
       },
       rule: {
         datas_name: [
-          { required: true, message: '请输入数据集名称', trigger: 'blur' }
+          {required: true, message: '请输入数据集名称', trigger: 'blur'}
         ],
         describe: [
-          { required: true, message: '请输入描述', trigger: 'blur' }
+          {required: true, message: '请输入描述', trigger: 'blur'}
         ],
         ds_name: [
-          { required: true, message: '选择不能为空', trigger: 'blur' }
+          {required: true, message: '选择不能为空', trigger: 'blur'}
         ],
         schema_name: [
-          { required: true, message: '选择不能为空', trigger: 'blur' }
+          {required: true, message: '选择不能为空', trigger: 'blur'}
         ],
         table_name: [
-          { required: true, message: '选择不能为空', trigger: 'blur' }
+          {required: true, message: '选择不能为空', trigger: 'blur'}
         ],
         id_field: [
-          { required: true, message: '请选择id', trigger: 'blur' }
+          {required: true, message: '请选择id', trigger: 'blur'}
         ],
         doc_field: [
-          { required: true, message: '请选择doc', trigger: 'blur' }
+          {required: true, message: '请选择doc', trigger: 'blur'}
         ]
       },
       type: 0,
@@ -282,7 +324,7 @@ export default {
       setSchema(data).then(res => {
         if (res.data.success) {
           for (let i = 0; i < res.data.data.schema_name.length; i++) {
-            this.SchemaOption.push({ value: res.data.data.schema_name[i] })
+            this.SchemaOption.push({value: res.data.data.schema_name[i]})
           }
         } else {
           this.$message({
@@ -300,7 +342,7 @@ export default {
       setTable(data).then(res => {
         if (res.data.success) {
           for (let i = 0; i < res.data.data.table_name.length; i++) {
-            this.tableOption.push({ value: res.data.data.table_name[i].table_name })
+            this.tableOption.push({value: res.data.data.table_name[i].table_name})
           }
         } else {
           this.$message({
@@ -318,15 +360,15 @@ export default {
       }
       setField(data).then(res => {
         for (let i = 0; i < res.data.data.fields.length; i++) {
-          this.FirstOption.push({ value: res.data.data.fields[i].comments || res.data.data.fields[i].column_name })
-          this.SecondOption.push({ value: res.data.data.fields[i].comments || res.data.data.fields[i].column_name })
+          this.FirstOption.push({value: res.data.data.fields[i].comments || res.data.data.fields[i].column_name})
+          this.SecondOption.push({value: res.data.data.fields[i].comments || res.data.data.fields[i].column_name})
         }
       })
     },
     getOption(data) {
       const option = []
       for (let i = 0; i < data.length; i++) {
-        option.push({ value: data[i].ds_name, label: data[i].ds_name, id: data[i].id })
+        option.push({value: data[i].ds_name, label: data[i].ds_name, id: data[i].id})
       }
       return option
     }
@@ -341,5 +383,9 @@ export default {
     color: black;
   }
 
+}
+.conn{
+  float: right;
+  margin: 15px 0;
 }
 </style>
