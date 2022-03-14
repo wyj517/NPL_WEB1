@@ -5,10 +5,10 @@
         <div class="content">
           <span style="margin-right: 15px">内容</span>
           <el-input
+            v-model="findContent"
             placeholder="输入内容"
             style="width: 200px"
-            v-model="findContent"
-          ></el-input>
+          />
         </div>
         <div>
           <span style="margin-right: 15px">类型编号</span>
@@ -17,18 +17,18 @@
               v-for="item in TypeOptions"
               :key="item.value"
               :label="item.label"
-              :value="item.value">
-            </el-option>
+              :value="item.value"
+            />
           </el-select>
         </div>
         <div class="tag">
           <span style="margin-right: 15px">最终标签:</span>
           <el-input
+            v-model="newTag"
             placeholder="输入内容"
             style="width: 200px"
-            v-model="newTag"
             @keydown.enter.native="addTag(newTag)"
-          ></el-input>
+          />
         </div>
       </div>
       <div class="right">
@@ -43,62 +43,65 @@
         ref="multipleTable"
         :data="tableData"
         tooltip-effect="dark"
+        border
         style="width: 100%"
         @selection-change="handleSelectionChange"
-        border>
+      >
         <el-table-column
           type="selection"
-          width="55">
-        </el-table-column>
+          width="55"
+        />
         <el-table-column
           prop="id"
           label="数据ID"
-          width="120">
-        </el-table-column>
+          width="120"
+        />
         <el-table-column
           prop="content"
           label="内容"
-          width="120">
-        </el-table-column>
+          width="120"
+        />
         <el-table-column
           prop="type"
-          label="类型编号">
-        </el-table-column>
+          label="类型编号"
+        />
         <el-table-column
           prop="AutoTag"
-          label="自动标签">
-        </el-table-column>
+          label="自动标签"
+        />
         <el-table-column
           prop="LastTag"
-          label="最终标签">
+          label="最终标签"
+        >
           <template slot-scope="scope">
             <el-select v-model="scope.row.LastTag" placeholder="请选择">
               <el-option
                 v-for="item in TagOptions"
                 :key="item.value"
                 :label="item.label"
-                :value="item.value">
-              </el-option>
+                :value="item.value"
+              />
             </el-select>
           </template>
         </el-table-column>
       </el-table>
       <div style="margin-top: 20px">
-        <el-button @click="toggleSelection([tableData[0], tableData[1], tableData[2]])" type="primary">搜索结果全部选择</el-button>
+        <el-button type="primary" @click="toggleSelection([tableData[0], tableData[1], tableData[2]])">搜索结果全部选择
+        </el-button>
       </div>
     </div>
     <el-dialog
       title="批量标签"
       :visible.sync="dialogVisible"
-      width="30%">
+      width="30%"
+    >
       <el-select v-model="Tagvalue" placeholder="请选择">
         <el-option
           v-for="item in TagOptions"
           :key="item.value"
           :label="item.label"
           :value="item.value"
-        >
-        </el-option>
+        />
       </el-select>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>

@@ -70,27 +70,28 @@
             <el-table
               :data="caseData"
               border
-              style="width: 100%">
+              style="width: 100%"
+            >
               <el-table-column
                 prop="date"
                 label="id"
-                width="">
-              </el-table-column>
+                width=""
+              />
               <el-table-column
                 prop="name"
                 label="doc"
-                width="">
-              </el-table-column>
+                width=""
+              />
               <el-table-column
                 prop=""
                 label=""
-                width="">
-              </el-table-column>
+                width=""
+              />
               <el-table-column
                 prop=""
                 label=""
-                width="">
-              </el-table-column>
+                width=""
+              />
             </el-table>
           </div>
           <!--          <el-tabs type="border-card">-->
@@ -137,7 +138,7 @@
 </template>
 
 <script>
-import {setDetail, setField, setSchema, setTable, setDsList, setCreate, setEditor} from '@/api/dataset'
+import { setDetail, setField, setSchema, setTable, setDsList, setCreate, setEditor } from '@/api/dataset'
 
 export default {
   name: 'Detail',
@@ -194,25 +195,25 @@ export default {
       },
       rule: {
         datas_name: [
-          {required: true, message: '请输入数据集名称', trigger: 'blur'}
+          { required: true, message: '请输入数据集名称', trigger: 'blur' }
         ],
         describe: [
-          {required: true, message: '请输入描述', trigger: 'blur'}
+          { required: true, message: '请输入描述', trigger: 'blur' }
         ],
         ds_name: [
-          {required: true, message: '选择不能为空', trigger: 'blur'}
+          { required: true, message: '选择不能为空', trigger: 'blur' }
         ],
         schema_name: [
-          {required: true, message: '选择不能为空', trigger: 'blur'}
+          { required: true, message: '选择不能为空', trigger: 'blur' }
         ],
         table_name: [
-          {required: true, message: '选择不能为空', trigger: 'blur'}
+          { required: true, message: '选择不能为空', trigger: 'blur' }
         ],
         id_field: [
-          {required: true, message: '请选择id', trigger: 'blur'}
+          { required: true, message: '请选择id', trigger: 'blur' }
         ],
         doc_field: [
-          {required: true, message: '请选择doc', trigger: 'blur'}
+          { required: true, message: '请选择doc', trigger: 'blur' }
         ]
       },
       type: 0,
@@ -324,7 +325,7 @@ export default {
       setSchema(data).then(res => {
         if (res.data.success) {
           for (let i = 0; i < res.data.data.schema_name.length; i++) {
-            this.SchemaOption.push({value: res.data.data.schema_name[i]})
+            this.SchemaOption.push({ value: res.data.data.schema_name[i] })
           }
         } else {
           this.$message({
@@ -342,7 +343,7 @@ export default {
       setTable(data).then(res => {
         if (res.data.success) {
           for (let i = 0; i < res.data.data.table_name.length; i++) {
-            this.tableOption.push({value: res.data.data.table_name[i].table_name})
+            this.tableOption.push({ value: res.data.data.table_name[i].table_name })
           }
         } else {
           this.$message({
@@ -360,15 +361,15 @@ export default {
       }
       setField(data).then(res => {
         for (let i = 0; i < res.data.data.fields.length; i++) {
-          this.FirstOption.push({value: res.data.data.fields[i].comments || res.data.data.fields[i].column_name})
-          this.SecondOption.push({value: res.data.data.fields[i].comments || res.data.data.fields[i].column_name})
+          this.FirstOption.push({ value: res.data.data.fields[i].comments || res.data.data.fields[i].column_name })
+          this.SecondOption.push({ value: res.data.data.fields[i].comments || res.data.data.fields[i].column_name })
         }
       })
     },
     getOption(data) {
       const option = []
       for (let i = 0; i < data.length; i++) {
-        option.push({value: data[i].ds_name, label: data[i].ds_name, id: data[i].id})
+        option.push({ value: data[i].ds_name, label: data[i].ds_name, id: data[i].id })
       }
       return option
     }
@@ -384,7 +385,8 @@ export default {
   }
 
 }
-.conn{
+
+.conn {
   float: right;
   margin: 15px 0;
 }
