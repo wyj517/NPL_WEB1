@@ -120,7 +120,19 @@ export default {
                       click: () => {}
                     }
                   },
-                  '分析列表'
+                  '任务列表'
+                ),
+                h(
+                  'el-button',
+                  {
+                    props: {
+                      type: 'text'
+                    },
+                    on: {
+                      click: () => {}
+                    }
+                  },
+                  '分析'
                 ),
                 h(
                   'el-button',
