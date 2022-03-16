@@ -11,7 +11,7 @@
         <el-form-item label="任务名称">
           <el-input placeholder="请输入" />
         </el-form-item>
-        <el-form-item label="数据算法">
+        <el-form-item label="数据名称">
           <el-select v-model="DataValue" placeholder="请选择">
             <el-option
               v-for="item in DataOption"
@@ -21,28 +21,28 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item label="算法参数">
-<!--          <codemirror v-model="code" :options="cmOptions" />-->
+        <el-form-item label="参数">
+          <!--          <codemirror v-model="code" :options="cmOptions" />-->
           <div>
             参数名1
             <el-input
+              v-model="parameter.paraOne"
               placeholer="请输入参数名"
-              v-model="parameter.paraOne">
-            </el-input>
+            />
           </div>
           <div>
             参数名3
             <el-input
+              v-model="parameter.paraTwo"
               placeholer="请输入参数名"
-              v-model="parameter.paraTwo">
-            </el-input>
+            />
           </div>
           <div>
             参数名4
             <el-input
+              v-model="parameter.paraThree"
               placeholer="请输入参数名"
-              v-model="parameter.paraThree">
-            </el-input>
+            />
           </div>
         </el-form-item>
       </el-form>
@@ -79,9 +79,7 @@ import 'codemirror/addon/hint/xml-hint.js'
 
 export default {
   name: 'Task',
-  components: {
-
-  },
+  components: {},
   props: {},
   data() {
     return {
@@ -97,8 +95,8 @@ export default {
       editorText: '',
       parameter: {
         paraOne: '',
-        paraTwo:'',
-        paraThree:''
+        paraTwo: '',
+        paraThree: ''
       }
     }
   },

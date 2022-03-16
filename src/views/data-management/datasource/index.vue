@@ -1,6 +1,6 @@
 <template>
   <div class="source_main">
-    <ListHeader :search="search" title="数据集名称" @handle-create="addSource" />
+    <ListHeader title="数据集名称" @handle-create="addSource" @handle-search="getList" />
     <BaseTable v-loading="loading" :height="height" :columns="columns" :data="tableData" />
     <el-pagination
       align="right"
@@ -73,7 +73,7 @@ export default {
         currentPage: 1,
         pageSize: 20,
         query_str: '',
-        total: ''
+        total: 0
       },
       // total:'',
       search: '',
@@ -146,7 +146,7 @@ export default {
                       }
                     }
                   },
-                  '编写'
+                  '编辑'
                 ),
                 h(
                   'el-button',
@@ -229,12 +229,12 @@ export default {
         }
       })
     },
-    getList() {
+    getList(str) {
       const data = {
         page: this.page.currentPage,
         page_size: this.page.pageSize,
         total_flg: true,
-        query_str: this.page.query_str
+        query_str: str || ''
       }
       sourceList(data).then(res => {
         this.tableData = res.data.data
@@ -274,8 +274,8 @@ export default {
       sourceTest(data).then(res => {
         console.log(res)
         this.$message({
-          type: 'success',
-          message: `测试连接`
+          type: res.data.success==true ? 'success' : 'error',
+          message: res.data.msg
         })
       })
     }

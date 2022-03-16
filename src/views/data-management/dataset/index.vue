@@ -1,8 +1,18 @@
 <template>
   <div class="set_main">
-    <ListHeader :search="search" title="数据源名称" @handle-create="openAddDialog" />
+    <ListHeader title="数据源名称" @handle-create="openAddDialog" @handle-search="getSet" />
     <BaseTable v-loading="loading" :height="height" :columns="columns" :data="tableData" />
-
+    <el-pagination
+      align="right"
+      style="padding: 20px"
+      :current-page.sync="page.currentPage"
+      :page-sizes="[10, 20, 100, 200]"
+      :page-size="page.pageSize"
+      layout="total, sizes, prev, pager, next"
+      :total="page.total"
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+    />
     <Details
       ref="dialogRef"
       :info="info"
@@ -40,11 +50,16 @@ export default {
   },
   data() {
     return {
-      search: '',
       dialogVisible: true,
       loading: false,
       height: null,
-      tableData: []
+      tableData: [],
+      page: {
+        currentPage: 1,
+        pageSize: 20,
+        query_str: '',
+        total: 0
+      }
     }
   },
   computed: {
@@ -80,7 +95,7 @@ export default {
                       }
                     }
                   },
-                  '编写'
+                  '编辑'
                 ),
                 h(
                   'el-button',
@@ -144,7 +159,7 @@ export default {
                       click: () => {}
                     }
                   },
-                  '数据标签'
+                  '执行结果'
                 )
               ]
             )
@@ -168,15 +183,16 @@ export default {
     openTask() {
       this.$refs.taskDialogRef.opendialog()
     },
-    getSet() {
+    getSet(str) {
       const data = {
-        page: 1,
-        page_size: 10,
-        total_flg: false,
-        query_str: ''
+        page: this.page.currentPage,
+        page_size: this.page.pageSize,
+        total_flg: true,
+        query_str: str || ''
       }
       setList(data).then(res => {
         this.tableData = res.data.data
+        this.page.total = res.data.counts
       })
     },
     handleDelete(id) {
@@ -201,6 +217,16 @@ export default {
           message: '已取消删除'
         })
       })
+    },
+    handleSizeChange(val) {
+      this.page.currentPage = 1
+      this.page.pageSize = val
+      this.getList(this.page)
+    },
+    // 当前页改变时触发 跳转其他页
+    handleCurrentChange(val) {
+      this.page.currentPage = val
+      this.getList()
     }
   }
 }
