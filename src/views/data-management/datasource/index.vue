@@ -274,7 +274,7 @@ export default {
       sourceTest(data).then(res => {
         console.log(res)
         this.$message({
-          type: res.data.success==true ? 'success' : 'error',
+          type: res.data.success === true ? 'success' : 'error',
           message: res.data.msg
         })
       })
