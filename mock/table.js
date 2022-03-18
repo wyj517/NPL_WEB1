@@ -40,7 +40,7 @@ module.exports = [
   },
   // 获取数据源详情
   {
-    url: "/nlp/ds/get_ds_detail",
+    url: "/ds/get_ds_detail",
     type: "get",
     response: (_) => {
       return {
@@ -63,7 +63,7 @@ module.exports = [
   },
   // // 数据源清单
   {
-    url: "/nlp/ds/get_ds",
+    url: "/ds/get_ds",
     type: "get",
     response: (_) => {
       return {
@@ -100,7 +100,7 @@ module.exports = [
 
   //编辑数据源
   {
-    url: "/nlp/ds/update_ds_detail",
+    url: "/ds/update_ds_detail",
     type: "get",
     response: (_) => {
       return {
@@ -113,7 +113,7 @@ module.exports = [
   },
   // 新增数据源
   {
-    url: "/nlp/ds/create_ds",
+    url: "/ds/create_ds",
     type: "get",
     response: (_) => {
       return {
@@ -126,7 +126,7 @@ module.exports = [
   },
   // 删除数据源
   {
-    url: "/nlp/ds/delete_ds",
+    url: "/ds/delete_ds",
     type: "get",
     response: (_) => {
       return {
@@ -139,7 +139,7 @@ module.exports = [
   },
   // 测试数据源连接
   {
-    url: "/nlp/ds/test_ds",
+    url: "/ds/test_ds",
     type: "get",
     response: (_) => {
       return {
@@ -153,7 +153,7 @@ module.exports = [
 
   //数据集详情
   {
-    url: "/nlp/datas/get_datas_detail",
+    url: "/datas/get_datas_detail",
     type: "get",
     response: (_) => {
       return {
@@ -178,7 +178,7 @@ module.exports = [
   },
   //数据集列表
   {
-    url: "/nlp/datas/get_datas",
+    url: "/datas/get_datas",
     type: "get",
     response: (_) => {
       return {
@@ -210,7 +210,7 @@ module.exports = [
 
   //任务列表
   {
-    url: "/nlp/task/get_task",
+    url: "/task/get_task",
     type: "get",
     response: (_) => {
       return {

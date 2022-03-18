@@ -3,7 +3,7 @@ import request from '@/utils/request'
 // 返回数据集清单
 export function setList(data) {
   return request({
-    url: '/nlp/datas/get_datas',
+    url: '/datas/get_datas',
     method: 'post',
     data
   })
@@ -12,7 +12,7 @@ export function setList(data) {
 // 获取数据集详情
 export function setDetail(data) {
   return request({
-    url: '/nlp/datas/get_datas_detail',
+    url: '/datas/get_datas_detail',
     method: 'post',
     data
   })
@@ -21,7 +21,7 @@ export function setDetail(data) {
 // 编辑数据集
 export function setEditor(data) {
   return request({
-    url: '/nlp/datas/update_datas_detail',
+    url: '/datas/update_datas_detail',
     method: 'post',
     data
   })
@@ -30,7 +30,7 @@ export function setEditor(data) {
 // 新增数据集
 export function setCreate(data) {
   return request({
-    url: '/nlp/datas/create_datas',
+    url: '/datas/create_datas',
     method: 'post',
     data
   })
@@ -39,7 +39,7 @@ export function setCreate(data) {
 // 删除数据集
 export function setRemove(data) {
   return request({
-    url: '/nlp/datas/delete_datas',
+    url: '/datas/delete_datas',
     method: 'post',
     data
   })
@@ -48,7 +48,7 @@ export function setRemove(data) {
 // 新增数据集时返回数据集清单
 export function setDsList() {
   return request({
-    url: '/nlp/datas/get_datas_ds',
+    url: '/datas/get_datas_ds',
     method: 'post'
   })
 }
@@ -56,7 +56,7 @@ export function setDsList() {
 // 新增数据集时返回schema清单
 export function setSchema(data) {
   return request({
-    url: '/nlp/datas/get_datas_schema',
+    url: '/datas/get_datas_schema',
     method: 'post',
     data
   })
@@ -65,7 +65,7 @@ export function setSchema(data) {
 // 新增数据集时返回table清单
 export function setTable(data) {
   return request({
-    url: '/nlp/datas/get_datas_table',
+    url: '/datas/get_datas_table',
     method: 'post',
     data
   })
@@ -74,7 +74,7 @@ export function setTable(data) {
 // 新增数据集时返回field清单
 export function setField(data) {
   return request({
-    url: '/nlp/datas/get_datas_field',
+    url: '/datas/get_datas_field',
     method: 'post',
     data
   })
