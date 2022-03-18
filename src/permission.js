@@ -15,7 +15,7 @@ router.beforeEach(async(to, from, next) => {
   NProgress.start()
 
   // set page title
-  document.title = 'NPL数据分析平台'
+  document.title = '信访12345话务分析系统'
 
   // determine whether the user has logged in
   const hasToken = getToken()

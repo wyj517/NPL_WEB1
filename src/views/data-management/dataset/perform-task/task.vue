@@ -11,7 +11,7 @@
         <el-form-item label="任务名称">
           <el-input placeholder="请输入" />
         </el-form-item>
-        <el-form-item label="数据名称">
+        <el-form-item label="任务类型">
           <el-select v-model="DataValue" placeholder="请选择">
             <el-option
               v-for="item in DataOption"
@@ -21,7 +21,7 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item label="参数">
+        <el-form-item label="任务参数">
           <!--          <codemirror v-model="code" :options="cmOptions" />-->
           <div>
             参数名1

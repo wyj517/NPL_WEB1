@@ -24,7 +24,7 @@ export default {
   },
   data() {
     return {
-      title: 'NPL数据分析平台',
+      title: '信访12345话务分析系统',
       logo: ''
     }
   }
