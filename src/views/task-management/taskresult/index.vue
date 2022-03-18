@@ -85,9 +85,22 @@
           </template>
         </el-table-column>
       </el-table>
-      <div style="margin-top: 20px">
-        <el-button type="primary" @click="toggleSelection([tableData[0], tableData[1], tableData[2]])">搜索结果全部选择
-        </el-button>
+      <div class="bottom-page">
+        <div style="margin-top: 20px">
+          <el-button type="primary" @click="toggleSelection(tableData)">搜索结果全部选择
+          </el-button>
+        </div>
+        <el-pagination
+          align="right"
+          style="padding: 20px"
+          :current-page.sync="page.currentPage"
+          :page-sizes="[10, 20, 100, 200]"
+          :page-size="page.pageSize"
+          layout="total, sizes, prev, pager, next"
+          :total="page.total"
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+        />
       </div>
     </div>
     <el-dialog
@@ -174,7 +187,23 @@ export default {
           AutoTag: '污染',
           LastTag: '污染'
         }
-      ]
+      ],
+      page: {
+        currentPage: 1,
+        pageSize: 20,
+        query_str: '',
+        total: 0
+      },
+      handleSizeChange(val) {
+        this.page.currentPage = 1
+        this.page.pageSize = val
+        this.getList(this.page)
+      },
+      // 当前页改变时触发 跳转其他页
+      handleCurrentChange(val) {
+        this.page.currentPage = val
+        this.getList()
+      }
     }
   },
   computed: {},
@@ -195,13 +224,16 @@ export default {
       this.newTag = ''
     },
     toggleSelection(rows) {
-      if (rows) {
-        rows.forEach(row => {
-          this.$refs.multipleTable.toggleRowSelection(row)
-        })
-      } else {
-        this.$refs.multipleTable.clearSelection()
+      for (let i = 0; i < rows.length; i++) {
+        this.$refs.multipleTable.toggleRowSelection(rows[i], true)
       }
+      // if (rows) {
+      //   rows.forEach(row => {
+      //     this.$refs.multipleTable.toggleRowSelection(row)
+      //   })
+      // } else {
+      //   this.$refs.multipleTable.clearSelection()
+      // }
     }
   }
 }
@@ -227,6 +259,12 @@ export default {
       margin: 0 20px;
     }
   }
+}
+
+.bottom-page {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }
 
 </style>
