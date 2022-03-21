@@ -18,10 +18,11 @@ export function setDetail(data) {
   })
 }
 
-// 编辑数据集
-export function setEditor(data) {
+// 新增编辑数据集 type0 新增，type1 编辑
+export function setAddEditor(data,type) {
+  let modeUrl = !type?"create_datas":"update_datas_detail"
   return request({
-    url: '/datas/update_datas_detail',
+    url: '/datas/'+modeUrl,
     method: 'post',
     data
   })

@@ -152,6 +152,7 @@ export default {
     }
   },
   mounted() {
+    console.log(this.data);
   },
   methods: {
     handleSelectionChange(val) {

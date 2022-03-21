@@ -32,9 +32,9 @@ const actions = {
   login({ commit }, userInfo) {
     const { username, password } = userInfo
     return new Promise((resolve, reject) => {
-      login({ username: username.trim(), password: password }).then(response => {
-        // const { data } = response
-        const token = `${response.data.token_type} ${response.data.access_token}`
+      login({ username: username.trim(), password: password }).then(res => {
+        // const { data } = res
+        const token = `${res.token_type} ${res.access_token}`
         commit('SET_TOKEN', token)
         setToken(token)
         resolve()
@@ -47,13 +47,11 @@ const actions = {
   // get user info
   getInfo({ commit, state }) {
     return new Promise((resolve, reject) => {
-      getInfo(state.token).then(response => {
-        const { data } = response.data
-
+      getInfo(state.token).then(res => {
+        const  data  = res.data
         if (!data) {
           return reject('Verification failed, please Login again.')
         }
-
         const { username, full_name } = data
         commit('SET_NAME', username)
         commit('SET_AVATAR', full_name)

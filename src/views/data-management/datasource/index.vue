@@ -24,10 +24,10 @@
         <el-form-item label="数据库类型" label-width="150px" prop="ds_type">
           <el-select v-model="ruleForm.ds_type" placeholder="请选择数据库类型" style="width: 100%" size="small">
             <el-option
-              v-for="item in TypeOption"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
+              v-for="(item,index) in TypeOption"
+              :key="index"
+              :label="item"
+              :value="item"
             />
           </el-select>
         </el-form-item>
@@ -82,21 +82,7 @@ export default {
       loading: false,
       height: null,
       tableData: [],
-      TypeOption: [
-        {
-          value: 'MYSQL',
-          label: 'MYSQL'
-        },
-        {
-          value: 'ORACLE',
-          label: 'ORACLE'
-        },
-        {
-          value: 'SQLServer',
-          label: 'SQLServer'
-        }
-      ],
-
+      TypeOption: ["MYSQL","ORACLE","SQLServer"],
       ruleForm: {},
 
       rule: {
@@ -194,7 +180,7 @@ export default {
         ds_id: id
       }
       sourceDetail(data).then(res => {
-        this.ruleForm = res.data.data
+        this.ruleForm = res.data
       })
     },
     addSource() {
@@ -210,8 +196,8 @@ export default {
             this.ruleForm.id = ''
             sourceCreate(this.ruleForm).then(res => {
               this.$message({
-                type: res.data.success === true ? 'success' : 'error',
-                message: res.data.success === true ? `新增成功` : `新增失败`
+                type: res.success === true ? 'success' : 'error',
+                message: res.success === true ? `新增成功` : `新增失败`
               })
               this.getList()
             })
@@ -219,8 +205,8 @@ export default {
             console.log(this.ruleForm)
             sourceUpdate(this.ruleForm).then(res => {
               this.$message({
-                type: res.data.success === true ? 'success' : 'error',
-                message: res.data.success === true ? `编辑成功` : `编辑失败`
+                type: res.success === true ? 'success' : 'error',
+                message: res.success === true ? `编辑成功` : `编辑失败`
               })
               this.getList()
             })
@@ -230,14 +216,14 @@ export default {
       })
     },
     getList(str) {
-      const data = {
+      const params = {
         page: this.page.currentPage,
         page_size: this.page.pageSize,
         total_flg: true,
         query_str: str || ''
       }
-      sourceList(data).then(res => {
-        this.tableData = res.data.data
+      sourceList(params).then(res => {
+        this.tableData = res.data
         this.page.total = res.data.counts
       })
     },
@@ -255,8 +241,8 @@ export default {
         }
         sourceRemove(data).then(res => {
           this.$message({
-            type: res.data.success === true ? 'success' : 'error',
-            message: res.data.success === true ? `删除成功` : `删除失败`
+            type: res.success === true ? 'success' : 'error',
+            message: res.success === true ? `删除成功` : `删除失败`
           })
           this.getList()
         })
@@ -274,8 +260,8 @@ export default {
       sourceTest(data).then(res => {
         console.log(res)
         this.$message({
-          type: res.data.success === true ? 'success' : 'error',
-          message: res.data.msg
+          type: res.success? 'success' : 'error',
+          message: res.msg
         })
       })
     }

@@ -5,128 +5,141 @@
     width="700px"
     top="5vh"
     class="detail"
+    :close-on-click-modal="false"
   >
     <main>
       <div>
-        <el-form ref="ruleForm" label-position="right" label-width="100px" :model="ruleForm" :rules="rule">
+        <el-form
+          ref="ruleForm"
+          label-position="right"
+          label-width="150px"
+          :model="ruleForm"
+          :rules="rule"
+        >
           <el-form-item label="数据集名称" class="item" prop="set_name">
-            <el-input v-model="ruleForm.datas_name" placeholder="请输入数据集名称" style="width: 200px;" />
+            <el-input
+              v-model="ruleForm.datas_name"
+              placeholder="请输入数据集名称"
+              style="width: 200px"
+            />
           </el-form-item>
           <el-form-item label="描述">
-            <el-input v-model="ruleForm.des" placeholder="请输入描述" style="width: 200px" />
+            <el-input
+              v-model="ruleForm.des"
+              placeholder="请输入描述"
+              style="width: 200px"
+            />
           </el-form-item>
-          <el-form-item label="数据源名称" prop="ds_name">
-            <el-select v-model="ruleForm.ds_name" placeholder="请选择数据源名称" @change="getSchemaName">
+          <el-form-item label="数据源名称" prop="ds_id">
+            <el-select
+              v-model="ruleForm.ds_id"
+              placeholder="请选择数据源名称"
+              @change="getSchemaName"
+            >
               <el-option
-                v-for="item in SourceOption"
+                v-for="item in sourceOption"
                 :key="item.id"
-                :label="item.label"
-                :value="item"
+                :label="item.ds_name"
+                :value="item.id"
               />
             </el-select>
           </el-form-item>
           <el-form-item label="schema名称" prop="schema_name">
-            <el-select v-model="ruleForm.schema_name" placeholder="请选择schema名称" @change="getTableName">
+            <el-select
+              v-model="ruleForm.schema_name"
+              placeholder="请选择schema名称"
+              @change="getTableName"
+              clearable
+            >
               <el-option
-                v-for="item in SchemaOption"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
+                v-for="(item, index) in schemaOption"
+                :key="index"
+                :label="item"
+                :value="item"
               />
             </el-select>
           </el-form-item>
           <el-form-item label="表名称" prop="table_name">
-            <el-select v-model="ruleForm.table_name" placeholder="请选择表名称" filterable @change="getFiledInfo">
+            <el-select
+              v-model="ruleForm.table_name"
+              placeholder="请选择表名称"
+              filterable
+              @change="getFiledInfo"
+              clearable
+            >
               <el-option
-                v-for="item in tableOption"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
+                v-for="(item, index) in tableOption"
+                :key="index"
+                :label="item.table_name + '\t' + item.comments"
+                :value="item.table_name"
               />
             </el-select>
           </el-form-item>
-        </el-form>
-        <div class="field_main">
-          <div class="field_head">
-            <span>where语句</span>
-            <el-divider />
-          </div>
-          <div>
+
+          <div class="field_main">
+            <div class="field_head">
+              <h3>where语句</h3>
+              <el-row>
+                <el-col :span="12"
+                  ><el-form-item label="id" prop="doc_field">
+                    <el-select
+                      v-model="ruleForm.id_field"
+                      placeholder="请选择"
+                      filterable
+                    >
+                      <el-option
+                        v-for="(item, index) in fieldList"
+                        :key="index"
+                        :label="item.column_name + '\t' + item.comments"
+                        :value="item.column_name"
+                      />
+                    </el-select>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                  <el-form-item label="doc" prop="doc_field">
+                    <el-select
+                      v-model="ruleForm.doc_field"
+                      placeholder="请选择"
+                      filterable
+                    >
+                      <el-option
+                        v-for="(item, index) in fieldList"
+                        :key="index"
+                        :label="item.column_name + '\t' + item.comments"
+                        :value="item.column_name"
+                      />
+                    </el-select>
+                  </el-form-item>
+                </el-col>
+              </el-row>
+            </div>
             <div>
-              <el-input
-                v-model="ruleForm.sql_str"
-                type="textarea"
-                placeholder="请输入内容"
-                limit="10"
-                show-word-limit
-                :autosize="{ minRows: 8.5, maxRows: 20 }"
-              />
+              <div>
+                <el-input
+                  v-model="ruleForm.where_clause"
+                  type="textarea"
+                  placeholder="exp：where field = xxx"
+                  limit="10"
+                  show-word-limit
+                  :autosize="{ minRows: 8.5, maxRows: 20 }"
+                />
+              </div>
+            </div>
+            <div>
+              <el-button type="primary" class="conn">测试连接</el-button>
             </div>
           </div>
-          <div>
-            <el-button type="primary" class="conn">测试连接</el-button>
-          </div>
-          <div>
-            <el-table
-              :data="caseData"
-              border
-              style="width: 100%"
-            >
-              <el-table-column
-                prop="date"
-                label="id"
-                width=""
-              />
-              <el-table-column
-                prop="name"
-                label="doc"
-                width=""
-              />
-              <el-table-column
-                prop=""
-                label=""
-                width=""
-              />
-              <el-table-column
-                prop=""
-                label=""
-                width=""
-              />
-            </el-table>
-          </div>
-          <!--          <el-tabs type="border-card">-->
-          <!--            <el-tab-pane label="选择模式">-->
-          <!--              <div>-->
-          <!--                <el-form ref="ruleForms" label-position="right" label-width="100px" :model="ruleForm" :rules="rule">-->
-          <!--                  <el-form-item label="id" prop="doc_field">-->
-          <!--                    <el-select v-model="ruleForm.id_field" placeholder="请选择" filterable>-->
-          <!--                      <el-option-->
-          <!--                        v-for="item in FirstOption"-->
-          <!--                        :key="item.value"-->
-          <!--                        :label="item.label"-->
-          <!--                        :value="item.value"-->
-          <!--                      />-->
-          <!--                    </el-select>-->
-          <!--                  </el-form-item>-->
-          <!--                  <el-form-item label="doc" prop="doc_field">-->
-          <!--                    <el-select v-model="ruleForm.doc_field" placeholder="请选择" filterable>-->
-          <!--                      <el-option-->
-          <!--                        v-for="item in SecondOption"-->
-          <!--                        :key="item.value"-->
-          <!--                        :label="item.label"-->
-          <!--                        :value="item.value"-->
-          <!--                      />-->
-          <!--                    </el-select>-->
-          <!--                  </el-form-item>-->
-          <!--                  <el-form-item label="其他">-->
-          <!--                    <el-checkbox-group v-model="ruleForm.other_field">-->
-          <!--                      <el-checkbox v-for="(lb,i) in ruleForm.other_field " :key="i" :label="lb" />-->
-          <!--                    </el-checkbox-group>-->
-          <!--                  </el-form-item>-->
-          <!--                </el-form>-->
-          <!--              </div>-->
-          <!--            </el-tab-pane>-->
-          <!--          </el-tabs>-->
+        </el-form>
+
+        <!-- 测试返回数据 -->
+        <div class="test-res-data">
+          <el-table :data="testResData" border style="width: 100%">
+            <el-table-column prop="date" label="id" width="" />
+            <el-table-column prop="name" label="doc" width="" />
+            <el-table-column prop="" label="" width="" />
+            <el-table-column prop="" label="" width="" />
+          </el-table>
         </div>
       </div>
     </main>
@@ -138,243 +151,135 @@
 </template>
 
 <script>
-import { setDetail, setField, setSchema, setTable, setDsList, setCreate, setEditor } from '@/api/dataset'
+import {
+  setDetail,
+  setField,
+  setSchema,
+  setTable,
+  setDsList,
+  setAddEditor,
+} from "@/api/dataset";
 
 export default {
-  name: 'Detail',
+  name: "Detail",
   components: {},
   props: {
     info: {
       type: Object,
       default: () => {
-        return {}
-      }
-    }
+        return {};
+      },
+    },
   },
   data() {
     return {
       dialogVisible: false,
-      SourceOption: [],
-      SchemaOption: [],
+      sourceOption: [],
+      schemaOption: [],
       tableOption: [],
-
-      FirstOption: [],
-      SecondOption: [],
-      checkList: [],
-      caseData: [
-        {
-          id: 'test',
-          doc: 'test'
-        },
-        {
-          id: 'test',
-          doc: 'test'
-        },
-        {
-          id: 'test',
-          doc: 'test'
-        }
-      ],
-
+      fieldList: [],
       active: true,
-
+      testResData: [],
       ruleForm: {
-        datas_name: '',
-        des: '',
-        ds_name: '',
-        source_name: '',
-        schema_name: '',
-        table_name: '',
-        id_field: '',
-        doc_field: '',
-        sql_str: '',
-        other_field: [
-          'des',
-          'ds_type'
-        ]
+        datas_name: "",
+        des: "",
+        ds_id: "",
+        source_name: "",
+        schema_name: "",
+        table_name: "",
+        id_field: "",
+        doc_field: "",
+        where_clause: "",
       },
       rule: {
         datas_name: [
-          { required: true, message: '请输入数据集名称', trigger: 'blur' }
+          { required: true, message: "请输入数据集名称", trigger: "blur" },
         ],
-        describe: [
-          { required: true, message: '请输入描述', trigger: 'blur' }
-        ],
-        ds_name: [
-          { required: true, message: '选择不能为空', trigger: 'blur' }
+        describe: [{ required: true, message: "请输入描述", trigger: "blur" }],
+        ds_id: [
+          { required: true, message: "选择数据源不能为空", trigger: "blur" },
         ],
         schema_name: [
-          { required: true, message: '选择不能为空', trigger: 'blur' }
+          { required: true, message: "选择不能为空", trigger: "blur" },
         ],
         table_name: [
-          { required: true, message: '选择不能为空', trigger: 'blur' }
+          { required: true, message: "选择不能为空", trigger: "blur" },
         ],
-        id_field: [
-          { required: true, message: '请选择id', trigger: 'blur' }
-        ],
-        doc_field: [
-          { required: true, message: '请选择doc', trigger: 'blur' }
-        ]
+        id_field: [{ required: true, message: "请选择id", trigger: "blur" }],
+        doc_field: [{ required: true, message: "请选择doc", trigger: "blur" }],
       },
       type: 0,
-      datas_id: ''
-    }
+      datas_id: "",
+    };
   },
   computed: {},
   mounted() {
-    this.getDsName()
+    this.getDsName();
   },
   methods: {
-    opendialog(id) {
-      this.type = 1
-      this.dialogVisible = true
-      const data = {
-        datas_id: id
+    opendialog(id, type) {
+      this.dialogVisible = true;
+      this.type = type;
+      if (type) {
+        const data = {
+          datas_id: id,
+        };
+        setDetail(data).then((res) => {
+          console.log("详情", res.data);
+          this.ruleForm = res.data;
+        });
+        this.datas_id = id;
+      } else {
+        this.ruleForm = {};
       }
-      setDetail(data).then(res => {
-        console.log(res.data.data)
-        this.ruleForm.datas_name = res.data.data.datas_name
-        this.ruleForm.des = res.data.data.des
-        this.ruleForm.other_field = res.data.data.other_field
-      })
-      this.datas_id = id
     },
-    openAddDialog(res) {
-      this.type = 0
-      this.ruleForm = {}
-      this.dialogVisible = true
-    },
+    // 编辑新增
     handleAdd() {
-      const p1 = new Promise((resolve, reject) => {
-        this.$refs['ruleForm'].validate((valid) => {
-          if (valid) {
-            resolve()
+      this.$refs["ruleForm"].validate(async (valid) => {
+        if (valid) {
+          let res = await setAddEditor(this.ruleForm, this.type);
+          if (res.success) {
+            this.$message.success(res.msg);
+            this.dialogVisible = false;
           }
-        })
-      })
-      const p2 = new Promise((resolve, reject) => {
-        this.$refs['ruleForms'].validate((valid) => {
-          if (valid) {
-            resolve()
-          }
-        })
-      })
-      Promise.all([p1, p2]).then(() => {
-        this.dialogVisible = false
-        if (this.type === 0) {
-          const data = {
-            datas_name: this.ruleForm.datas_name,
-            des: this.ruleForm.des,
-            ds_id: this.ruleForm.ds_name.id,
-            ds_name: this.ruleForm.ds_name.value,
-            schema_name: this.ruleForm.schema_name,
-            table_name: this.ruleForm.table_name,
-            id_field: this.ruleForm.id_field,
-            doc_field: this.ruleForm.doc_field,
-            other_field: this.ruleForm.other_field,
-            sql_str: this.ruleForm.sql_str,
-            create_user_id: 1,
-            create_user_name: this.$store.getters.name
-          }
-          setCreate(data).then(res => {
-            this.$message({
-              type: res.data.success === true ? 'success' : 'error',
-              message: res.data.msg
-            })
-            this.$emit('refresh')
-          })
-        } else {
-          const data = {
-            datas_name: this.ruleForm.datas_name,
-            des: this.ruleForm.des,
-            ds_id: this.ruleForm.ds_name.id,
-            ds_name: this.ruleForm.ds_name.value,
-            schema_name: this.ruleForm.schema_name,
-            table_name: this.ruleForm.table_name,
-            id_field: this.ruleForm.id_field,
-            doc_field: this.ruleForm.doc_field,
-            // other_field: this.ruleForm.other_field,
-            other_field: [
-              'des'
-            ],
-            sql_str: this.ruleForm.sql_str,
-            create_user_id: 1,
-            create_user_name: this.$store.getters.name,
-            id: this.datas_id
-          }
-          setEditor(data).then(res => {
-            this.$message({
-              type: res.data.success === true ? 'success' : 'error',
-              message: res.data.msg
-            })
-            this.$emit('refresh')
-          })
         }
-      })
+      });
     },
-    getDsName() {
-      setDsList().then(res => {
-        this.SourceOption = this.getOption(res.data.data)
-      })
+    // 返回数据库列表
+    async getDsName() {
+      let res = await setDsList();
+      this.sourceOption = res.data;
+      this.ruleForm.schema_name = "";
+      this.ruleForm.table_name = "";
+      console.log(this.sourceOption);
     },
-    getSchemaName(item) {
-      console.log('item', item)
+    // 获取schemeName
+    async getSchemaName(ds_id) {
+      // console.log("itemid", ds_id);
+      let res = await setSchema({ ds_id });
+      this.schemaOption = res?.data?.schema_name || [];
+    },
+    // 获取表格name
+    async getTableName(schemaName) {
       const data = {
-        ds_id: item.id
-      }
-      setSchema(data).then(res => {
-        if (res.data.success) {
-          for (let i = 0; i < res.data.data.schema_name.length; i++) {
-            this.SchemaOption.push({ value: res.data.data.schema_name[i] })
-          }
-        } else {
-          this.$message({
-            type: 'error',
-            message: res.data.msg
-          })
-        }
-      })
+        ds_id: this.ruleForm.ds_id,
+        schema_name: schemaName,
+      };
+      let res = await setTable(data);
+      this.tableOption = res?.data?.table_name || [];
     },
-    getTableName(item) {
-      const data = {
-        ds_id: this.ruleForm.ds_name.id,
-        schema_name: item
-      }
-      setTable(data).then(res => {
-        if (res.data.success) {
-          for (let i = 0; i < res.data.data.table_name.length; i++) {
-            this.tableOption.push({ value: res.data.data.table_name[i].table_name })
-          }
-        } else {
-          this.$message({
-            type: 'error',
-            message: res.data.msg
-          })
-        }
-      })
-    },
-    getFiledInfo(item) {
-      const data = {
-        ds_id: this.ruleForm.ds_name.id,
+    // 获取字段列表
+    async getFiledInfo(talbeName) {
+      const pamars = {
+        ds_id: this.ruleForm.ds_id,
         schema_name: this.ruleForm.schema_name,
-        table_name: item
-      }
-      setField(data).then(res => {
-        for (let i = 0; i < res.data.data.fields.length; i++) {
-          this.FirstOption.push({ value: res.data.data.fields[i].comments || res.data.data.fields[i].column_name })
-          this.SecondOption.push({ value: res.data.data.fields[i].comments || res.data.data.fields[i].column_name })
-        }
-      })
+        table_name: talbeName,
+      };
+      let res = await setField(pamars);
+      this.fieldList = res?.data?.fields || [];
     },
-    getOption(data) {
-      const option = []
-      for (let i = 0; i < data.length; i++) {
-        option.push({ value: data[i].ds_name, label: data[i].ds_name, id: data[i].id })
-      }
-      return option
-    }
-  }
-}
+  },
+};
 </script>
 
 <style scoped lang="scss">
@@ -383,7 +288,6 @@ export default {
     font-weight: bold;
     color: black;
   }
-
 }
 
 .conn {

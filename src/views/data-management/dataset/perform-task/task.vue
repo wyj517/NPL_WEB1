@@ -30,20 +30,6 @@
               placeholer="请输入参数名"
             />
           </div>
-          <div>
-            参数名3
-            <el-input
-              v-model="parameter.paraTwo"
-              placeholer="请输入参数名"
-            />
-          </div>
-          <div>
-            参数名4
-            <el-input
-              v-model="parameter.paraThree"
-              placeholer="请输入参数名"
-            />
-          </div>
         </el-form-item>
       </el-form>
     </main>
@@ -56,27 +42,6 @@
 </template>
 
 <script>
-import 'codemirror/theme/base16-light.css'
-import 'codemirror/mode/javascript/javascript.js'
-import 'codemirror/mode/css/css.js'
-import 'codemirror/mode/xml/xml.js'
-import 'codemirror/mode/clike/clike.js'
-import 'codemirror/mode/markdown/markdown.js'
-import 'codemirror/mode/python/python.js'
-import 'codemirror/mode/r/r.js'
-import 'codemirror/mode/shell/shell.js'
-import 'codemirror/mode/sql/sql.js'
-import 'codemirror/mode/swift/swift.js'
-import 'codemirror/mode/vue/vue.js'
-import 'codemirror/addon/hint/anyword-hint.js'
-import 'codemirror/addon/hint/css-hint.js'
-import 'codemirror/addon/hint/html-hint.js'
-import 'codemirror/addon/hint/javascript-hint.js'
-import 'codemirror/addon/hint/show-hint.css'
-import 'codemirror/addon/hint/show-hint.js'
-import 'codemirror/addon/hint/sql-hint.js'
-import 'codemirror/addon/hint/xml-hint.js'
-
 export default {
   name: 'Task',
   components: {},

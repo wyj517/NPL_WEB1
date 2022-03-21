@@ -152,7 +152,7 @@ export default {
         'task_name': ''
       }
       taskList(params).then(res => {
-        this.tableData = res.data.data
+        this.tableData = res.data
         this.taskNum = res.data.counts
         this.successNum = res.data.cntSuccess
         this.errorNum = res.data.cntError

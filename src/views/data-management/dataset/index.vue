@@ -171,14 +171,14 @@ export default {
   },
   mounted() {
     this.getSet()
-    this.height = document.body.offsetHeight - 70 - 70 - 62 - 35 - 20 - 60
+    this.height = document.body.offsetHeight - 317
   },
   methods: {
     openDialog(id) {
-      this.$refs.dialogRef.opendialog(id)
+      this.$refs.dialogRef.opendialog(id,1)
     },
     openAddDialog() {
-      this.$refs.dialogRef.openAddDialog()
+      this.$refs.dialogRef.opendialog(null,0)
     },
     openTask() {
       this.$refs.taskDialogRef.opendialog()
@@ -191,8 +191,8 @@ export default {
         query_str: str || ''
       }
       setList(data).then(res => {
-        this.tableData = res.data.data
-        this.page.total = res.data.counts
+        this.tableData = res.data || []
+        this.page.total = res.counts
       })
     },
     handleDelete(id) {
@@ -206,8 +206,8 @@ export default {
         }
         setRemove(data).then(res => {
           this.$message({
-            type: res.data.success === true ? 'success' : 'error',
-            message: res.data.success === true ? `删除成功` : `删除失败`
+            type: res.success === true ? 'success' : 'error',
+            message: res.success === true ? `删除成功` : `删除失败`
           })
           this.getSet()
         })
@@ -237,7 +237,7 @@ export default {
   padding: 20px;
 }
 
-/deep/ .el-form-item__label {
+.el-form-item__label {
   font-weight: normal;
 }
 </style>
