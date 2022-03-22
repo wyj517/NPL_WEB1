@@ -8,33 +8,37 @@
             v-model="findContent"
             placeholder="输入内容"
             style="width: 200px"
+
           />
         </div>
         <div>
           <span style="margin-right: 15px">类型编号</span>
-          <el-select v-model="Typevalue" placeholder="请选择">
+          <el-select v-model="Typevalue" placeholder="请选择" clearable>
             <el-option
-              v-for="item in TypeOptions"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
+              v-for="(item,index) in TypeOptions"
+              :key="item"
+              :label="item"
+              :value="item"
             />
           </el-select>
         </div>
         <div class="tag">
           <span style="margin-right: 15px">最终标签:</span>
           <el-input
-            v-model="newTag"
+            v-model="manual_tag"
             placeholder="输入内容"
             style="width: 200px"
-            @keydown.enter.native="addTag(newTag)"
+            @keydown.enter.native="addTag(manual_tag)"
           />
+        </div>
+        <div>
+          <el-button type="primary" @click="getResult">筛选</el-button>
         </div>
       </div>
       <div class="right">
         <div>
           <el-button type="primary" @click="dialogVisible = true">批量标签</el-button>
-          <el-button type="primary">重新分析</el-button>
+          <el-button type="primary" @click="reAnalyze()">重新分析</el-button>
         </div>
       </div>
     </div>
@@ -57,29 +61,33 @@
           width="120"
         />
         <el-table-column
-          prop="content"
+          prop="doc"
           label="内容"
-          width="120"
         />
         <el-table-column
-          prop="type"
+          prop="class_id"
           label="类型编号"
+          width="100"
         />
         <el-table-column
-          prop="AutoTag"
+          prop="predict_tag"
           label="自动标签"
+          width="100"
         />
         <el-table-column
-          prop="LastTag"
+          prop="manual_tag"
           label="最终标签"
+          width="150"
         >
           <template slot-scope="scope">
-            <el-select v-model="scope.row.LastTag" placeholder="请选择">
+            <el-select v-model="scope.row.manual_tag" placeholder="请选择"
+                       @change="updateClassTag(0,scope.row.id,scope.row.manual_tag)"
+            >
               <el-option
-                v-for="item in TagOptions"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
+                v-for="(item,index) in TagOptions"
+                :key="item"
+                :label="item"
+                :value="item"
               />
             </el-select>
           </template>
@@ -110,21 +118,22 @@
     >
       <el-select v-model="Tagvalue" placeholder="请选择">
         <el-option
-          v-for="item in TagOptions"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value"
+          v-for="(item,index) in TagOptions"
+          :key="item"
+          :label="item"
+          :value="item"
         />
       </el-select>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="batchTag">确 定</el-button>
+        <el-button type="primary" @click="updateClassTag(1)">确 定</el-button>
       </span>
     </el-dialog>
   </div>
 </template>
 
 <script>
+import { getTaskResult, getClassID, updateLabel } from '@/api/task'
 
 export default {
   name: 'Index',
@@ -135,105 +144,116 @@ export default {
       multipleSelection: [],
       Typevalue: null,
       Tagvalue: null,
-      newTag: '',
       findContent: '',
-      TypeOptions: [
-        {
-          value: '1',
-          label: '1'
-        },
-        {
-          value: '2',
-          label: '2'
-        },
-        {
-          value: '3',
-          label: '3'
-        }
-      ],
-      TagOptions: [
-        {
-          value: '疫情',
-          label: '疫情'
-        },
-        {
-          value: '社保',
-          label: '社保'
-        },
-        {
-          value: '污染',
-          label: '污染'
-        }
-      ],
-      tableData: [
-        {
-          id: '1',
-          content: '事情描述内容1',
-          type: '1',
-          AutoTag: '疫情',
-          LastTag: '疫情'
-        },
-        {
-          id: '2',
-          content: '事情描述内容2',
-          type: '2',
-          AutoTag: '社保',
-          LastTag: '社保'
-        },
-        {
-          id: '3',
-          content: '事情描述内容3',
-          type: '3',
-          AutoTag: '污染',
-          LastTag: '污染'
-        }
-      ],
+      TypeOptions: [],
+      TagOptions: ['疫情1', '疫情2', '疫情3'],
+      tableData: [],
       page: {
         currentPage: 1,
-        pageSize: 20,
+        pageSize: 10,
         query_str: '',
         total: 0
       },
-      handleSizeChange(val) {
-        this.page.currentPage = 1
-        this.page.pageSize = val
-        this.getList(this.page)
-      },
-      // 当前页改变时触发 跳转其他页
-      handleCurrentChange(val) {
-        this.page.currentPage = val
-        this.getList()
-      }
+      selectedIDs: [],
+      manual_tag: ''
     }
   },
   computed: {},
+  mounted() {
+    this.getResult()
+    this.getClass()
+  },
   methods: {
     handleSelectionChange(val) {
       this.multipleSelection = val
-      console.log(this.multipleSelection)
-    },
-    batchTag() {
-      for (let i = 0; i < this.multipleSelection.length; i++) {
-        this.tableData[this.multipleSelection[i].id - 1].LastTag = this.Tagvalue
-      }
-      this.dialogVisible = false
+      let ids = []
+      this.multipleSelection.map((item) => {
+        ids.push(item.id)
+      })
+      this.selectedIDs = ids
+      console.log('多选', this.selectedIDs)
     },
     addTag(val) {
-      this.TagOptions.push({ value: val, label: val })
-      console.log(this.TagOptions)
-      this.newTag = ''
+      this.TagOptions.push(val)
+      this.manual_tag = ''
     },
     toggleSelection(rows) {
       for (let i = 0; i < rows.length; i++) {
         this.$refs.multipleTable.toggleRowSelection(rows[i], true)
       }
-      // if (rows) {
-      //   rows.forEach(row => {
-      //     this.$refs.multipleTable.toggleRowSelection(row)
-      //   })
-      // } else {
-      //   this.$refs.multipleTable.clearSelection()
-      // }
+    },
+    handleSizeChange(val) {
+      this.page.currentPage = 1
+      this.page.pageSize = val
+      this.getResult()
+    },
+    // 当前页改变时触发 跳转其他页
+    handleCurrentChange(val) {
+      this.page.currentPage = val
+      this.getResult()
+    },
+
+    //获取任务执行结果列表
+    getResult() {
+      let params = {
+        page: this.page.currentPage,
+        page_size: this.page.pageSize,
+        total_flg: true,
+        task_id: this.$route.query.id,
+        dataset_id: this.$route.query.dataset_id,
+        class_id: this.Typevalue,
+        manual_tag: this.manual_tag,
+        doc: this.findContent
+      }
+      getTaskResult(params).then(res => {
+            this.tableData = res.counts ? res.data : []
+            this.page.total = res.counts
+      })
+    },
+
+    //获取下拉classid列表
+    getClass() {
+      let params = {
+        dataset_id: this.$route.query.dataset_id
+      }
+      getClassID(params).then(res => {
+        for (let i = 0; i < res.data.class_ids.length; i++) {
+          this.TypeOptions.push(res.data.class_ids[i])
+        }
+      })
+    },
+
+    //批量更新数据标签
+    updateClassTag(flg, id, tag) {
+      //flg 1批量 0单改
+      let params = {
+        dataset_id: this.$route.query.dataset_id,
+        label_ids: flg ? this.selectedIDs : [id],
+        manual_tag: flg ? this.Tagvalue : tag,
+        is_total: false,
+        tag: '',
+        class_id: '',
+        doc: ''
+      }
+      updateLabel(params).then(res => {
+        if (res.success) {
+          this.$message.success(res.msg)
+          this.dialogVisible = false
+          this.getResult()
+        }
+      })
+    },
+    //重新分析
+    reAnalyze(){
+      this.$confirm('数据重新分析需要占用较多时间', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+
+      }).catch(() => {
+
+      });
     }
   }
 }

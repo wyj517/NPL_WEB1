@@ -80,3 +80,20 @@ export function setField(data) {
     data
   })
 }
+
+//创建任务
+export function createTask(data) {
+  return request({
+    url: '/task/create_task',
+    method: 'post',
+    data
+  })
+}
+//任务类型下拉拦
+export function getType(data) {
+  return request({
+    url: '/task/get_task_type',
+    method: 'post',
+    data
+  })
+}

@@ -19,10 +19,38 @@ export function detail(data) {
 }
 
 // 创建任务
-export function create(data) {
+export function createTask(data) {
   return request({
     url: '/task/create_task',
     method: 'post',
     data
   })
 }
+
+//获取执行结果
+export function getTaskResult(data) {
+  return request({
+    url: '/task/get_label',
+    method: 'post',
+    data
+  })
+}
+
+//获取下拉classid列表
+export function getClassID(data) {
+  return request({
+    url: '/task/get_class_ids',
+    method: 'post',
+    data
+  })
+}
+
+//更新数据标签
+export function updateLabel(data) {
+  return request({
+    url: '/task/update_label',
+    method: 'post',
+    data
+  })
+}
+

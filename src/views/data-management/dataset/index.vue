@@ -1,6 +1,6 @@
 <template>
   <div class="set_main">
-    <ListHeader title="数据源名称" @handle-create="openAddDialog" @handle-search="getSet" />
+    <ListHeader title="数据集名称" @handle-create="openAddDialog" @handle-search="getSet" />
     <BaseTable v-loading="loading" :height="height" :columns="columns" :data="tableData" />
     <el-pagination
       align="right"
@@ -119,7 +119,7 @@ export default {
                     },
                     on: {
                       click: () => {
-                        this.openTask()
+                        this.openTask(row.id)
                       }
                     }
                   },
@@ -180,8 +180,8 @@ export default {
     openAddDialog() {
       this.$refs.dialogRef.opendialog(null,0)
     },
-    openTask() {
-      this.$refs.taskDialogRef.opendialog()
+    openTask(id) {
+      this.$refs.taskDialogRef.opendialog(id)
     },
     getSet(str) {
       const data = {

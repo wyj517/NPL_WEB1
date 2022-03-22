@@ -93,7 +93,7 @@ export default {
         {
           label: '结束执行时间',
           width: '180px',
-          render: (h, params) => <span>{formatDates(params.row.end_time)}</span>
+          render: (h, params) => <span>{formatDates(params.row.update_time)}</span>
         },
         { label: '执行时长', key: 'use_time' },
         {
@@ -126,7 +126,7 @@ export default {
                     },
                     on: {
                       click: () => {
-                        this.$router.push('taskresult')
+                        this.$router.push({ path: 'taskresult', query: { id: row.id, dataset_id: row.dataset_id } })
                       }
                     }
                   },
