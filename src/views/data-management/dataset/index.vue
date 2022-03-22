@@ -132,7 +132,9 @@ export default {
                       type: 'text'
                     },
                     on: {
-                      click: () => {}
+                      click: () => {
+                        this.$router.push('task/tasklist')
+                      }
                     }
                   },
                   '任务列表'

@@ -153,10 +153,10 @@ export default {
       }
       taskList(params).then(res => {
         this.tableData = res.data
-        this.taskNum = res.data.counts
-        this.successNum = res.data.cntSuccess
-        this.errorNum = res.data.cntError
-        this.executionNum = res.data.cntRun
+        this.taskNum = res.counts
+        this.successNum = res.cntSuccess
+        this.errorNum = res.cntError
+        this.executionNum = res.cntRun
       })
     }
   }
