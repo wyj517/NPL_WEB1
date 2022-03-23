@@ -15,7 +15,7 @@
           <el-select v-model="DataValue" placeholder="请选择">
             <el-option
               v-for="(item,index) in DataOption"
-              :key="item"
+              :key="index"
               :label="item"
               :value="item"
             />
