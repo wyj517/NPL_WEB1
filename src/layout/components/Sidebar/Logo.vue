@@ -24,7 +24,7 @@ export default {
   },
   data() {
     return {
-      title: '信访12345话务分析系统',
+      title: process.env.VUE_APP_TITLE,  
       logo: ''
     }
   }
