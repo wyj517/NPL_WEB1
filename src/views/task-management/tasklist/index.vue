@@ -150,7 +150,7 @@ export default {
         page: 1,
         page_size: 10,
         total_flg: true,
-        task_name: str || '',
+        task_name: str || "",
         dataset_id: this.$route.query.dataset_id || ''
       }
       taskList(params).then(res => {
