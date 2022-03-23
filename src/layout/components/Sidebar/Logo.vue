@@ -24,7 +24,7 @@ export default {
   },
   data() {
     return {
-      title: '龙港语义分析平台',
+      title: process.env.VUE_APP_TITLE,  
       logo: ''
     }
   }
