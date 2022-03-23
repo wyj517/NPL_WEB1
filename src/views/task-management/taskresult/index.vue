@@ -16,7 +16,7 @@
           <el-select v-model="Typevalue" placeholder="请选择" @change="getResult" clearable>
             <el-option
               v-for="(item,index) in TypeOptions"
-              :key="item"
+              :key="index"
               :label="item"
               :value="item"
             />
@@ -87,7 +87,7 @@
             >
               <el-option
                 v-for="(item,index) in TagOptions"
-                :key="item"
+                :key="index"
                 :label="item"
                 :value="item"
               />
@@ -121,7 +121,7 @@
       <el-select v-model="Tagvalue" placeholder="请选择">
         <el-option
           v-for="(item,index) in TagOptions"
-          :key="item"
+          :key="index"
           :label="item"
           :value="item"
         />
