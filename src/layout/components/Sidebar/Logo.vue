@@ -24,7 +24,7 @@ export default {
   },
   data() {
     return {
-      title: '信访12345话务分析系统',
+      title: '龙港语义分析平台',
       logo: ''
     }
   }
