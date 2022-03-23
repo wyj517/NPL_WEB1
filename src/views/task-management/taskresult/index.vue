@@ -8,12 +8,12 @@
             v-model="findContent"
             placeholder="输入内容"
             style="width: 200px"
-
+            @change="getResult"
           />
         </div>
         <div>
           <span style="margin-right: 15px">类型编号</span>
-          <el-select v-model="Typevalue" placeholder="请选择" clearable>
+          <el-select v-model="Typevalue" placeholder="请选择" @change="getResult" clearable>
             <el-option
               v-for="(item,index) in TypeOptions"
               :key="item"
@@ -29,6 +29,7 @@
             placeholder="输入内容"
             style="width: 200px"
             @keydown.enter.native="addTag(manual_tag)"
+            @change="getResult"
           />
         </div>
         <div>
@@ -38,13 +39,14 @@
       <div class="right">
         <div>
           <el-button type="primary" @click="dialogVisible = true">批量标签</el-button>
-          <el-button type="primary" @click="reAnalyze()">重新分析</el-button>
+          <el-button type="success" plain @click="reAnalyze()">重新分析</el-button>
         </div>
       </div>
     </div>
     <div class="main" style="margin-top: 50px">
       <el-table
         ref="multipleTable"
+        v-loading="isLoading"
         :data="tableData"
         tooltip-effect="dark"
         border
@@ -134,12 +136,14 @@
 
 <script>
 import { getTaskResult, getClassID, updateLabel } from '@/api/task'
+import { createTask } from '@/api/dataset'
 
 export default {
   name: 'Index',
   components: {},
   data() {
     return {
+      isLoading: true,
       dialogVisible: false,
       multipleSelection: [],
       Typevalue: null,
@@ -171,7 +175,6 @@ export default {
         ids.push(item.id)
       })
       this.selectedIDs = ids
-      console.log('多选', this.selectedIDs)
     },
     addTag(val) {
       this.TagOptions.push(val)
@@ -205,9 +208,11 @@ export default {
         manual_tag: this.manual_tag,
         doc: this.findContent
       }
+      this.isLoading = true
       getTaskResult(params).then(res => {
-            this.tableData = res.counts ? res.data : []
-            this.page.total = res.counts
+        this.tableData = res.counts ? res.data : []
+        this.isLoading = false
+        this.page.total = res.counts
       })
     },
 
@@ -244,16 +249,29 @@ export default {
       })
     },
     //重新分析
-    reAnalyze(){
+    reAnalyze() {
       this.$confirm('数据重新分析需要占用较多时间', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-
+        let params = {
+          dataset_id: this.$route.query.dataset_id,
+          task_name: this.$route.query.task_name,
+          task_type: this.$route.query.task_type,
+          params_json: this.$route.query.params_json,
+          label_ids:[],
+          class_id: this.Typevalue,
+          doc: this.findContent,
+          last_task_id:this.$route.query.id
+        }
+        console.log(params)
+        createTask(params).then(res => {
+          this.$message.success(res.msg)
+        })
       }).catch(() => {
 
-      });
+      })
     }
   }
 }

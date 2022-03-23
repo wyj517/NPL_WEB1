@@ -133,7 +133,7 @@ export default {
                     },
                     on: {
                       click: () => {
-                        this.$router.push('task/tasklist')
+                        this.$router.push({ path: 'task/tasklist', query: { dataset_id: row.id } })
                       }
                     }
                   },
@@ -146,19 +146,9 @@ export default {
                       type: 'text'
                     },
                     on: {
-                      click: () => {}
-                    }
-                  },
-                  '分析'
-                ),
-                h(
-                  'el-button',
-                  {
-                    props: {
-                      type: 'text'
-                    },
-                    on: {
-                      click: () => {}
+                      click: () => {
+                        // this.$router.push({ path: 'task/taskresult', query: { dataset_id: row.id } })
+                      }
                     }
                   },
                   '执行结果'
@@ -177,10 +167,10 @@ export default {
   },
   methods: {
     openDialog(id) {
-      this.$refs.dialogRef.opendialog(id,1)
+      this.$refs.dialogRef.opendialog(id, 1)
     },
     openAddDialog() {
-      this.$refs.dialogRef.opendialog(null,0)
+      this.$refs.dialogRef.opendialog(null, 0)
     },
     openTask(id) {
       this.$refs.taskDialogRef.opendialog(id)

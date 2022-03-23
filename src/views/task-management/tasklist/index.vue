@@ -33,8 +33,8 @@
         </div>
       </div>
     </div>
-    <ListHeader title="任务名称" :show-create="false" :search="search" />
-    <BaseTable v-loading="loading" :height="height" :columns="columns" :data="tableData" />
+    <ListHeader title="任务名称" :show-create="false" :search="search" @handle-search="getList" />
+    <BaseTable v-loading="loading" :height="height" :columns="columns" :data="tableData"  />
   </div>
 </template>
 
@@ -57,10 +57,10 @@ export default {
       height: null,
       tableData: [],
 
-      taskNum: '258',
-      executionNum: '20',
-      successNum: '180',
-      errorNum: '18'
+      taskNum: '',
+      executionNum: '',
+      successNum: '',
+      errorNum: ''
 
     }
   },
@@ -70,6 +70,7 @@ export default {
         // 表格列项
         { label: '任务名称', key: 'task_name', width: '150' },
         { label: '创建人', key: 'create_user' },
+        { label: '数据集名称', key: 'datas_name'},
         {
           label: '执行状态',
           render: (h, params) => {
@@ -126,7 +127,7 @@ export default {
                     },
                     on: {
                       click: () => {
-                        this.$router.push({ path: 'taskresult', query: { id: row.id, dataset_id: row.dataset_id } })
+                        this.$router.push({ path: 'taskresult', query: { id: row.id, dataset_id: row.dataset_id, task_type:row.task_type, task_name:row.task_name,params_json:row.params_json } })
                       }
                     }
                   },
@@ -144,12 +145,13 @@ export default {
     this.getList()
   },
   methods: {
-    getList() {
+    getList(str) {
       const params = {
-        'page': 1,
-        'page_size': 10,
-        'total_flg': true,
-        'task_name': ''
+        page: 1,
+        page_size: 10,
+        total_flg: true,
+        task_name: str || '',
+        dataset_id: this.$route.query.dataset_id || ''
       }
       taskList(params).then(res => {
         this.tableData = res.data

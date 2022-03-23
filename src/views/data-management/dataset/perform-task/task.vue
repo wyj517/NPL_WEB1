@@ -56,7 +56,6 @@ export default {
       DataValue: '',
       editorText: '',
       params_json: { num: 200 },
-
       dataset_id: ''
     }
   },
