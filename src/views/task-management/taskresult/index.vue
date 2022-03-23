@@ -53,37 +53,19 @@
         style="width: 100%"
         @selection-change="handleSelectionChange"
       >
-        <el-table-column
-          type="selection"
-          width="55"
-        />
-        <el-table-column
-          prop="id"
-          label="数据ID"
-          width="120"
-        />
-        <el-table-column
-          prop="doc"
-          label="内容"
-        />
-        <el-table-column
-          prop="class_id"
-          label="类型编号"
-          width="100"
-        />
-        <el-table-column
-          prop="predict_tag"
-          label="自动标签"
-          width="100"
-        />
-        <el-table-column
-          prop="manual_tag"
-          label="最终标签"
-          width="150"
-        >
+        <el-table-column type="selection" width="55" />
+        <el-table-column prop="id" label="数据ID" width="120" />
+        <el-table-column prop="doc" label="内容" />
+        <el-table-column prop="class_id" label="类型编号" width="100" />
+        <el-table-column prop="predict_tag" label="自动标签" width="100" />
+        <el-table-column prop="manual_tag" label="最终标签" width="150">
           <template slot-scope="scope">
-            <el-select v-model="scope.row.manual_tag" placeholder="请选择"
-                       @change="updateClassTag(0,scope.row.id,scope.row.manual_tag)"
+            <el-select
+              v-model="scope.row.manual_tag"
+              placeholder="请选择"
+              filterable
+              allow-create
+              @change="updateClassTag(0,scope.row.id,scope.row.manual_tag)"
             >
               <el-option
                 v-for="(item,index) in TagOptions"
@@ -97,7 +79,8 @@
       </el-table>
       <div class="bottom-page">
         <div style="margin-top: 20px">
-          <el-button type="primary" @click="toggleSelection(tableData)">搜索结果全部选择
+          <el-button type="primary" @click="toggleSelection(tableData)"
+            >搜索结果全部选择
           </el-button>
         </div>
         <el-pagination
