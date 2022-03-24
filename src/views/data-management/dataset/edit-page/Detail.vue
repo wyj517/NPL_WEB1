@@ -81,7 +81,8 @@
               <h3>where语句</h3>
               <el-row>
                 <el-col :span="12"
-                  ><el-form-item label="id" prop="doc_field">
+                >
+                  <el-form-item label="主键" prop="doc_field">
                     <el-select
                       v-model="ruleForm.id_field"
                       placeholder="请选择"
@@ -97,7 +98,7 @@
                   </el-form-item>
                 </el-col>
                 <el-col :span="12">
-                  <el-form-item label="doc" prop="doc_field">
+                  <el-form-item label="待分析列" prop="doc_field">
                     <el-select
                       v-model="ruleForm.doc_field"
                       placeholder="请选择"
@@ -127,7 +128,7 @@
               </div>
             </div>
             <div>
-              <el-button type="primary" class="conn">测试连接</el-button>
+              <el-button type="primary" class="conn" @click="testLink">返回样例</el-button>
             </div>
           </div>
         </el-form>
@@ -135,10 +136,9 @@
         <!-- 测试返回数据 -->
         <div class="test-res-data">
           <el-table :data="testResData" border style="width: 100%">
-            <el-table-column prop="date" label="id" width="" />
-            <el-table-column prop="name" label="doc" width="" />
-            <el-table-column prop="" label="" width="" />
-            <el-table-column prop="" label="" width="" />
+            <el-table-column prop="id" label="主键" width="" />
+            <el-table-column prop="doc" label="待分析" width="300" :show-overflow-tooltip="true" />
+            <el-table-column prop="" label="时间" width="" />
           </el-table>
         </div>
       </div>
@@ -158,18 +158,19 @@ import {
   setTable,
   setDsList,
   setAddEditor,
-} from "@/api/dataset";
+  testConn
+} from '@/api/dataset'
 
 export default {
-  name: "Detail",
+  name: 'Detail',
   components: {},
   props: {
     info: {
       type: Object,
       default: () => {
-        return {};
-      },
-    },
+        return {}
+      }
+    }
   },
   data() {
     return {
@@ -181,105 +182,125 @@ export default {
       active: true,
       testResData: [],
       ruleForm: {
-        datas_name: "",
-        des: "",
-        ds_id: "",
-        source_name: "",
-        schema_name: "",
-        table_name: "",
-        id_field: "",
-        doc_field: "",
-        where_clause: "",
+        datas_name: '',
+        des: '',
+        ds_id: '',
+        source_name: '',
+        schema_name: '',
+        table_name: '',
+        id_field: '',
+        doc_field: '',
+        where_clause: ''
       },
       rule: {
         datas_name: [
-          { required: true, message: "请输入数据集名称", trigger: "blur" },
+          { required: true, message: '请输入数据集名称', trigger: 'blur' }
         ],
-        describe: [{ required: true, message: "请输入描述", trigger: "blur" }],
+        describe: [{ required: true, message: '请输入描述', trigger: 'blur' }],
         ds_id: [
-          { required: true, message: "选择数据源不能为空", trigger: "blur" },
+          { required: true, message: '选择数据源不能为空', trigger: 'blur' }
         ],
         schema_name: [
-          { required: true, message: "选择不能为空", trigger: "blur" },
+          { required: true, message: '选择不能为空', trigger: 'blur' }
         ],
         table_name: [
-          { required: true, message: "选择不能为空", trigger: "blur" },
+          { required: true, message: '选择不能为空', trigger: 'blur' }
         ],
-        id_field: [{ required: true, message: "请选择id", trigger: "blur" }],
-        doc_field: [{ required: true, message: "请选择doc", trigger: "blur" }],
+        id_field: [{ required: true, message: '请选择id', trigger: 'blur' }],
+        doc_field: [{ required: true, message: '请选择doc', trigger: 'blur' }]
       },
       type: 0,
-      datas_id: "",
-    };
+      datas_id: ''
+    }
   },
   computed: {},
   mounted() {
-    this.getDsName();
+    this.getDsName()
   },
   methods: {
     opendialog(id, type) {
-      this.dialogVisible = true;
-      this.type = type;
+      this.dialogVisible = true
+      this.type = type
       if (type) {
         const data = {
-          datas_id: id,
-        };
+          datas_id: id
+        }
         setDetail(data).then((res) => {
-          console.log("详情", res.data);
-          this.ruleForm = res.data;
-        });
-        this.datas_id = id;
+          console.log('详情', res.data)
+          this.ruleForm = res.data
+        })
+        this.datas_id = id
       } else {
-        this.ruleForm = {};
+        this.ruleForm = {}
       }
     },
     // 编辑新增
     handleAdd() {
-      this.$refs["ruleForm"].validate(async (valid) => {
+      this.$refs['ruleForm'].validate(async(valid) => {
         if (valid) {
-          let res = await setAddEditor(this.ruleForm, this.type);
+          let res = await setAddEditor(this.ruleForm, this.type)
           if (res.success) {
-            this.$message.success(res.msg);
-            this.dialogVisible = false;
+            this.$message.success(res.msg)
+            this.dialogVisible = false
+            this.$emit('refresh');
           }
         }
-      });
+      })
     },
     // 返回数据库列表
     async getDsName() {
-      let res = await setDsList();
-      this.sourceOption = res.data;
-      this.ruleForm.schema_name = "";
-      this.ruleForm.table_name = "";
-      console.log(this.sourceOption);
+      let res = await setDsList()
+      this.sourceOption = res.data
+      this.ruleForm.schema_name = ''
+      this.ruleForm.table_name = ''
+      console.log(this.sourceOption)
     },
     // 获取schemeName
     async getSchemaName(ds_id) {
       // console.log("itemid", ds_id);
-      let res = await setSchema({ ds_id });
-      this.schemaOption = res?.data?.schema_name || [];
+      let res = await setSchema({ ds_id })
+      this.schemaOption = res?.data?.schema_name || []
     },
     // 获取表格name
     async getTableName(schemaName) {
       const data = {
         ds_id: this.ruleForm.ds_id,
-        schema_name: schemaName,
-      };
-      let res = await setTable(data);
-      this.tableOption = res?.data?.table_name || [];
+        schema_name: schemaName
+      }
+      let res = await setTable(data)
+      this.tableOption = res?.data?.table_name || []
     },
     // 获取字段列表
     async getFiledInfo(talbeName) {
       const pamars = {
         ds_id: this.ruleForm.ds_id,
         schema_name: this.ruleForm.schema_name,
-        table_name: talbeName,
-      };
-      let res = await setField(pamars);
-      this.fieldList = res?.data?.fields || [];
+        table_name: talbeName
+      }
+      let res = await setField(pamars)
+      this.fieldList = res?.data?.fields || []
     },
-  },
-};
+
+    testLink() {
+      let params={
+        page:1,
+        page_size:5,
+        total_flg:true,
+        ds_id:this.ruleForm.ds_id,
+        where_clause:this.ruleForm.where_clause,
+        id_field:this.ruleForm.id_field,
+        doc_field:this.ruleForm.doc_field,
+        schema_name:this.ruleForm.schema_name,
+        table_name:this.ruleForm.table_name
+      }
+      testConn(params).then((res) => {
+        if (res.success) {
+          this.testResData=res.data
+        }
+      })
+    }
+  }
+}
 </script>
 
 <style scoped lang="scss">

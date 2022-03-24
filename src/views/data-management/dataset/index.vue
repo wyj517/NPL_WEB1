@@ -147,7 +147,8 @@ export default {
                     },
                     on: {
                       click: () => {
-                        // this.$router.push({ path: 'task/taskresult', query: { dataset_id: row.id } })
+
+                        this.$router.push({ path: 'task/taskresult', query: { dataset_id: row.id, task_name:row.last_task_name } })
                       }
                     }
                   },

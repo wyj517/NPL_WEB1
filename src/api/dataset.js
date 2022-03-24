@@ -97,3 +97,11 @@ export function getType(data) {
     data
   })
 }
+//数据集创建前测试连接
+export function testConn(data){
+  return request({
+    url: '/datas/test_connect',
+    method: 'post',
+    data
+  })
+}

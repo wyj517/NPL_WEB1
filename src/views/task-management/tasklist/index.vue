@@ -1,46 +1,57 @@
 <template>
   <div class="task_main">
-    <div class="task_header">
-      <div class="left_header">
-        <div class="left_number">
-          <span class="font">总任务数 </span>
-          <span style="font-size: 30px">{{ taskNum }}</span>
-        </div>
-        <el-progress :text-inside="true" :stroke-width="15" :percentage="70" color="#13ce66" />
-      </div>
-      <el-divider direction="vertical" />
-      <div class="right_header">
-        <div class="right_title">
-          <div style="display: flex;align-items: center">
-            <div class="icon_title" style="background: #0d85fc" />
-            <span style="">正在执行数</span>
-          </div>
-          <span>{{ executionNum }}</span>
-        </div>
-        <div class="right_title">
-          <div style="display: flex;align-items: center">
-            <div class="icon_title" style="background: #13ce66" />
-            <span>执行成功数</span>
-          </div>
-          <span>{{ successNum }}</span>
-        </div>
-        <div class="right_title">
-          <div style="display: flex;align-items: center">
-            <div class="icon_title" style="background: #ff4949" />
-            <span>执行失败</span>
-          </div>
-          <span>{{ errorNum }}</span>
-        </div>
-      </div>
-    </div>
+<!--    <div class="task_header">-->
+<!--      <div class="left_header">-->
+<!--        <div class="left_number">-->
+<!--          <span class="font">总任务数 </span>-->
+<!--          <span style="font-size: 30px">{{ taskNum }}</span>-->
+<!--        </div>-->
+<!--        <el-progress :text-inside="true" :stroke-width="15" :percentage="70" color="#13ce66" />-->
+<!--      </div>-->
+<!--      <el-divider direction="vertical" />-->
+<!--      <div class="right_header">-->
+<!--        <div class="right_title">-->
+<!--          <div style="display: flex;align-items: center">-->
+<!--            <div class="icon_title" style="background: #0d85fc" />-->
+<!--            <span style="">正在执行数</span>-->
+<!--          </div>-->
+<!--          <span>{{ executionNum }}</span>-->
+<!--        </div>-->
+<!--        <div class="right_title">-->
+<!--          <div style="display: flex;align-items: center">-->
+<!--            <div class="icon_title" style="background: #13ce66" />-->
+<!--            <span>执行成功数</span>-->
+<!--          </div>-->
+<!--          <span>{{ successNum }}</span>-->
+<!--        </div>-->
+<!--        <div class="right_title">-->
+<!--          <div style="display: flex;align-items: center">-->
+<!--            <div class="icon_title" style="background: #ff4949" />-->
+<!--            <span>执行失败</span>-->
+<!--          </div>-->
+<!--          <span>{{ errorNum }}</span>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
     <ListHeader title="任务名称" :show-create="false" :search="search" @handle-search="getList" />
     <BaseTable v-loading="loading" :height="height" :columns="columns" :data="tableData"  />
+    <el-pagination
+      align="right"
+      style="padding: 20px"
+      :current-page.sync="page.currentPage"
+      :page-sizes="[10, 20, 100, 200]"
+      :page-size="page.pageSize"
+      layout="total, sizes, prev, pager, next"
+      :total="page.total"
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+    />
   </div>
 </template>
 
 <script>
 import BaseTable from '@/components/BaseTable'
-import { formatDates } from '@/utils'
+import { formatDates, interval } from '@/utils'
 import ListHeader from '@/components/ListHeader'
 import { taskList } from '@/api/task'
 
@@ -56,7 +67,12 @@ export default {
       loading: false,
       height: null,
       tableData: [],
-
+      page: {
+        currentPage: 1,
+        pageSize: 10,
+        query_str: '',
+        total: 0
+      },
       taskNum: '',
       executionNum: '',
       successNum: '',
@@ -79,10 +95,10 @@ export default {
               {
                 props: {
                   underline: false,
-                  type: params.row.sts === '0' ? 'success' : params.row.sts === '1' ? 'danger' : 'primary'
+                  type: params.row.task_status === 0 ? 'danger' : params.row.task_status === 1 ? 'primary' : 'success'
                 }
               },
-              '●' + (params.row.sts === '0' ? '执行成功' : params.row.sts === '1' ? '执行失败' : '正在执行')
+              '●' + (params.row.task_status === 0 ? '执行失败' : params.row.task_status === 1 ? '进行中' : '成功')
             )
           }
         },
@@ -92,11 +108,14 @@ export default {
           render: (h, params) => <span>{formatDates(params.row.create_time)}</span>
         },
         {
-          label: '结束执行时间',
+          label: '结束时间',
           width: '180px',
-          render: (h, params) => <span>{formatDates(params.row.update_time)}</span>
+          render: (h, params) => <span>{formatDates(params.row.end_time)}</span>
         },
-        { label: '执行时长', key: 'use_time' },
+        {
+          label: '执行时长',
+          render: (h, params) => <span>{interval(params.row.create_time,params.row.end_time)}</span>
+        },
         {
           label: '操作',
           width: '160',
@@ -145,10 +164,20 @@ export default {
     this.getList()
   },
   methods: {
+    handleSizeChange(val) {
+      this.page.currentPage = 1
+      this.page.pageSize = val
+      this.getList()
+    },
+    // 当前页改变时触发 跳转其他页
+    handleCurrentChange(val) {
+      this.page.currentPage = val
+      this.getList()
+    },
     getList(str) {
       const params = {
-        page: 1,
-        page_size: 10,
+        page: this.page.currentPage,
+        page_size: this.page.pageSize,
         total_flg: true,
         task_name: str || "",
         dataset_id: this.$route.query.dataset_id || ''
@@ -159,6 +188,7 @@ export default {
         this.successNum = res.cntSuccess
         this.errorNum = res.cntError
         this.executionNum = res.cntRun
+        this.page.total = res.counts
       })
     }
   }

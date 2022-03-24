@@ -28,7 +28,6 @@
             v-model="manual_tag"
             placeholder="输入内容"
             style="width: 200px"
-            @keydown.enter.native="addTag(manual_tag)"
             @change="getResult"
           />
         </div>
@@ -39,7 +38,7 @@
       <div class="right">
         <div>
           <el-button type="primary" @click="dialogVisible = true">批量标签</el-button>
-          <el-button type="success" plain @click="reAnalyze()">重新分析</el-button>
+          <el-button type="success" plain @click="dialogAnalysis=true">重新分析</el-button>
         </div>
       </div>
     </div>
@@ -80,7 +79,7 @@
       <div class="bottom-page">
         <div style="margin-top: 20px">
           <el-button type="primary" @click="toggleSelection(tableData)"
-            >搜索结果全部选择
+          >搜索结果全部选择
           </el-button>
         </div>
         <el-pagination
@@ -114,12 +113,50 @@
         <el-button type="primary" @click="updateClassTag(1)">确 定</el-button>
       </span>
     </el-dialog>
+
+
+    <el-dialog
+      :visible.sync="dialogAnalysis"
+      title="基本信息"
+      width="700px"
+      top="5vh"
+      class="detail"
+    >
+      <main>
+        <el-form label-position="right" label-width="100px">
+          <el-form-item label="任务类型">
+            <el-select v-model="DataValue" placeholder="请选择">
+              <el-option
+                v-for="(item,index) in DataOption"
+                :key="index"
+                :label="item.label"
+                :value="item.value"
+              />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="任务参数">
+            <div>
+              {{this.params_json[0].field}} {{ this.params_json[0].des }}
+              <el-input
+                v-model="para.num"
+                placeholer="请输入参数值"
+              />
+            </div>
+          </el-form-item>
+        </el-form>
+      </main>
+
+      <span slot="footer" class="dialog-footer">
+      <el-button @click="dialogAnalysis = false">取 消</el-button>
+      <el-button type="primary" @click="reAnalyze">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { getTaskResult, getClassID, updateLabel } from '@/api/task'
-import { createTask } from '@/api/dataset'
+import { getTaskResult, getClassID, updateLabel, manualTags } from '@/api/task'
+import { createTask, getType } from '@/api/dataset'
 
 export default {
   name: 'Index',
@@ -128,6 +165,7 @@ export default {
     return {
       isLoading: true,
       dialogVisible: false,
+      dialogAnalysis: false,
       multipleSelection: [],
       Typevalue: null,
       Tagvalue: null,
@@ -142,13 +180,29 @@ export default {
         total: 0
       },
       selectedIDs: [],
-      manual_tag: ''
+      manual_tag: '',
+      is_total:false,
+      DataValue: '',
+      DataOption: [],
+      params_json: [
+        {
+          des: "",
+          field: "",
+          type: ""
+        }
+      ],
+      para: {
+        "num": null,
+      }
     }
   },
   computed: {},
   mounted() {
     this.getResult()
     this.getClass()
+    this.getManual()
+    this.getTaskType()
+    console.log(this.$route.query.params_json)
   },
   methods: {
     handleSelectionChange(val) {
@@ -160,13 +214,22 @@ export default {
       this.selectedIDs = ids
     },
     addTag(val) {
-      this.TagOptions.push(val)
-      this.manual_tag = ''
+      let flag = true
+      for (let i = 0; i < this.TagOptions.length; i++) {
+        if (this.TagOptions[i] === val) {
+          flag = false
+        }
+        console.log(this.TagOptions[i])
+      }
+      if (flag) {
+        this.TagOptions.unshift(val)
+      }
     },
     toggleSelection(rows) {
       for (let i = 0; i < rows.length; i++) {
         this.$refs.multipleTable.toggleRowSelection(rows[i], true)
       }
+      this.is_total=true
     },
     handleSizeChange(val) {
       this.page.currentPage = 1
@@ -177,6 +240,17 @@ export default {
     handleCurrentChange(val) {
       this.page.currentPage = val
       this.getResult()
+    },
+   //获取参数类型
+    getTaskType() {
+      getType().then(res => {
+        console.log(res)
+        for (let i = 0; i < res.data.length; i++) {
+          this.DataOption.push({ value: res.data[i].task_type, label: res.data[i].task_type_name })
+          this.params_json = res.data[i].params_json
+        }
+        console.log('json', this.params_json[0])
+      })
     },
 
     //获取任务执行结果列表
@@ -211,6 +285,17 @@ export default {
       })
     },
 
+    //获取最终标签列表
+    getManual() {
+      let params = {
+        dataset_id: this.$route.query.dataset_id
+      }
+      manualTags(params).then(res => {
+          this.TagOptions=res.data.manual_tags
+          console.log(res)
+      })
+    },
+
     //批量更新数据标签
     updateClassTag(flg, id, tag) {
       //flg 1批量 0单改
@@ -226,6 +311,7 @@ export default {
       updateLabel(params).then(res => {
         if (res.success) {
           this.$message.success(res.msg)
+          this.addTag(tag)
           this.dialogVisible = false
           this.getResult()
         }
@@ -233,27 +319,28 @@ export default {
     },
     //重新分析
     reAnalyze() {
-      this.$confirm('数据重新分析需要占用较多时间', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        let params = {
-          dataset_id: this.$route.query.dataset_id,
-          task_name: this.$route.query.task_name,
-          task_type: this.$route.query.task_type,
-          params_json: this.$route.query.params_json,
-          label_ids:[],
-          class_id: this.Typevalue,
-          doc: this.findContent,
-          last_task_id:this.$route.query.id
+      console.log(this.$route.query)
+      if (this.is_total){
+        this.selectedIDs=[]
+      }
+      let params = {
+        dataset_id: this.$route.query.dataset_id,
+        task_name: this.$route.query.task_name,
+        task_type: this.$route.query.task_type || this.DataValue,
+        params_json: this.$route.query.params_json || this.para,
+        label_ids: this.selectedIDs || [],
+        class_id: this.Typevalue,
+        doc: this.findContent,
+        last_task_id: this.$route.query.id,
+        is_total:this.is_total
+      }
+      console.log(params)
+      createTask(params).then(res => {
+        if (res.success) {
+          this.$message.success(res.msg)
+          this.dialogAnalysis=false
+          this.$router.push({ path: 'tasklist', query: { dataset_id: this.$route.query.dataset_id } })
         }
-        console.log(params)
-        createTask(params).then(res => {
-            console.log(res)
-        })
-      }).catch(() => {
-
       })
     }
   }

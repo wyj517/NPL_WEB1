@@ -53,4 +53,12 @@ export function updateLabel(data) {
     data
   })
 }
+// 获取最终标签下拉列表
 
+export function manualTags(data) {
+  return request({
+    url: 'task/get_manual_tags',
+    method: 'post',
+    data
+  })
+}
