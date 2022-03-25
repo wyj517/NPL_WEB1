@@ -23,7 +23,7 @@
           </el-select>
         </div>
         <div class="tag">
-          <span style="margin-right: 15px">最终标签:</span>
+          <span style="margin-right: 15px">最终标签</span>
           <el-input
             v-model="manual_tag"
             placeholder="输入内容"

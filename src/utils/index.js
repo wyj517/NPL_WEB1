@@ -76,21 +76,24 @@ export function formatDates(data) {
   return fmt;
 };
 
-export function interval(start,end){
+export function interval(start, end) {
   if (start === null || end === null) {
-    return null
+    return null;
   }
   let startTime = new Date(start); // 开始时间
   let endTime = new Date(end); // 结束时间
-  console.log(start)
-  console.log(end)
+  // console.log(start)
+  // console.log(end)
   let usedTime = endTime - startTime; // 相差的毫秒数
-  let days = Math.floor(usedTime / (24 * 3600 * 1000)); // 计算出天数
-  let leavel = usedTime % (24 * 3600 * 1000); // 计算天数后剩余的时间
+  // let days = Math.floor(usedTime / (24 * 3600 * 1000)); // 计算出天数
+  // let leavel = usedTime % (24 * 3600 * 1000); // 计算天数后剩余的时间
+  let leavel = usedTime
   let hours = Math.floor(leavel / (3600 * 1000)); // 计算剩余的小时数
   let leavel2 = leavel % (3600 * 1000); // 计算剩余小时后剩余的毫秒数
   let minutes = Math.floor(leavel2 / (60 * 1000)); // 计算剩余的分钟数
-  return days + '天' + hours + '时' + minutes+1 + '分';
+  let leavel3 = leavel2 % (60*1000); // 计算剩余小时后剩余的毫秒数
+  let scound = Math.floor(leavel3/1000)
+  return hours + "时" + minutes + "分" + scound + "秒";
 }
 
 

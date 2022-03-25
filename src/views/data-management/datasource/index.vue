@@ -1,6 +1,6 @@
 <template>
   <div class="source_main">
-    <ListHeader title="数据集名称" @handle-create="addSource" @handle-search="getList" />
+    <ListHeader title="数据源名称" @handle-create="addSource" @handle-search="getList" />
     <BaseTable v-loading="loading" :height="height" :columns="columns" :data="tableData" />
     <el-pagination
       align="right"

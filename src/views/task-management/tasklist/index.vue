@@ -85,7 +85,7 @@ export default {
       const arr = [
         // 表格列项
         { label: '任务名称', key: 'task_name', width: '150' },
-        { label: '创建人', key: 'create_user' },
+        { label: '创建人', key: 'full_name' },  
         { label: '数据集名称', key: 'datas_name'},
         {
           label: '执行状态',
@@ -95,10 +95,10 @@ export default {
               {
                 props: {
                   underline: false,
-                  type: params.row.task_status === 0 ? 'danger' : params.row.task_status === 1 ? 'primary' : 'success'
+                  type: params.row.task_status === 2 ? 'success' : params.row.task_status === 1 ? 'primary' : 'danger'
                 }
               },
-              '●' + (params.row.task_status === 0 ? '执行失败' : params.row.task_status === 1 ? '进行中' : '成功')
+              '●' + (params.row.task_status === 2 ? '成功' : params.row.task_status === 1 ? '进行中' : '执行失败')
             )
           }
         },
@@ -137,20 +137,6 @@ export default {
                     }
                   },
                   '执行日志'
-                ),
-                h(
-                  'el-button',
-                  {
-                    props: {
-                      type: 'text'
-                    },
-                    on: {
-                      click: () => {
-                        this.$router.push({ path: 'taskresult', query: { id: row.id, dataset_id: row.dataset_id, task_type:row.task_type, task_name:row.task_name,params_json:row.params_json } })
-                      }
-                    }
-                  },
-                  '执行结果'
                 )
               ]
             )
