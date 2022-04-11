@@ -62,3 +62,11 @@ export function manualTags(data) {
     data
   })
 }
+
+export function getTaskLog(data){
+  return request({
+    url:"/task/get_task_log",
+    method:"post",
+    data
+  })
+}

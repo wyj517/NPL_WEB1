@@ -97,9 +97,16 @@ export const constantRoutes = [
         name: 'Taskstate',
         hidden: true,
         meta: { title: '任务执行日志', icon: 'link', affix: true }
+      },{
+        path: 'analysis',
+        component: () => import('@/views/analysis/index'),
+        name: 'Analysis',
+        hidden: true,
+        meta: { title: '数据分析', icon: 'link', affix: true }
       }
     ]
   },
+  
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
 ]

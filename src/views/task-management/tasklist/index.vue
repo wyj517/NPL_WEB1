@@ -54,6 +54,7 @@ import BaseTable from '@/components/BaseTable'
 import { formatDates, interval } from '@/utils'
 import ListHeader from '@/components/ListHeader'
 import { taskList } from '@/api/task'
+import router from '@/router'
 
 export default {
   name: 'Index',
@@ -128,11 +129,11 @@ export default {
                   'el-button',
                   {
                     props: {
-                      type: 'text'
+                      type: 'text',
                     },
                     on: {
                       click: () => {
-                        this.$router.push('taskstate')
+                        this.routerTaskLog(row.id,row.datas_name)
                       }
                     }
                   },
@@ -150,6 +151,9 @@ export default {
     this.getList()
   },
   methods: {
+    routerTaskLog(id,name){
+      this.$router.push({name:"Taskstate",query:{id,name}})
+    },
     handleSizeChange(val) {
       this.page.currentPage = 1
       this.page.pageSize = val

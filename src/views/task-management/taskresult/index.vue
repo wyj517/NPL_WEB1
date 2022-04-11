@@ -7,15 +7,23 @@
           <el-input
             v-model="findContent"
             placeholder="输入内容"
-            style="width: 200px"
+            style="width: 150px"
             @change="getResult"
+            size="small"
           />
         </div>
         <div>
           <span style="margin-right: 15px">类型编号</span>
-          <el-select v-model="Typevalue" placeholder="请选择" @change="getResult" clearable>
+          <el-select
+            v-model="Typevalue"
+            placeholder="请选择"
+            @change="getResult"
+            clearable
+            size="small"
+             style="width: 150px"
+          >
             <el-option
-              v-for="(item,index) in TypeOptions"
+              v-for="(item, index) in TypeOptions"
               :key="index"
               :label="item"
               :value="item"
@@ -27,18 +35,38 @@
           <el-input
             v-model="manual_tag"
             placeholder="输入内容"
-            style="width: 200px"
+            style="width: 150px"
             @change="getResult"
+            size="small"
           />
         </div>
         <div>
-          <el-button type="primary" @click="getResult">筛选</el-button>
+          <el-button type="primary" @click="getResult" size="small" >筛选</el-button>
         </div>
       </div>
       <div class="right">
         <div>
-          <el-button type="primary" @click="dialogVisible = true">批量标签</el-button>
-          <el-button type="success" plain @click="dialogAnalysis=true">重新分析</el-button>
+          <el-button type="primary" @click="dialogVisible = true" size="small"
+            >批量标签</el-button
+          >
+          <el-button type="success" plain @click="dialogAnalysis = true" size="small"
+            >重新分析</el-button
+          >
+          <el-button
+            type="primary"
+            plain
+            size="small"
+            @click="exportExcel"
+            :loading="exportLoading"
+            >导出</el-button
+          >
+            <el-button
+            type="primary"
+            plain
+            size="small"
+            @click="toAnalysis"
+            >统计</el-button
+          >
         </div>
       </div>
     </div>
@@ -64,10 +92,10 @@
               placeholder="请选择"
               filterable
               allow-create
-              @change="updateClassTag(0,scope.row.id,scope.row.manual_tag)"
+              @change="updateClassTag(0, scope.row.id, scope.row.manual_tag)"
             >
               <el-option
-                v-for="(item,index) in TagOptions"
+                v-for="(item, index) in TagOptions"
                 :key="index"
                 :label="item"
                 :value="item"
@@ -77,10 +105,14 @@
         </el-table-column>
       </el-table>
       <div class="bottom-page">
-        <div style="margin-top: 20px">
-          <el-button type="primary" @click="toggleSelection(tableData)"
-          >搜索结果全部选择
-          </el-button>
+        <div class="select-all">
+          <el-checkbox
+            size="large"
+            style="margin-right: 10px"
+            v-model="is_total"
+            @change="toggleSelection(tableData)"
+            label="搜索结果全部选择"
+          />
         </div>
         <el-pagination
           align="right"
@@ -99,10 +131,16 @@
       title="批量标签"
       :visible.sync="dialogVisible"
       width="30%"
+      :close-on-click-modal="false"
     >
-      <el-select v-model="Tagvalue" placeholder="请选择">
+      <el-select
+        v-model="Tagvalue"
+        placeholder="请选择"
+        filterable
+        allow-create
+      >
         <el-option
-          v-for="(item,index) in TagOptions"
+          v-for="(item, index) in TagOptions"
           :key="index"
           :label="item"
           :value="item"
@@ -114,20 +152,20 @@
       </span>
     </el-dialog>
 
-
     <el-dialog
       :visible.sync="dialogAnalysis"
       title="基本信息"
       width="700px"
       top="5vh"
       class="detail"
+      :close-on-click-modal="false"
     >
       <main>
         <el-form label-position="right" label-width="100px">
           <el-form-item label="任务类型">
             <el-select v-model="DataValue" placeholder="请选择">
               <el-option
-                v-for="(item,index) in DataOption"
+                v-for="(item, index) in DataOption"
                 :key="index"
                 :label="item.label"
                 :value="item.value"
@@ -136,121 +174,127 @@
           </el-form-item>
           <el-form-item label="任务参数">
             <div>
-              {{this.params_json[0].field}} {{ this.params_json[0].des }}
-              <el-input
-                v-model="para.num"
-                placeholer="请输入参数值"
-              />
+              {{ this.params_json[0].des }}
+              <el-input v-model="para.num" placeholer="请输入参数值" />
             </div>
           </el-form-item>
         </el-form>
       </main>
 
       <span slot="footer" class="dialog-footer">
-      <el-button @click="dialogAnalysis = false">取 消</el-button>
-      <el-button type="primary" @click="reAnalyze">确 定</el-button>
+        <el-button @click="dialogAnalysis = false">取 消</el-button>
+        <el-button type="primary" @click="reAnalyze">确 定</el-button>
       </span>
     </el-dialog>
   </div>
 </template>
 
 <script>
-import { getTaskResult, getClassID, updateLabel, manualTags } from '@/api/task'
-import { createTask, getType } from '@/api/dataset'
-
+import { getTaskResult, getClassID, updateLabel, manualTags } from "@/api/task";
+import { createTask, getType } from "@/api/dataset";
+import excel from "@/utils/excel";
+let staticSel = false;
 export default {
-  name: 'Index',
+  name: "Index",
   components: {},
   data() {
     return {
+      exportLoading: false,
       isLoading: true,
       dialogVisible: false,
       dialogAnalysis: false,
       multipleSelection: [],
       Typevalue: null,
       Tagvalue: null,
-      findContent: '',
+      findContent: "",
       TypeOptions: [],
-      TagOptions: ['疫情1', '疫情2', '疫情3'],
+      TagOptions: [],
       tableData: [],
       page: {
         currentPage: 1,
         pageSize: 10,
-        query_str: '',
-        total: 0
+        query_str: "",
+        total: 0,
       },
       selectedIDs: [],
-      manual_tag: '',
-      is_total:false,
-      DataValue: '',
+      manual_tag: "",
+      is_total: false,
+      DataValue: "",
       DataOption: [],
       params_json: [
         {
           des: "",
           field: "",
-          type: ""
-        }
+          type: "",
+        },
       ],
       para: {
-        "num": null,
-      }
-    }
+        num: null,
+      },
+    };
   },
   computed: {},
   mounted() {
-    this.getResult()
-    this.getClass()
-    this.getManual()
-    this.getTaskType()
-    console.log(this.$route.query.params_json)
+    this.getResult();
+    this.getClass();
+    this.getManual();
+    this.getTaskType();
+    // console.log(this.$route.query.params_json)
   },
   methods: {
+    // 分析
+    toAnalysis(){
+      this.$router.push({name:"Analysis",query:{id:this.$route.query.dataset_id}})
+    },
     handleSelectionChange(val) {
-      this.multipleSelection = val
-      let ids = []
+      this.multipleSelection = val;
+      let ids = [];
       this.multipleSelection.map((item) => {
-        ids.push(item.id)
-      })
-      this.selectedIDs = ids
+        ids.push(item.id);
+      });
+      this.selectedIDs = ids;
     },
     addTag(val) {
-      let flag = true
+      let flag = true;
       for (let i = 0; i < this.TagOptions.length; i++) {
         if (this.TagOptions[i] === val) {
-          flag = false
+          flag = false;
         }
-        console.log(this.TagOptions[i])
+        // console.log(this.TagOptions[i])
       }
       if (flag) {
-        this.TagOptions.unshift(val)
+        this.TagOptions.unshift(val);
       }
     },
     toggleSelection(rows) {
+      staticSel = !staticSel;
       for (let i = 0; i < rows.length; i++) {
-        this.$refs.multipleTable.toggleRowSelection(rows[i], true)
+        this.$refs.multipleTable.toggleRowSelection(rows[i], staticSel);
       }
-      this.is_total=true
+      this.is_total = staticSel;
     },
     handleSizeChange(val) {
-      this.page.currentPage = 1
-      this.page.pageSize = val
-      this.getResult()
+      this.page.currentPage = 1;
+      this.page.pageSize = val;
+      this.getResult();
     },
     // 当前页改变时触发 跳转其他页
     handleCurrentChange(val) {
-      this.page.currentPage = val
-      this.getResult()
+      this.page.currentPage = val;
+      this.getResult();
     },
-   //获取参数类型
+    //获取参数类型
     getTaskType() {
-      getType().then(res => {
-        console.log(res)
+      getType().then((res) => {
         for (let i = 0; i < res.data.length; i++) {
-          this.DataOption.push({ value: res.data[i].task_type, label: res.data[i].task_type_name })
-          this.params_json = res.data[i].params_json
+          this.DataOption.push({
+            value: res.data[i].task_type,
+            label: res.data[i].task_type_name,
+          });
+          this.params_json = res.data[i].params_json;
         }
-        console.log('json', this.params_json[0])
-      })
+        // console.log('json', this.params_json[0])
+      });
     },
 
     //获取任务执行结果列表
@@ -263,65 +307,103 @@ export default {
         dataset_id: this.$route.query.dataset_id,
         class_id: this.Typevalue,
         manual_tag: this.manual_tag,
-        doc: this.findContent
+        doc: this.findContent,
+      };
+      this.isLoading = true;
+      getTaskResult(params).then((res) => {
+        this.tableData = res.counts ? res.data : [];
+        this.isLoading = false;
+        this.page.total = res.counts;
+        this.is_total = false;
+      });
+    },
+
+    // 导出
+    async exportExcel() {
+      this.exportLoading = true;
+      let params = {
+        page: 1,
+        page_size: 999999,
+        total_flg: true,
+        task_id: this.$route.query.id,
+        dataset_id: this.$route.query.dataset_id,
+        class_id: this.Typevalue,
+        manual_tag: this.manual_tag,
+        doc: this.findContent,
+      };
+      let res = await getTaskResult(params);
+      this.exportExcelFu(res.data);
+    },
+    // 导出参数
+    exportExcelFu(tableData) {
+      if (tableData) {
+        const params = {
+          title: ["数据ID", "内容", "类型编号", "自动标签", "最终标签"],
+          key: ["id", "doc", "class_id", "predict_tag", "manual_tag"],
+          data: tableData,
+          autoWidth: true,
+          filename: "分类列表",
+        };
+        console.log(params);
+        excel.export_array_to_excel(params);
+        this.exportLoading = false;
+      } else {
+        console.error("表格数据不能为空！");
+        // this.$Message.success('表格数据不能为空！')
       }
-      this.isLoading = true
-      getTaskResult(params).then(res => {
-        this.tableData = res.counts ? res.data : []
-        this.isLoading = false
-        this.page.total = res.counts
-      })
     },
 
     //获取下拉classid列表
     getClass() {
       let params = {
-        dataset_id: this.$route.query.dataset_id
-      }
-      getClassID(params).then(res => {
+        dataset_id: this.$route.query.dataset_id,
+      };
+      getClassID(params).then((res) => {
         for (let i = 0; i < res.data.class_ids.length; i++) {
-          this.TypeOptions.push(res.data.class_ids[i])
+          this.TypeOptions.push(res.data.class_ids[i]);
         }
-      })
+      });
     },
 
     //获取最终标签列表
     getManual() {
       let params = {
-        dataset_id: this.$route.query.dataset_id
-      }
-      manualTags(params).then(res => {
-          this.TagOptions=res.data.manual_tags
-          console.log(res)
-      })
+        dataset_id: this.$route.query.dataset_id,
+      };
+      manualTags(params).then((res) => {
+        this.TagOptions = res.data.manual_tags;
+      });
     },
 
     //批量更新数据标签
     updateClassTag(flg, id, tag) {
       //flg 1批量 0单改
-      let params = {
-        dataset_id: this.$route.query.dataset_id,
-        label_ids: flg ? this.selectedIDs : [id],
-        manual_tag: flg ? this.Tagvalue : tag,
-        is_total: false,
-        tag: '',
-        class_id: '',
-        doc: ''
+      if (tag || this.Tagvalue) {
+        let params = {
+          dataset_id: this.$route.query.dataset_id,
+          label_ids: flg ? this.selectedIDs : [id],
+          manual_tag: flg ? this.Tagvalue : tag,
+          is_total: this.is_total,
+          tag: "",
+          class_id: this.Typevalue,
+          doc: "",
+        };
+        updateLabel(params).then((res) => {
+          if (res.success) {
+            this.$message.success(res.msg);
+            this.addTag(tag);
+            this.dialogVisible = false;
+            this.getResult();
+          }
+        });
+      } else {
+        this.$message.error("请先选择标签");
       }
-      updateLabel(params).then(res => {
-        if (res.success) {
-          this.$message.success(res.msg)
-          this.addTag(tag)
-          this.dialogVisible = false
-          this.getResult()
-        }
-      })
     },
     //重新分析
     reAnalyze() {
-      console.log(this.$route.query)
-      if (this.is_total){
-        this.selectedIDs=[]
+      if (this.is_total) {
+        this.selectedIDs = [];
       }
       let params = {
         dataset_id: this.$route.query.dataset_id,
@@ -331,20 +413,22 @@ export default {
         label_ids: this.selectedIDs || [],
         class_id: this.Typevalue,
         doc: this.findContent,
-        last_task_id: this.$route.query.id,
-        is_total:this.is_total
-      }
-      console.log(params)
-      createTask(params).then(res => {
+        last_task_id: this.$route.query.last_task_id,
+        is_total: this.is_total,
+      };
+      createTask(params).then((res) => {
         if (res.success) {
-          this.$message.success(res.msg)
-          this.dialogAnalysis=false
-          this.$router.push({ path: 'tasklist', query: { dataset_id: this.$route.query.dataset_id } })
+          this.$message.success(res.msg);
+          this.dialogAnalysis = false;
+          this.$router.push({
+            path: "tasklist",
+            query: { dataset_id: this.$route.query.dataset_id },
+          });
         }
-      })
-    }
-  }
-}
+      });
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>
@@ -374,5 +458,12 @@ export default {
   flex-direction: row;
   justify-content: space-between;
 }
-
+.select-all {
+  margin-top: 20px;
+  border: solid 1px #53a8ff;
+  background: #ecf5ff;
+  height: 40px;
+  padding: 10px;
+  border-radius: 3px;
+}
 </style>

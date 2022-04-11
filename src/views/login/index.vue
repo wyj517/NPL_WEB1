@@ -66,7 +66,7 @@ export default {
   data() {
     const validatePassword = (rule, value, callback) => {
       if (value.length < 6) {
-        callback(new Error("密码不能为空"));
+        callback(new Error("密码不能小于6位"));
       } else {
         callback();
       }
@@ -81,7 +81,7 @@ export default {
           { required: true, trigger: "blur", message: "用户名不能为空" },
         ],
         password: [
-          { required: true, trigger: "blur", validator: validatePassword },
+          { required: true, trigger: "blur", message: "密码不能为空" },
         ],
       },
       loading: false,

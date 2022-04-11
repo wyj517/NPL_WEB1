@@ -1,10 +1,18 @@
 <template>
   <div class="main">
     <div class="title">
-      <div style="width: 3px; height: 20px;background: skyblue;margin-right: 10px" />
-      <span>任务名称</span>
+      <div
+        style="
+          width: 3px;
+          height: 20px;
+          background: skyblue;
+          margin-right: 10px;
+        "
+      />
+      <span>任务名称 — {{ name }}</span>
     </div>
     <div class="task_log">
+      <el-button type="primary" class="refresh" size="small" @click="getLogInfo">刷新</el-button>
       <el-tabs v-model="activeName" type="card">
         <el-tab-pane label="运行日志" name="first">
           <codemirror v-model="code" :options="cmOptions" />
@@ -15,58 +23,72 @@
 </template>
 
 <script>
-import { codemirror } from 'vue-codemirror'
-import 'codemirror/mode/python/python.js'
-import 'codemirror/theme/base16-light.css'
+import { codemirror } from "vue-codemirror";
+import "codemirror/mode/python/python.js";
+import "codemirror/theme/base16-light.css";
+import { getTaskLog } from "@/api/task.js";
 export default {
-  name: 'Index',
+  name: "Index",
   components: {
-    codemirror
+    codemirror,
   },
   data() {
     return {
-      activeName: 'first',
+      name: this.$route.query.name,
+      activeName: "first",
       loading: false,
       height: null,
-      tableData: [
-        { log_time: '2022/01/01', state: 'NORMAL', log_content: '123' }
-      ],
-      code: '2022-01-07 16:44:32   任务taskname1 开始执行 message:xxxxx',
+      code: "",
       cmOptions: {
         // codemirror options
         tabSize: 2, // 缩进
-        mode: 'python', // 语言
-        theme: 'base16-light', // 主题
+        mode: "python", // 语言
+        theme: "base16-light", // 主题
         lineNumbers: true,
         line: true,
         readOnly: true, // 只读
         indentWithTabs: true,
         smartIndent: true,
         matchBrackets: true,
-        hintOptions: { // 自定义提示选项
+        hintOptions: {
+          // 自定义提示选项
           tables: {
-            users: ['name', 'score', 'birthDate'],
-            countries: ['name', 'population', 'size']
-          }
+            users: ["name", "score", "birthDate"],
+            countries: ["name", "population", "size"],
+          },
         },
-        extraKeys: { 'Ctrl': 'autocomplete' }// 自定义快捷键
+        extraKeys: { Ctrl: "autocomplete" }, // 自定义快捷键
         // more codemirror options, 更多 codemirror 的高级配置...
-      }
-    }
+      },
+    };
   },
   computed: {
     columns() {
       const arr = [
         // 表格列项
-        { label: '日志采集时间', key: 'log_time', width: '150' },
-        { label: '状态', key: 'state', width: '150' },
-        { label: '日志内容', key: 'log_content' }
-      ]
-      return arr
-    }
+        { label: "日志采集时间", key: "log_time", width: "150" },
+        { label: "状态", key: "state", width: "150" },
+        { label: "日志内容", key: "log_content" },
+      ];
+      return arr;
+    },
   },
-  methods: {}
-}
+  mounted() {
+    this.getLogInfo();
+    // var t2 =window.setInterval(() => {
+    //   this.getLogInfo();
+    // },2000);
+  },
+  methods: {
+    async getLogInfo() {
+      this.code = ""
+      let data = { task_id: this.$route.query.id };
+      let res = await getTaskLog(data);
+      this.code = res.data.content;
+      console.log(res);
+    },
+  },
+};
 </script>
 
 <style scoped lang="scss">
@@ -79,6 +101,23 @@ export default {
 
   .task_log {
     margin-top: 50px;
+    position: relative;
+    .refresh{
+      position: absolute;
+      right: 0;
+      top: 0;
+      z-index: 999;
+    }
   }
+}
+</style>
+
+<style>
+.cm-s-base16-light span.cm-error {
+  background: none;
+  color: #aa759f;
+}
+.CodeMirror {
+  height: 500px;
 }
 </style>

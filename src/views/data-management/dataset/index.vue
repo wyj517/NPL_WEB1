@@ -1,6 +1,6 @@
 <template>
   <div class="set_main">
-    <ListHeader title="数据集名称" @handle-create="openAddDialog" @handle-search="getSet" />
+    <ListHeader title="数据集名称" @handle-create="openAddDialog" @handle-search="getSet" buttonTitle="数据集" />
     <BaseTable v-loading="loading" :height="height" :columns="columns" :data="tableData" />
     <el-pagination
       align="right"
@@ -148,7 +148,7 @@ export default {
                     on: {
                       click: () => {
 
-                        this.$router.push({ path: 'task/taskresult', query: { dataset_id: row.id, task_name:row.last_task_name } })
+                        this.$router.push({ path: 'task/taskresult', query: { dataset_id: row.id, task_name:row.last_task_name,last_task_id:row.last_task_id} })
                       }
                     }
                   },
@@ -198,10 +198,9 @@ export default {
           datas_id: id
         }
         setRemove(data).then(res => {
-          this.$message({
-            type: res.success === true ? 'success' : 'error',
-            message: res.success === true ? `删除成功` : `删除失败`
-          })
+          if (res.success) {
+               this.$message.success("删除成功")
+          }
           this.getSet()
         })
       }).catch(() => {

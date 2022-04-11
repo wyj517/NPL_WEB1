@@ -63,3 +63,14 @@ div:focus {
 .app-container {
   padding: 20px;
 }
+
+.el-form-item__label {
+  font-weight: normal;
+}
+
+thead.has-gutter .el-checkbox{
+  display: none;
+}
+.w100{
+  width: 100%;
+}

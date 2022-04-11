@@ -5,6 +5,7 @@
     width="700px"
     top="5vh"
     class="detail"
+    :close-on-click-modal="false"
   >
     <main>
       <el-form label-position="right" label-width="100px">
@@ -24,7 +25,7 @@
         <el-form-item label="任务参数">
           <!--          <codemirror v-model="code" :options="cmOptions" />-->
           <div>
-            {{this.params_json[0].field}} {{ this.params_json[0].des }}
+            {{ this.params_json[0].des }}
             <el-input
               v-model="para.num"
               placeholer="请输入参数名"
