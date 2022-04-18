@@ -50,20 +50,20 @@ export const constantRoutes = [
     redirect: '/dataset',
     meta: {
       title: '数据管理',
-      icon: 'nested'
+      icon: 'sourmanage'
     },
     children: [
       {
         path: 'dataset',
         component: () => import('@/views/data-management/dataset/index'),
         name: 'Dataset',
-        meta: { title: '数据集管理', icon: 'table', affix: true }
+        meta: { title: '数据集管理', icon: 'dataset', affix: true }
       },
       {
         path: 'datasource',
         component: () => import('@/views/data-management/datasource/index'),
         name: 'Datasource',
-        meta: { title: '数据源管理', icon: 'table', affix: true }
+        meta: { title: '数据源管理', icon: 'savedatasour', affix: true }
       }
     ]
   },
@@ -74,14 +74,14 @@ export const constantRoutes = [
     redirect: '/task/tasklist',
     meta: {
       title: '任务管理',
-      icon: 'tree'
+      icon: 'taskmn'
     },
     children: [
       {
         path: 'tasklist',
         component: () => import('@/views/task-management/tasklist/index'),
         name: 'Tasklist',
-        meta: { title: '任务列表', icon: 'link', affix: true },
+        meta: { title: '任务列表', icon: 'datasour', affix: true },
         children: []
       },
       {
@@ -96,17 +96,42 @@ export const constantRoutes = [
         component: () => import('@/views/task-management/taskstate/index'),
         name: 'Taskstate',
         hidden: true,
-        meta: { title: '任务执行日志', icon: 'link', affix: true }
+        meta: { title: '任务执行日志', icon: 'datasour', affix: true }
       },{
         path: 'analysis',
         component: () => import('@/views/analysis/index'),
         name: 'Analysis',
         hidden: true,
-        meta: { title: '数据分析', icon: 'link', affix: true }
+        meta: { title: '数据分析', icon: 'count', affix: true }
       }
     ]
   },
-  
+  // 用户管理
+  {
+    path: '/user',
+    component: Layout,
+    redirect: '/user/userlist',
+    meta: {
+      title: '人员管理',
+      icon: 'usermanages'
+    },
+    children: [
+      {
+        path: 'users',
+        component: () => import('@/views/user-management/users/index'),
+        name: 'Users',
+        meta: { title: '用户管理', icon: 'link', affix: true },
+        children: []
+      },
+      {
+        path: 'roles',
+        component: () => import('@/views/user-management/roles/index'),
+        name: 'Roles',
+        meta: { title: '角色管理', icon: 'link', affix: true }
+      }
+    ]
+  },
+
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
 ]

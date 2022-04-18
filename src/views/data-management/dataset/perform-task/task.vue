@@ -1,11 +1,12 @@
 <template>
   <el-dialog
     :visible.sync="dialogVisible"
-    title="基本信息"
-    width="700px"
-    top="5vh"
+    title="添加任务"
+    width="400px"
+    top="20vh"
     class="detail"
     :close-on-click-modal="false"
+    :modal="false"
   >
     <main>
       <el-form label-position="right" label-width="100px">
@@ -13,7 +14,7 @@
           <el-input placeholder="请输入" v-model="TaskName" />
         </el-form-item>
         <el-form-item label="任务类型">
-          <el-select v-model="DataValue" placeholder="请选择">
+          <el-select v-model="DataValue" placeholder="请选择" >
             <el-option
               v-for="(item,index) in DataOption"
               :key="index"
@@ -24,8 +25,8 @@
         </el-form-item>
         <el-form-item label="任务参数">
           <!--          <codemirror v-model="code" :options="cmOptions" />-->
+          <span class="des"> {{ this.params_json[0].des }}</span>
           <div>
-            {{ this.params_json[0].des }}
             <el-input
               v-model="para.num"
               placeholer="请输入参数名"
@@ -118,5 +119,8 @@ export default {
 <style scoped lang="scss">
 .detail {
 
+}
+::v-deep .el-select{
+  display: inline;
 }
 </style>

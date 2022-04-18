@@ -21,6 +21,9 @@
     <Task
       ref="taskDialogRef"
     />
+    <tasklist
+      ref="listDialogRef"
+    />
   </div>
 </template>
 
@@ -31,10 +34,12 @@ import Details from './edit-page/Detail.vue'
 import Task from './perform-task/task.vue'
 import { formatDates } from '@/utils'
 import { setList, setRemove } from '@/api/dataset'
+import Tasklist from '@/views/data-management/dataset/list-task/tasklist'
 
 export default {
   name: 'Index',
   components: {
+    Tasklist,
     BaseTable,
     ListHeader,
     Details,
@@ -72,8 +77,62 @@ export default {
         { label: '创建者', key: 'create_user_name', width: '120' },
         {
           label: '创建时间',
-          width: '180px',
+          width: '180',
           render: (h, params) => <span>{formatDates(params.row.create_time)}</span>
+        },
+        {
+          label:'任务列表',
+          width: '300',
+          render: (h,{ row }) =>{
+            return h(
+              'div',
+              [
+                h(
+                  'el-tag',
+                  {
+                    props:{
+                      type: 'success'
+                    },
+                    on: {
+                      click: () => {
+                        this.openTask(row.id)
+                      }
+                    }
+                  },
+                '添加任务'
+                ),
+                h(
+                  'el-tag',
+                  {
+                    props:{
+                      type: 'info'
+                    },
+                    on: {
+                      click: () => {
+                        // this.$router.push({ path: 'task/tasklist', query: { dataset_id: row.id } })
+                        this.openList(row.id)
+                      }
+                    }
+                  },
+                  '任务列表>'
+                ),
+                h(
+                  'el-tag',
+                  {
+                    props:{
+                      type: 'warning'
+                    },
+                    on: {
+                      click: () => {
+                        this.$router.push({ path: 'task/taskresult', query: { dataset_id: row.id, task_name:row.last_task_name,last_task_id:row.last_task_id} })
+                      }
+                    }
+                  },
+                  '执行结果>'
+                ),
+              ]
+            )
+          }
         },
         {
           label: '操作',
@@ -111,49 +170,49 @@ export default {
                   },
                   '删除'
                 ),
-                h(
-                  'el-button',
-                  {
-                    props: {
-                      type: 'text'
-                    },
-                    on: {
-                      click: () => {
-                        this.openTask(row.id)
-                      }
-                    }
-                  },
-                  '创建任务'
-                ),
-                h(
-                  'el-button',
-                  {
-                    props: {
-                      type: 'text'
-                    },
-                    on: {
-                      click: () => {
-                        this.$router.push({ path: 'task/tasklist', query: { dataset_id: row.id } })
-                      }
-                    }
-                  },
-                  '任务列表'
-                ),
-                h(
-                  'el-button',
-                  {
-                    props: {
-                      type: 'text'
-                    },
-                    on: {
-                      click: () => {
-
-                        this.$router.push({ path: 'task/taskresult', query: { dataset_id: row.id, task_name:row.last_task_name,last_task_id:row.last_task_id} })
-                      }
-                    }
-                  },
-                  '执行结果'
-                )
+                // h(
+                //   'el-button',
+                //   {
+                //     props: {
+                //       type: 'text'
+                //     },
+                //     on: {
+                //       click: () => {
+                //         this.openTask(row.id)
+                //       }
+                //     }
+                //   },
+                //   '创建任务'
+                // ),
+                // h(
+                //   'el-button',
+                //   {
+                //     props: {
+                //       type: 'text'
+                //     },
+                //     on: {
+                //       click: () => {
+                //         this.$router.push({ path: 'task/tasklist', query: { dataset_id: row.id } })
+                //       }
+                //     }
+                //   },
+                //   '任务列表'
+                // ),
+                // h(
+                //   'el-button',
+                //   {
+                //     props: {
+                //       type: 'text'
+                //     },
+                //     on: {
+                //       click: () => {
+                //
+                //         this.$router.push({ path: 'task/taskresult', query: { dataset_id: row.id, task_name:row.last_task_name,last_task_id:row.last_task_id} })
+                //       }
+                //     }
+                //   },
+                //   '执行结果'
+                // )
               ]
             )
           }
@@ -175,6 +234,9 @@ export default {
     },
     openTask(id) {
       this.$refs.taskDialogRef.opendialog(id)
+    },
+    openList(){
+      this.$refs.listDialogRef.opendialog()
     },
     getSet(str) {
       const data = {
@@ -231,5 +293,26 @@ export default {
 
 .el-form-item__label {
   font-weight: normal;
+}
+
+::v-deep .el-tag{
+  margin-left: 10px;
+  line-height: 22px;
+  height: 22px;
+}
+::v-deep .el-tag--success{
+  color: #19BC9C;
+  background: rgba(25, 188, 156, 0.2);
+  cursor : pointer;
+}
+::v-deep .el-tag--info{
+  color: #409EFF;
+  background: rgba(64, 158, 255, 0.2);
+  cursor : pointer;
+}
+::v-deep .el-tag--warning{
+  color: #FA6400;
+  background: rgba(250, 100, 0, 0.1);
+  cursor : pointer;
 }
 </style>

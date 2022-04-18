@@ -23,78 +23,78 @@
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
     />
-    <el-dialog
-      :visible.sync="dialogVisible"
-      :title="dialogtitle"
-      :close-on-click-modal="false"
-      width="700px"
-      top="5vh"
-      class="detail"
+    <el-drawer
+      title="编辑"
+      :visible.sync="drawer"
+      :direction="direction"
+      custom-class="demo-drawer"
+      class="drawer"
     >
-      <el-form ref="ruleForm" :model="ruleForm" :rules="rule" class="w100">
-        <el-form-item label="数据库类型" label-width="150px" prop="ds_type">
-          <el-select
-            v-model="ruleForm.ds_type"
-            placeholder="请选择数据库类型"
-            style="width: 100%"
+      <div class="demo-drawer__content">
+        <el-form ref="ruleForm" :model="ruleForm" :rules="rule" :inline="true" label-position="top" class="">
+          <el-form-item label="数据库类型" size="small" label-width="150px" prop="ds_type">
+            <el-select
+              v-model="ruleForm.ds_type"
+              placeholder="请选择数据库类型"
+              size="small"
+              style="width: 182px"
+            >
+              <el-option
+                v-for="(item, index) in TypeOption"
+                :key="index"
+                :label="item"
+                :value="item"
+              />
+            </el-select>
+          </el-form-item>
+          <el-form-item
+            label="数据源名称"
+            label-width="150px"
             size="small"
+            prop="ds_name"
           >
-            <el-option
-              v-for="(item, index) in TypeOption"
-              :key="index"
-              :label="item"
-              :value="item"
+            <el-input v-model="ruleForm.ds_name" placeholder="请输入数据源名称" />
+          </el-form-item>
+          <el-form-item label="描述" label-width="150px" size="small">
+            <el-input v-model="ruleForm.des" placeholder="请输入描述" />
+          </el-form-item>
+          <el-form-item
+            label="连接串"
+            label-width="150px"
+            size="small"
+            prop="conn_str"
+          >
+            <el-input v-model="ruleForm.conn_str" placeholder="请输入连接串" />
+          </el-form-item>
+          <el-form-item
+            label="用户名"
+            label-width="150px"
+            size="small"
+            prop="user_name"
+          >
+            <el-input v-model="ruleForm.user_name" placeholder="请输入用户名" />
+          </el-form-item>
+          <el-form-item
+            label="密码"
+            label-width="150px"
+            size="small"
+            prop="password"
+          >
+            <el-input
+              v-model="ruleForm.password"
+              type="password"
+              placeholder="请输入密码"
             />
-          </el-select>
-        </el-form-item>
-        <el-form-item
-          label="数据源名称"
-          label-width="150px"
-          size="small"
-          prop="ds_name"
-        >
-          <el-input v-model="ruleForm.ds_name" placeholder="请输入数据源名称" />
-        </el-form-item>
-        <el-form-item label="描述" label-width="150px" size="small">
-          <el-input v-model="ruleForm.des" placeholder="请输入描述" />
-        </el-form-item>
-        <el-form-item
-          label="连接串"
-          label-width="150px"
-          size="small"
-          prop="conn_str"
-        >
-          <el-input v-model="ruleForm.conn_str" placeholder="请输入连接串" />
-        </el-form-item>
-        <el-form-item
-          label="用户名"
-          label-width="150px"
-          size="small"
-          prop="user_name"
-        >
-          <el-input v-model="ruleForm.user_name" placeholder="请输入用户名" />
-        </el-form-item>
-        <el-form-item
-          label="密码"
-          label-width="150px"
-          size="small"
-          prop="password"
-        >
-          <el-input
-            v-model="ruleForm.password"
-            type="password"
-            placeholder="请输入密码"
-          />
-        </el-form-item>
-      </el-form>
-      <span slot="footer" class="dialog-footer">
-        <el-button type="primary" class="conn" @click="startSource(ruleForm.id)"
-          >测试连接</el-button
-        >
-        <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="handleAdd">确 定</el-button>
-      </span>
-    </el-dialog>
+          </el-form-item>
+        </el-form>
+        <span>
+        <el-button type="primary" class="conn" @click="startSource(ruleForm.id)">测试连接</el-button></span>
+        <div class="demo-drawer__footer">
+          <el-button @click="drawer = false">取 消</el-button>
+          <el-button type="primary" @click="handleAdd">确 定</el-button>
+        </div>
+      </div>
+    </el-drawer>
   </div>
 </template>
 
@@ -118,6 +118,8 @@ export default {
   },
   data() {
     return {
+      drawer: false,
+      direction: 'rtl',
       page: {
         currentPage: 1,
         pageSize: 20,
@@ -126,7 +128,6 @@ export default {
       },
       // total:'',
       search: "",
-      dialogVisible: false,
       dialogtitle: "",
       loading: false,
       height: null,
@@ -223,7 +224,7 @@ export default {
     openAddDialog(id, index) {
       // 编辑
       this.dialogtitle = "编辑数据源";
-      this.dialogVisible = true;
+      this.drawer = true;
       const data = {
         ds_id: id,
       };
@@ -236,7 +237,7 @@ export default {
       // 新增
       this.dialogtitle = "新增数据源";
       this.ruleForm = {};
-      this.dialogVisible = true;
+      this.drawer = true
     },
     handleAdd() {
       this.$refs["ruleForm"].validate((valid) => {
@@ -258,7 +259,7 @@ export default {
               this.getList();
             });
           }
-          this.dialogVisible = false;
+          this.drawer = false;
         }
       });
     },
@@ -320,13 +321,43 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .source_main {
   padding: 20px;
 }
 
 .conn {
-  float: left;
-  margin-left: 60px;
+  width: 85%;
+  height: 32px;
+  background: #19BC9C;
+  border-color: #19BC9C;
+  border-radius: 2px;
+  margin-left: 20px;
+}
+.drawer{
+  ::v-deep .el-form-item{
+    margin-left: 20px;
+  }
+
+  ::v-deep .demo-drawer__footer{
+    position: absolute;
+    bottom: 20px;
+    right: 16px;
+    .el-button--primary{
+      background: #19BC9C;
+      border-radius: 4px;
+      border-color: #19BC9C;
+      color: #FFFFFF;
+    }
+    .el-button--default{
+      background: rgba(25, 188, 156, 0.2);
+      border-radius: 4px;
+      border: 1px solid rgba(25, 188, 156, 0.6);
+      color: #00C5A5;
+    }
+  }
+}
+::v-deep .rtl{
+  padding: 0 10px;
 }
 </style>

@@ -3,11 +3,10 @@
     <transition name="sidebarLogoFade">
       <router-link v-if="collapse" key="collapse" class="sidebar-logo-link" to="/">
         <img v-if="logo" :src="logo" class="sidebar-logo">
-        <h1 v-else class="sidebar-title">{{ title }} </h1>
+<!--        <h1 v-else class="sidebar-title">{{ title }} </h1>-->
       </router-link>
       <router-link v-else key="expand" class="sidebar-logo-link" to="/">
-        <img v-if="logo" :src="logo" class="sidebar-logo">
-        <h1 class="sidebar-title">{{ title }} </h1>
+        <img v-if="logo" src="../../../assets/logo.png" class="sidebar-logo">
       </router-link>
     </transition>
   </div>
@@ -24,8 +23,8 @@ export default {
   },
   data() {
     return {
-      title: process.env.VUE_APP_TITLE,  
-      logo: ''
+      title: process.env.VUE_APP_TITLE,
+      logo: '../../../assets/logo.png'
     }
   }
 }
@@ -44,8 +43,8 @@ export default {
 .sidebar-logo-container {
   position: relative;
   width: 100%;
-  height: 50px;
-  line-height: 50px;
+  height: 106px;
+  line-height: 106px;
   background: #2b2f3a;
   text-align: center;
   overflow: hidden;
@@ -55,8 +54,8 @@ export default {
     width: 100%;
 
     & .sidebar-logo {
-      width: 32px;
-      height: 32px;
+      width: 100%;
+      height: 100%;
       vertical-align: middle;
       margin-right: 12px;
     }

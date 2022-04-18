@@ -1,12 +1,168 @@
 <template>
-  <el-dialog
+<!--  <el-dialog-->
+<!--    :visible.sync="dialogVisible"-->
+<!--    title="基本信息"-->
+<!--    width="700px"-->
+<!--    top="5vh"-->
+<!--    class="detail"-->
+<!--    :close-on-click-modal="false"-->
+<!--  >-->
+<!--    <main>-->
+<!--      <div>-->
+<!--        <el-form-->
+<!--          ref="ruleForm"-->
+<!--          label-position="right"-->
+<!--          label-width="150px"-->
+<!--          :model="ruleForm"-->
+<!--          :rules="rule"-->
+<!--          class="w100"-->
+<!--        >-->
+<!--          <el-form-item label="数据集名称" class="w100" prop="datas_name" >-->
+<!--            <el-input-->
+<!--              v-model="ruleForm.datas_name"-->
+<!--              placeholder="请输入数据集名称"-->
+<!--            />-->
+<!--          </el-form-item>-->
+<!--          <el-form-item label="描述">-->
+<!--            <el-input-->
+<!--              v-model="ruleForm.des"-->
+<!--              placeholder="请输入描述"-->
+<!--            />-->
+<!--          </el-form-item>-->
+<!--          <el-form-item label="数据源名称" prop="ds_id"  class="w100" >-->
+<!--            <el-select-->
+<!--              v-model="ruleForm.ds_id"-->
+<!--              placeholder="请选择数据源名称"-->
+<!--              @change="getSchemaName(ruleForm.ds_id,'edit')"-->
+<!--              clearable-->
+<!--              class="w100"-->
+<!--            >-->
+<!--              <el-option-->
+<!--                v-for="item in sourceOption"-->
+<!--                :key="item.id"-->
+<!--                :label="item.ds_name"-->
+<!--                :value="item.id"-->
+<!--              />-->
+<!--            </el-select>-->
+<!--          </el-form-item>-->
+<!--          <el-form-item label="schema名称" prop="schema_name"  class="w100" >-->
+<!--            <el-select-->
+<!--              v-model="ruleForm.schema_name"-->
+<!--              placeholder="请选择schema名称"-->
+<!--              @change="getTableName"-->
+<!--              clearable-->
+<!--              class="w100"-->
+<!--            >-->
+<!--              <el-option-->
+<!--                v-for="(item, index) in schemaOption"-->
+<!--                :key="index"-->
+<!--                :label="item"-->
+<!--                :value="item"-->
+<!--              />-->
+<!--            </el-select>-->
+<!--          </el-form-item>-->
+<!--          <el-form-item label="表名称" prop="table_name"  class="w100" >-->
+<!--            <el-select-->
+<!--              v-model="ruleForm.table_name"-->
+<!--              placeholder="请选择表名称"-->
+<!--              filterable-->
+<!--              @change="getFiledInfo"-->
+<!--              clearable-->
+<!--              class="w100"-->
+<!--            >-->
+<!--              <el-option-->
+<!--                v-for="(item, index) in tableOption"-->
+<!--                :key="index"-->
+<!--                :label="item.table_name + '\t' + item.comments"-->
+<!--                :value="item.table_name"-->
+<!--              />-->
+<!--            </el-select>-->
+<!--          </el-form-item>-->
+<!--          <div class="field_main">-->
+<!--            <div class="field_head">-->
+<!--              <h3>where语句</h3>-->
+<!--              <el-row>-->
+<!--                <el-col :span="12">-->
+<!--                  <el-form-item label="主键" prop="doc_field" >-->
+<!--                    <el-select-->
+<!--                      v-model="ruleForm.id_field"-->
+<!--                      placeholder="请选择"-->
+<!--                      filterable-->
+<!--                    >-->
+<!--                      <el-option-->
+<!--                        v-for="(item, index) in fieldList"-->
+<!--                        :key="index"-->
+<!--                        :label="item.column_name + '\t' + item.comments"-->
+<!--                        :value="item.column_name"-->
+<!--                      />-->
+<!--                    </el-select>-->
+<!--                  </el-form-item>-->
+<!--                </el-col>-->
+<!--                <el-col :span="12">-->
+<!--                  <el-form-item label="待分析列" prop="doc_field">-->
+<!--                    <el-select-->
+<!--                      v-model="ruleForm.doc_field"-->
+<!--                      placeholder="请选择"-->
+<!--                      filterable-->
+<!--                    >-->
+<!--                      <el-option-->
+<!--                        v-for="(item, index) in fieldList"-->
+<!--                        :key="index"-->
+<!--                        :label="item.column_name + '\t' + item.comments"-->
+<!--                        :value="item.column_name"-->
+<!--                      />-->
+<!--                    </el-select>-->
+<!--                  </el-form-item>-->
+<!--                </el-col>-->
+<!--              </el-row>-->
+<!--            </div>-->
+<!--            <div>-->
+<!--              <div>-->
+<!--                <el-input-->
+<!--                  v-model="ruleForm.where_clause"-->
+<!--                  type="textarea"-->
+<!--                  placeholder="exp：where field = xxx"-->
+<!--                  limit="10"-->
+<!--                  show-word-limit-->
+<!--                  :autosize="{ minRows: 8.5, maxRows: 20 }"-->
+<!--                />-->
+<!--              </div>-->
+<!--            </div>-->
+<!--            <div>-->
+<!--              <el-button type="primary" class="conn" @click="testLink"-->
+<!--                >返回样例</el-button-->
+<!--              >-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </el-form>-->
+
+<!--        &lt;!&ndash; 测试返回数据 &ndash;&gt;-->
+<!--        <div class="test-res-data">-->
+<!--          <el-table :data="testResData" border style="width: 100%">-->
+<!--            <el-table-column prop="id" label="主键" width="" />-->
+<!--            <el-table-column-->
+<!--              prop="doc"-->
+<!--              label="待分析"-->
+<!--              width="300"-->
+<!--              :show-overflow-tooltip="true"-->
+<!--            />-->
+<!--          </el-table>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </main>-->
+<!--    <span slot="footer" class="dialog-footer">-->
+<!--      <el-button @click="dialogVisible = false">取 消</el-button>-->
+<!--      <el-button type="primary" @click="handleAdd">确 定</el-button>-->
+<!--    </span>-->
+<!--  </el-dialog>-->
+
+
+  <el-drawer
+    title="编辑"
     :visible.sync="dialogVisible"
-    title="基本信息"
-    width="700px"
-    top="5vh"
-    class="detail"
-    :close-on-click-modal="false"
+    :direction="direction"
   >
+    <el-scrollbar class="page-scroll">
     <main>
       <div>
         <el-form
@@ -15,69 +171,86 @@
           label-width="150px"
           :model="ruleForm"
           :rules="rule"
+          :label-position="labelPosition"
           class="w100"
         >
-          <el-form-item label="数据集名称" class="w100" prop="datas_name" >
-            <el-input
-              v-model="ruleForm.datas_name"
-              placeholder="请输入数据集名称"
-            />
-          </el-form-item>
-          <el-form-item label="描述">
-            <el-input
-              v-model="ruleForm.des"
-              placeholder="请输入描述"
-            />
-          </el-form-item>
-          <el-form-item label="数据源名称" prop="ds_id"  class="w100" >
-            <el-select
-              v-model="ruleForm.ds_id"
-              placeholder="请选择数据源名称"
-              @change="getSchemaName(ruleForm.ds_id,'edit')"
-              clearable
-              class="w100"
-            >
-              <el-option
-                v-for="item in sourceOption"
-                :key="item.id"
-                :label="item.ds_name"
-                :value="item.id"
-              />
-            </el-select>
-          </el-form-item>
-          <el-form-item label="schema名称" prop="schema_name"  class="w100" >
-            <el-select
-              v-model="ruleForm.schema_name"
-              placeholder="请选择schema名称"
-              @change="getTableName"
-              clearable
-              class="w100"
-            >
-              <el-option
-                v-for="(item, index) in schemaOption"
-                :key="index"
-                :label="item"
-                :value="item"
-              />
-            </el-select>
-          </el-form-item>
-          <el-form-item label="表名称" prop="table_name"  class="w100" >
-            <el-select
-              v-model="ruleForm.table_name"
-              placeholder="请选择表名称"
-              filterable
-              @change="getFiledInfo"
-              clearable
-              class="w100"
-            >
-              <el-option
-                v-for="(item, index) in tableOption"
-                :key="index"
-                :label="item.table_name + '\t' + item.comments"
-                :value="item.table_name"
-              />
-            </el-select>
-          </el-form-item>
+          <el-row>
+            <el-col span="12">
+              <el-form-item label="数据集名称" class="w90" prop="datas_name" >
+                <el-input
+                  v-model="ruleForm.datas_name"
+                  placeholder="请输入数据集名称"
+                />
+              </el-form-item>
+            </el-col>
+            <el-col span="12">
+              <el-form-item label="数据源名称" prop="ds_id"  class="w90" >
+                <el-select
+                  v-model="ruleForm.ds_id"
+                  placeholder="请选择数据源名称"
+                  @change="getSchemaName(ruleForm.ds_id,'edit')"
+                  clearable
+                  class="w100"
+                >
+                  <el-option
+                    v-for="item in sourceOption"
+                    :key="item.id"
+                    :label="item.ds_name"
+                    :value="item.id"
+                  />
+                </el-select>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col span="12">
+              <el-form-item label="schema名称" prop="schema_name"  class="w90" >
+                <el-select
+                  v-model="ruleForm.schema_name"
+                  placeholder="请选择schema名称"
+                  @change="getTableName"
+                  clearable
+                  class="w100"
+                >
+                  <el-option
+                    v-for="(item, index) in schemaOption"
+                    :key="index"
+                    :label="item"
+                    :value="item"
+                  />
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col span="12">
+              <el-form-item label="表名称" prop="table_name"  class="w90" >
+                <el-select
+                  v-model="ruleForm.table_name"
+                  placeholder="请选择表名称"
+                  filterable
+                  @change="getFiledInfo"
+                  clearable
+                  class="w100"
+                >
+                  <el-option
+                    v-for="(item, index) in tableOption"
+                    :key="index"
+                    :label="item.table_name + '\t' + item.comments"
+                    :value="item.table_name"
+                  />
+                </el-select>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col span="24">
+              <el-form-item label="描述">
+                <el-input
+                  v-model="ruleForm.des"
+                  placeholder="请输入描述"
+                />
+              </el-form-item>
+            </el-col>
+          </el-row>
           <div class="field_main">
             <div class="field_head">
               <h3>where语句</h3>
@@ -124,13 +297,13 @@
                   placeholder="exp：where field = xxx"
                   limit="10"
                   show-word-limit
-                  :autosize="{ minRows: 8.5, maxRows: 20 }"
+                  :autosize="{ minRows: 4, maxRows: 20 }"
                 />
               </div>
             </div>
             <div>
               <el-button type="primary" class="conn" @click="testLink"
-                >返回样例</el-button
+              >返回样例</el-button
               >
             </div>
           </div>
@@ -150,11 +323,12 @@
         </div>
       </div>
     </main>
-    <span slot="footer" class="dialog-footer">
+    <div class="demo-drawer__footer">
       <el-button @click="dialogVisible = false">取 消</el-button>
       <el-button type="primary" @click="handleAdd">确 定</el-button>
-    </span>
-  </el-dialog>
+    </div>
+    </el-scrollbar>
+  </el-drawer>
 </template>
 
 <script>
@@ -181,6 +355,7 @@ export default {
   },
   data() {
     return {
+      labelPosition: 'top',
       dialogVisible: false,
       sourceOption: [],
       schemaOption: [],
@@ -218,6 +393,8 @@ export default {
       },
       type: 0,
       datas_id: "",
+
+      direction: 'rtl',
     };
   },
   computed: {},
@@ -329,5 +506,38 @@ export default {
 .conn {
   float: right;
   margin: 15px 0;
+  background: #19BC9C;
+  border-radius: 4px;
+  color: #fff;
+  border: 1px solid rgba(25, 188, 156, 0.6);
+}
+::v-deep .rtl{
+  padding: 20px;
+}
+::v-deep .el-drawer__body {
+  overflow: auto;
+}
+.el-scrollbar__wrap{
+  overflow-x: hidden;
+}
+.page-scroll{
+  height: 100%;
+  width: 100%;
+}
+::v-deep .demo-drawer__footer{
+   float: right;
+   margin: 16px 0;
+  .el-button--primary{
+    background: #19BC9C;
+    border-radius: 4px;
+    border-color: #19BC9C;
+    color: #FFFFFF;
+  }
+  .el-button--default{
+    background: rgba(25, 188, 156, 0.2);
+    border-radius: 4px;
+    border: 1px solid rgba(25, 188, 156, 0.6);
+    color: #00C5A5;
+  }
 }
 </style>

@@ -41,15 +41,31 @@
           />
         </div>
         <div>
-          <el-button type="primary" @click="getResult" size="small" >筛选</el-button>
+          <el-button type="primary" @click="getResult" size="small" class="screen" >筛选</el-button>
         </div>
       </div>
       <div class="right">
         <div>
-          <el-button type="primary" @click="dialogVisible = true" size="small"
-            >批量标签</el-button
-          >
-          <el-button type="success" plain @click="dialogAnalysis = true" size="small"
+          <el-popover
+            placement="top"
+            width="200"
+            trigger="click">
+            <el-input
+              placeholder="请输入任务名称"
+              v-model="searchName">
+              <i slot="prefix" class="el-input__icon el-icon-search"></i>
+            </el-input>
+            <ul class="el-scrollbar__view el-select-dropdown__list">
+              <el-scrollbar>
+                <li v-for="(item, index) in TagOptions" class="list_item" @click="updateClassTag(1,'',item)">
+                  <span>{{item}}</span>
+                </li>
+              </el-scrollbar>
+            </ul>
+            <el-button slot="reference" type="primary" size="small" class="tags"
+            >批量标签 ˇ</el-button>
+          </el-popover>
+          <el-button type="success" plain @click="dialogAnalysis = true" size="small" class="rethink" style="margin-left: 12px"
             >重新分析</el-button
           >
           <el-button
@@ -76,7 +92,7 @@
         v-loading="isLoading"
         :data="tableData"
         tooltip-effect="dark"
-        border
+
         style="width: 100%"
         @selection-change="handleSelectionChange"
       >
@@ -155,15 +171,16 @@
     <el-dialog
       :visible.sync="dialogAnalysis"
       title="基本信息"
-      width="700px"
-      top="5vh"
+      width="400px"
+      top="20vh"
       class="detail"
+      :modal="false"
       :close-on-click-modal="false"
     >
       <main>
         <el-form label-position="right" label-width="100px">
           <el-form-item label="任务类型">
-            <el-select v-model="DataValue" placeholder="请选择">
+            <el-select v-model="DataValue" placeholder="请选择" style="width: 100%">
               <el-option
                 v-for="(item, index) in DataOption"
                 :key="index"
@@ -172,9 +189,9 @@
               />
             </el-select>
           </el-form-item>
-          <el-form-item label="任务参数">
+          <el-form-item label="任务参数" class="taskpara">
             <div>
-              {{ this.params_json[0].des }}
+              <span class="taskdes">({{ this.params_json[0].des }})</span>
               <el-input v-model="para.num" placeholer="请输入参数值" />
             </div>
           </el-form-item>
@@ -182,8 +199,8 @@
       </main>
 
       <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogAnalysis = false">取 消</el-button>
-        <el-button type="primary" @click="reAnalyze">确 定</el-button>
+        <el-button @click="dialogAnalysis = false" size="small" class="cancel">取 消</el-button>
+        <el-button type="primary" @click="reAnalyze" size="small" class="rethink">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -199,6 +216,7 @@ export default {
   components: {},
   data() {
     return {
+      searchName:'',
       exportLoading: false,
       isLoading: true,
       dialogVisible: false,
@@ -382,7 +400,7 @@ export default {
         let params = {
           dataset_id: this.$route.query.dataset_id,
           label_ids: flg ? this.selectedIDs : [id],
-          manual_tag: flg ? this.Tagvalue : tag,
+          manual_tag: tag,
           is_total: this.is_total,
           tag: "",
           class_id: this.Typevalue,
@@ -466,4 +484,57 @@ export default {
   padding: 10px;
   border-radius: 3px;
 }
+.screen{
+  background: #19BC9C;
+  box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.06);
+  border-radius: 1px;
+  border-color: #19BC9C;
+}
+.tags{
+  background: rgba(25, 188, 156, 0.2);
+  border: 1px solid rgba(25, 188, 156, 0.6);
+  color: #00BF9B;
+  ::v-deep .el-input__inner{
+    background: rgba(25, 188, 156, 0.2);
+    color: #00BF9B;
+    width: 96px;
+    height: 32px;
+  }
+  ::v-deep .el-input__inner::placeholder{
+    color: #00BF9B !important;
+  }
+}
+.rethink{
+  background: #19BC9C;
+  border-color: #19BC9C;
+  color: #fff;
+}
+.cancel{
+  background: rgba(25, 188, 156, 0.2);
+  border: 1px solid rgba(25, 188, 156, 0.6);
+  color: #00BF9B;
+}
+.taskpara{
+  .taskdes{
+    position: absolute;
+    left: -73px;
+    top: 15px;
+  }
+}
+.list_item{
+  box-shadow: inset 0px -1px 0px 0px rgba(0, 0, 0, 0.1);
+  color: #333333;
+  height: 45px;
+  line-height: 45px;
+  font-size: 14px;
+  font-weight: 400;
+}
+.list_item:hover{
+  background: #F0F5F8;
+  cursor:pointer;
+}
+::v-deep.el-scrollbar .el-scrollbar__view{
+   height: 260px;
+}
+
 </style>

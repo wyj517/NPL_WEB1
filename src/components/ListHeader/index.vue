@@ -3,7 +3,7 @@
     <div class="title">
       <div>
         <span style="font-size: 14px">
-          {{ title === '' ? $route.meta.title : title }}
+          {{ title === '' ? $route.meta.title : title }}：
         </span>
         <el-input v-model="find" placeholder="输入关键字" size="small" style="width: 200px" />
         <el-button v-if="showSearch" type="primary" size="small" style="margin-left: 20px" plain @click="createSearch">
@@ -13,7 +13,7 @@
       <div>
         <el-button
           v-if="showCreate"
-          type="primary"
+          type="success"
           size="small"
           @click="createData"
         >新增{{ buttonTitle }}
@@ -88,5 +88,15 @@ export default {
 .title {
   display: flex;
   justify-content: space-between;
+}
+::v-deep .el-button--success{
+  color: #fff;
+  background-color: #19BC9C;
+  border-color: #19BC9C;
+}
+::v-deep .el-button--primary.is-plain{
+  color: #fff;
+  background-color: #19BC9C;
+  border-color: #19BC9C;
 }
 </style>

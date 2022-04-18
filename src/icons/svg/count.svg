@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="128" height="128" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>平台统计</title>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" opacity="0.8">
+        <g id="02数据集管理_添加任务" transform="translate(-30.000000, -293.000000)" fill="#19BC9C" fill-rule="nonzero">
+            <g id="编组-3" transform="translate(0.000000, 106.000000)">
+                <g id="编组-2" transform="translate(0.000000, 169.000000)">
+                    <g id="平台统计" transform="translate(30.000000, 18.000000)">
+                        <path d="M0,10.9088715 C0,15.932408 4.06758448,20 9.09136421,20 C14.1151439,20 18.1827284,15.932408 18.1827284,10.9088715 L9.08886108,10.9088715 L9.08886108,1.81774291 C4.06758448,1.81774291 0,5.88533494 0,10.9088715 Z M20,9.09112855 C20,4.06759203 15.9324155,-4.39104262e-16 10.9086358,-4.39104262e-16 L10.9086358,9.09112855 L20,9.09112855 Z" id="形状"></path>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
