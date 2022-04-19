@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="20px" height="20px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>列表</title>
+    <defs>
+        <path d="M16.7353371,1.11852503 C16.7353371,1.11259551 16.7338366,1.10593993 16.7338366,1.10005881 C16.7011638,1.09562982 16.6684667,1.09047477 16.6320667,1.09047477 L14.5509509,1.09047477 C14.5710387,1.20190132 14.583648,1.31477999 14.583648,1.42990946 C14.5851243,2.28656758 13.9617746,3.12918848 13.2225209,3.12918848 L6.83132274,3.12918848 C6.05266804,3.12918848 5.42929412,2.28654338 5.42929412,1.42990946 C5.43079465,1.31628052 5.44342816,1.20192552 5.46349171,1.09047477 L3.35710889,1.09047477 C3.33854586,1.09047477 3.32368576,1.0941777 3.30509854,1.09490376 C3.3058488,1.10303567 3.30437248,1.11186944 3.30509854,1.12075162 C2.16091927,1.19376941 1.25,2.1323517 1.25,3.28635702 L1.25,17.8200427 C1.25,19.0212664 2.2344695,19.9996854 3.44479316,19.9996854 L16.6156819,19.9996854 C17.8260297,19.9996854 18.810475,19.0212664 18.810475,17.8200427 L18.810475,3.28638123 C18.810475,2.12497005 17.8891731,1.18195877 16.7353129,1.11852503 L16.7353371,1.11852503 Z M15.0138406,9.0350374 L9.94739367,13.962419 C9.63460552,14.2664217 9.08405577,14.2656715 8.77051734,13.9631692 L5.82681389,11.102479 C5.67078284,10.9512158 5.5845991,10.7483052 5.5845991,10.5321077 C5.5845991,10.3166605 5.67075864,10.114476 5.82678969,9.96396305 C5.983571,9.81197376 6.19308872,9.72709693 6.41599022,9.72709693 C6.63814145,9.72709693 6.84765917,9.81194955 7.00444048,9.96321278 L9.35894341,12.250579 L13.8369159,7.89572276 C14.1497282,7.59101811 14.700278,7.59174417 15.0138164,7.89572276 C15.1698474,8.04625993 15.2560357,8.24917047 15.2560357,8.46461772 C15.2567572,8.68083943 15.1698474,8.88299971 15.0138164,9.034989 L15.0138406,9.0350374 Z M12.3701466,0.0378458429 L7.77997311,0.0378458429 C7.7763912,0.0378458429 7.77288189,0.0389125099 7.76927578,0.0391258429 L12.3808681,0.0391258429 C12.3772862,0.0389125099 12.3737285,0.0378458429 12.3701466,0.0378458429 Z" id="path-1"></path>
+        <filter x="-8.5%" y="-7.5%" width="117.1%" height="115.0%" filterUnits="objectBoundingBox" id="filter-2">
+            <feGaussianBlur stdDeviation="1" in="SourceAlpha" result="shadowBlurInner1"></feGaussianBlur>
+            <feOffset dx="0" dy="1" in="shadowBlurInner1" result="shadowOffsetInner1"></feOffset>
+            <feComposite in="shadowOffsetInner1" in2="SourceAlpha" operator="arithmetic" k2="-1" k3="1" result="shadowInnerInner1"></feComposite>
+            <feColorMatrix values="0 0 0 0 0.600514482   0 0 0 0 1   0 0 0 0 0.949191309  0 0 0 0.5 0" type="matrix" in="shadowInnerInner1"></feColorMatrix>
+        </filter>
+        <path d="M12.3808681,0 L7.76927578,0 C7.26238664,0.00631675246 6.8594214,0.458170272 6.8594214,1.01796523 C6.8594214,1.58095487 7.26955047,2.03842328 7.77997311,2.03842328 L12.3968899,2.03842328 C12.8827958,2.03842328 13.2936751,1.5824554 13.2936751,1.01796523 C13.2936751,0.458170272 12.8899838,0.00631675246 12.3808681,0 L12.3808681,0 Z" id="path-3"></path>
+        <filter x="-23.3%" y="-73.6%" width="146.6%" height="247.2%" filterUnits="objectBoundingBox" id="filter-4">
+            <feGaussianBlur stdDeviation="1" in="SourceAlpha" result="shadowBlurInner1"></feGaussianBlur>
+            <feOffset dx="0" dy="1" in="shadowBlurInner1" result="shadowOffsetInner1"></feOffset>
+            <feComposite in="shadowOffsetInner1" in2="SourceAlpha" operator="arithmetic" k2="-1" k3="1" result="shadowInnerInner1"></feComposite>
+            <feColorMatrix values="0 0 0 0 0.600514482   0 0 0 0 1   0 0 0 0 0.949191309  0 0 0 0.5 0" type="matrix" in="shadowInnerInner1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="02数据集管理_新增编辑" transform="translate(-20.000000, -349.000000)">
+            <g id="编组" transform="translate(0.000000, 331.000000)">
+                <g id="列表" transform="translate(20.000000, 18.000000)">
+                    <rect id="矩形" x="0" y="0" width="20" height="20"></rect>
+                    <g id="形状结合" fill-rule="nonzero">
+                        <use fill="#19BC9C" xlink:href="#path-1"></use>
+                        <use fill="black" fill-opacity="1" filter="url(#filter-2)" xlink:href="#path-1"></use>
+                    </g>
+                    <g id="路径" fill-rule="nonzero">
+                        <use fill="#FFC123" xlink:href="#path-3"></use>
+                        <use fill="black" fill-opacity="1" filter="url(#filter-4)" xlink:href="#path-3"></use>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -21,7 +21,7 @@
     <Task
       ref="taskDialogRef"
     />
-    <tasklist
+    <TaskList
       ref="listDialogRef"
     />
   </div>
@@ -34,12 +34,12 @@ import Details from './edit-page/Detail.vue'
 import Task from './perform-task/task.vue'
 import { formatDates } from '@/utils'
 import { setList, setRemove } from '@/api/dataset'
-import Tasklist from '@/views/data-management/dataset/list-task/tasklist'
+import TaskList from '@/views/data-management/dataset/list-task/tasklist'
 
 export default {
   name: 'Index',
   components: {
-    Tasklist,
+    TaskList,
     BaseTable,
     ListHeader,
     Details,
@@ -297,7 +297,7 @@ export default {
 
 ::v-deep .el-tag{
   margin-left: 10px;
-  line-height: 22px;
+  line-height: 20px;
   height: 22px;
 }
 ::v-deep .el-tag--success{

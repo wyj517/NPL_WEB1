@@ -94,7 +94,15 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+.router-link-active{
+  .is-active{
+    color: #fff;
+    font-weight: bold;
+  }
+}
 .is-active{
   box-shadow:0px 2px 4px 0px rgba(0, 0, 0, 0.5), inset 0px 0px 14px 0px rgba(25, 188, 156, 0.5);
+  color: #fff;
+  font-weight: bold;
 }
 </style>

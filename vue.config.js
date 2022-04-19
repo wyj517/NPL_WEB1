@@ -41,7 +41,7 @@ module.exports = {
     proxy: {
       "/nlp": {
         target:
-            "http://122.228.14.96:10001/nlp",
+            "https://122.228.14.96:10001/nlp",
         changeOrigin: true,
         logLevel: "debug",
         pathRewrite: {

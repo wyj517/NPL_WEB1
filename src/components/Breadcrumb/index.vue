@@ -1,12 +1,16 @@
 <template>
-  <el-breadcrumb class="app-breadcrumb" separator="/">
-    <transition-group name="breadcrumb">
-      <el-breadcrumb-item v-for="(item,index) in levelList" :key="item.path">
-        <span v-if="item.redirect==='noRedirect'||index==levelList.length-1" class="no-redirect" >{{ item.meta.title }}</span>
-        <a v-else @click.prevent="handleLink(item)" style="color: #97a8be">{{ item.meta.title }}</a>
-      </el-breadcrumb-item>
-    </transition-group>
-  </el-breadcrumb>
+<!--  <el-breadcrumb class="app-breadcrumb" separator="/">-->
+<!--    <transition-group name="breadcrumb">-->
+<!--      <el-breadcrumb-item v-for="(item,index) in levelList" :key="item.path">-->
+<!--        <span v-if="item.redirect==='noRedirect'||index==levelList.length-1" class="no-redirect" >{{ item.meta.title }}</span>-->
+<!--        <a v-else @click.prevent="handleLink(item)" style="color: #333333;font-weight: 500">{{ item.meta.title }}</a>-->
+<!--      </el-breadcrumb-item>-->
+<!--    </transition-group>-->
+<!--  </el-breadcrumb>-->
+  <div class="arrow">
+    <span class="arrow-left"></span>
+    <span style="margin-left: 14px;color: #333333;font-weight: bold;font-size: 16px">{{this.$route.meta.title}}</span>
+  </div>
 </template>
 
 <script>
@@ -64,6 +68,25 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.arrow{
+  height: 50px;
+  line-height: 50px;
+}
+.arrow-left:before {
+  content: " ";
+  display: inline-block;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+  height: .75rem;
+  width: .75rem;
+  border-width: 0 0 2px 2px;
+  border-color: #666;
+  border-style: solid;
+  position: relative;
+  top: 0
+}
+
 .app-breadcrumb.el-breadcrumb {
   display: inline-block;
   font-size: 14px;
