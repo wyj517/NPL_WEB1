@@ -1,5 +1,5 @@
 <template>
-  <div class="login-container">
+  <div class="login-container" :class="{'longgang':isLonggang}" >
     <div style="width: 59%">
 
     </div>
@@ -95,7 +95,7 @@ export default {
       passwordType: 'password',
       redirect: undefined,
       activeName: 'first',
-      fill:'#00C5A5'
+      fill:'#00C5A5',
     }
   },
   watch: {
@@ -105,6 +105,11 @@ export default {
       },
       immediate: true
     }
+  },
+  computed:{
+      isLonggang(){
+      return   process.env.VUE_APP_TITLE == "龙港语义分析平台"
+      }
   },
   methods: {
     showPwd() {
@@ -196,6 +201,10 @@ export default {
   background-size: 100% 100%;
   display: flex;
   flex-direction: row;
+  &.longgang{
+     background: url("../../assets/login-lg.png") fixed no-repeat;
+      background-size: 100% 100%;
+  }
 }
 
 .right {
