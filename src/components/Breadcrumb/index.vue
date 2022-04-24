@@ -64,6 +64,25 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.arrow{
+  height: 50px;
+  line-height: 50px;
+}
+.arrow-left:before {
+  content: " ";
+  display: inline-block;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+  height: .75rem;
+  width: .75rem;
+  border-width: 0 0 2px 2px;
+  border-color: #666;
+  border-style: solid;
+  position: relative;
+  top: 0
+}
+
 .app-breadcrumb.el-breadcrumb {
   display: inline-block;
   font-size: 14px;

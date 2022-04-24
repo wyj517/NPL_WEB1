@@ -25,7 +25,7 @@
         <el-button type="primary" size="mini">删除</el-button>
       </div>
       <div>
-        <div v-for="(item,index) in tableData">
+        <div v-for="(item,index) in tableData" @click="openTaskInfo(item.id,item.task_name)">
           <el-container>
             <el-header class="list_header" style="height: 40px">
               <el-checkbox class="title">测试数据集任务1-1-1</el-checkbox>
@@ -47,36 +47,36 @@
                 class="w100"
               >
                 <el-row>
-                  <el-col span="12">
+                  <el-col :span="12">
                     <el-form-item label="数据集名称：" class="w90" prop="task_name">
                       <span>{{ item.task_name }}</span>
                     </el-form-item>
                   </el-col>
-                  <el-col span="12">
+                  <el-col :span="12">
                     <el-form-item label="数据源名称：" class="w90" prop="datas_name">
                       <span>{{ item.datas_name }}</span>
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row>
-                  <el-col span="12">
+                  <el-col :span="12">
                     <el-form-item label="数据集类型：" class="w90" prop="task_type">
                       <span>{{ item.task_type }}</span>
                     </el-form-item>
                   </el-col>
-                  <el-col span="12">
+                  <el-col :span="12">
                     <el-form-item label="数据源类型：" class="w90" prop="datas_name">
                       <span></span>
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row>
-                  <el-col span="12">
+                  <el-col :span="12">
                     <el-form-item label="创建人：" class="w90" prop="full_name">
                       <span>{{ item.full_name }}</span>
                     </el-form-item>
                   </el-col>
-                  <el-col span="12">
+                  <el-col :span="12">
                     <el-form-item label="创建时间：" class="w90" prop="datas_name">
                       <span>{{ formatDate(item.create_time) }}</span>
                     </el-form-item>
@@ -99,11 +99,7 @@ import { formatDates } from '@/utils'
 export default {
   name: 'tasklist',
   props: {
-    data: {
-      type: Array,
-      required: true,
-      default: () => []
-    }
+
   },
   data() {
     return {
@@ -153,6 +149,9 @@ export default {
     },
     formatDate(time){
       return formatDates(time)
+    },
+    openTaskInfo(id,name){
+      this.$router.push({name:"Taskstate",query:{id,name}})
     }
   }
 }

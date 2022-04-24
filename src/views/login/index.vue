@@ -4,7 +4,7 @@
 
     </div>
     <div class="right" style="width: 41%">
-      <el-tabs v-model="activeName" style="width: 50%" stretch="true">
+      <el-tabs v-model="activeName" style="width: 50%" :stretch="true">
         <el-tab-pane label="账号密码登录" name="first" style="margin-top: 8px" >
           <el-form
             ref="loginForm"
@@ -21,7 +21,6 @@
               <el-input
                 ref="username"
                 v-model="loginForm.username"
-                placeholder="请输入用户名"
                 name="username"
                 type="text"
                 tabindex="1"
@@ -39,7 +38,6 @@
                 ref="password"
                 v-model="loginForm.password"
                 :type="passwordType"
-                placeholder="请输入密码"
                 name="password"
                 tabindex="2"
                 auto-complete="on"
@@ -271,4 +269,5 @@ export default {
   }
 }
 
+::v-deep input:-webkit-autofill { box-shadow: 0 0 0px 1000px #fff inset !important;}
 </style>

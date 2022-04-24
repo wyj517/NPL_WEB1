@@ -74,14 +74,14 @@ export const constantRoutes = [
     redirect: '/task/tasklist',
     meta: {
       title: '任务管理',
-      icon: 'taskmn'
+      icon: 'tasklist'
     },
     children: [
       {
         path: 'tasklist',
         component: () => import('@/views/task-management/tasklist/index'),
         name: 'Tasklist',
-        meta: { title: '任务列表', icon: 'datasour', affix: true },
+        meta: { title: '任务列表', icon: 'tasklist', affix: true },
         children: []
       },
       {
@@ -120,14 +120,14 @@ export const constantRoutes = [
         path: 'users',
         component: () => import('@/views/user-management/users/index'),
         name: 'Users',
-        meta: { title: '用户管理', icon: 'link', affix: true },
+        meta: { title: '用户管理', icon: 'users', affix: true },
         children: []
       },
       {
         path: 'roles',
         component: () => import('@/views/user-management/roles/index'),
         name: 'Roles',
-        meta: { title: '角色管理', icon: 'link', affix: true }
+        meta: { title: '角色管理', icon: 'role', affix: true }
       }
     ]
   },
