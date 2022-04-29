@@ -103,6 +103,12 @@ export const constantRoutes = [
         name: 'Analysis',
         hidden: true,
         meta: { title: '数据分析', icon: 'count', affix: true }
+      },{
+        path: 'charts',
+        component: () => import('@/views/task-management/task-chart/index'),
+        name: 'Charts',
+        hidden: true,
+        meta: { title: '图表', icon: 'count', affix: true }
       }
     ]
   },

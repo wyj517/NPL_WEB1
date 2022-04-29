@@ -22,11 +22,28 @@ export function logout() {
   })
 }
 
+//注册账号
+export function register(data){
+  return request({
+    url: '/account/register',
+    method: 'post',
+    data
+  })
+}
+
 //获取角色列表
 export function getRole(){
   return request({
     url: '/system/get_role_list',
     method: 'post'
+  })
+}
+//获取用户信息列表
+export function getUser(data){
+  return request({
+    url: '/system/get_user_list',
+    method: 'post',
+    data
   })
 }
 //修改或新建用户
@@ -53,3 +70,28 @@ export function deleteRole(data){
     data
   })
 }
+//修改用户密码
+export function changePassword(data){
+  return request({
+    url:'/system/change_user_password',
+    method:'post',
+    data
+  })
+}
+//获取组织列表
+export function getOrg(data){
+  return request({
+    url: '/system/get_org_list',
+    method: 'post',
+    data
+  })
+}
+//获取组织树
+export function getOrgTree(data){
+  return request({
+    url: '/system/get_org_tree',
+    method: 'post',
+    data
+  })
+}
+
