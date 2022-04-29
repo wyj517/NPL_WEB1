@@ -41,7 +41,7 @@ module.exports = {
     proxy: {
       "/nlp": {
         target:
-            "https://122.228.14.96:10001/nlp",
+            "https://nlp.wenzhou.gov.cn:10010/nlp",
         changeOrigin: true,
         logLevel: "debug",
         pathRewrite: {

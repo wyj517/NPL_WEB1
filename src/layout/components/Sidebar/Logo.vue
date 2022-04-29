@@ -1,12 +1,22 @@
 <template>
-  <div class="sidebar-logo-container" :class="{'collapse':collapse}">
+  <div class="sidebar-logo-container" :class="{ collapse: collapse }">
     <transition name="sidebarLogoFade">
-      <router-link v-if="collapse" key="collapse" class="sidebar-logo-link" to="/">
-        <img v-if="logo" :src="logo" class="sidebar-logo">
-<!--        <h1 v-else class="sidebar-title">{{ title }} </h1>-->
+      <router-link
+        v-if="collapse"
+        key="collapse"
+        class="sidebar-logo-link"
+        to="/"
+      >
+        <img
+          v-if="logo"
+          src="../../../assets/logo-mini.png"
+          class="sidebar-logo"
+        />
+        <!--        <h1 v-else class="sidebar-title">{{ title }} </h1>-->
       </router-link>
+      <!-- 大图 -->
       <router-link v-else key="expand" class="sidebar-logo-link" to="/">
-        <img v-if="logo" src="../../../assets/logo.png" class="sidebar-logo">
+        <img v-if="logo" :src="logo" class="sidebar-logo" />
       </router-link>
     </transition>
   </div>
@@ -14,20 +24,25 @@
 
 <script>
 export default {
-  name: 'SidebarLogo',
+  name: "SidebarLogo",
   props: {
     collapse: {
       type: Boolean,
-      required: true
-    }
+      required: true,
+    },
   },
   data() {
     return {
       title: process.env.VUE_APP_TITLE,
-      logo: '../../../assets/logo.png'
+      logo: require("../../../assets/logo.png"),
+    };
+  },
+  mounted(){
+    if (process.env.VUE_APP_TITLE == "龙港语义分析平台") {
+        this.logo= require("../../../assets/logo-lg.png")
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
@@ -48,7 +63,6 @@ export default {
   background: #2b2f3a;
   text-align: center;
   overflow: hidden;
-
   & .sidebar-logo-link {
     height: 100%;
     width: 100%;
@@ -73,8 +87,10 @@ export default {
   }
 
   &.collapse {
+    height: 54px;
     .sidebar-logo {
       margin-right: 0px;
+      vertical-align: top;
     }
   }
 }

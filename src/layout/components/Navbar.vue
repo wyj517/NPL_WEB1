@@ -1,63 +1,58 @@
 <template>
   <div class="navbar">
-    <div style="background: #fff;height: 50px;padding: 0 42px 0 20px;">
-<!--      <hamburger :is-active="sidebar.opened" class="hamburger-container" @toggleClick="toggleSideBar" />-->
+    <hamburger
+      :is-active="sidebar.opened"
+      class="hamburger-container"
+      @toggleClick="toggleSideBar"
+    />
 
       <breadcrumb class="breadcrumb-container" />
 
-
-
-      <div class="right-menu">
-        <el-dropdown class="avatar-container" trigger="click">
-          <div class="avatar-wrapper">
-            <img src="../../assets/users.png" class="user-avatar">
-            <i class="el-icon-caret-bottom" />
-          </div>
-          <el-dropdown-menu slot="dropdown" class="user-dropdown">
-            <router-link to="/">
-              <el-dropdown-item>
-                主页
-              </el-dropdown-item>
-            </router-link>
-            <a target="_blank" href="">
-              <el-dropdown-item>设置</el-dropdown-item>
-            </a>
-            <el-dropdown-item divided @click.native="logout">
-              <span style="display:block;">登出</span>
-            </el-dropdown-item>
-          </el-dropdown-menu>
-        </el-dropdown>
-      </div>
+    <div class="right-menu">
+      <el-dropdown class="avatar-container" trigger="click">
+        <div class="avatar-wrapper">
+          <img src="../../assets/users.png" class="user-avatar" />
+          <i class="el-icon-caret-bottom" />
+        </div>
+        <el-dropdown-menu slot="dropdown" class="user-dropdown">
+          <router-link to="/">
+            <el-dropdown-item> 主页 </el-dropdown-item>
+          </router-link>
+          <a target="_blank" href="">
+            <el-dropdown-item>设置</el-dropdown-item>
+          </a>
+          <el-dropdown-item divided @click.native="logout">
+            <span style="display: block">登出</span>
+          </el-dropdown-item>
+        </el-dropdown-menu>
+      </el-dropdown>
     </div>
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-import Breadcrumb from '@/components/Breadcrumb'
-import Hamburger from '@/components/Hamburger'
+import { mapGetters } from "vuex";
+import Breadcrumb from "@/components/Breadcrumb";
+import Hamburger from "@/components/Hamburger";
 
 export default {
   components: {
     Breadcrumb,
-    Hamburger
+    Hamburger,
   },
   computed: {
-    ...mapGetters([
-      'sidebar',
-      'avatar'
-    ])
+    ...mapGetters(["sidebar", "avatar"]),
   },
   methods: {
     toggleSideBar() {
-      this.$store.dispatch('app/toggleSideBar')
+      this.$store.dispatch("app/toggleSideBar");
     },
     async logout() {
-      await this.$store.dispatch('user/logout')
-      this.$router.push(`/login?redirect=${this.$route.fullPath}`)
-    }
-  }
-}
+      await this.$store.dispatch("user/logout");
+      this.$router.push(`/login?redirect=${this.$route.fullPath}`);
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>
@@ -66,19 +61,20 @@ export default {
   height: 60px;
   overflow: hidden;
   position: relative;
-  background: #F0F2F8;
-  box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
+  background: #ffffff;
+  border-bottom: solid 6px #f0f2f8;
+  // box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
 
   .hamburger-container {
     line-height: 46px;
     height: 100%;
     float: left;
     cursor: pointer;
-    transition: background .3s;
-    -webkit-tap-highlight-color:transparent;
+    transition: background 0.3s;
+    -webkit-tap-highlight-color: transparent;
 
     &:hover {
-      background: rgba(0, 0, 0, .025)
+      background: rgba(0, 0, 0, 0.025);
     }
   }
 
@@ -104,10 +100,10 @@ export default {
 
       &.hover-effect {
         cursor: pointer;
-        transition: background .3s;
+        transition: background 0.3s;
 
         &:hover {
-          background: rgba(0, 0, 0, .025)
+          background: rgba(0, 0, 0, 0.025);
         }
       }
     }
