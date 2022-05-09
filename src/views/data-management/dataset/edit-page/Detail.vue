@@ -1,6 +1,7 @@
 <template>
   <el-drawer
     title="编辑"
+    v-drawerDrag
     :visible.sync="dialogVisible"
     :direction="direction"
   >

@@ -17,12 +17,12 @@
             :model="ruleForm"
             :rules="rule"
           >
-            <el-form-item label="id" prop="id">
-              <el-input
-                v-model="ruleForm.id"
-                placeholder="请输入id"
-              />
-            </el-form-item>
+<!--            <el-form-item label="id" prop="id">-->
+<!--              <el-input-->
+<!--                v-model="ruleForm.id"-->
+<!--                placeholder="请输入id"-->
+<!--              />-->
+<!--            </el-form-item>-->
             <el-form-item label="角色名称" prop="role_name">
               <el-input
                 v-model="ruleForm.role_name"
@@ -66,6 +66,7 @@ import BaseTable from '@/components/BaseTable'
 import { formatDates, interval } from '@/utils'
 import { deleteRole, getRole, updateRole } from '@/api/user'
 import ListHeader from '@/components/ListHeader'
+import { setRemove } from '@/api/dataset'
 
 export default {
   name: 'index',
@@ -91,7 +92,8 @@ export default {
         remarks: ''
       },
       rule: {
-        role_name: [{ required: true, message: '角色名称不能为空', trigger: 'blur' }]
+        role_name: [{ required: true, message: '角色名称不能为空', trigger: 'blur' }],
+        lvl: [{ required: true, message: '角色等级不能为空', trigger: 'blur' }],
       }
     }
   },
@@ -104,14 +106,25 @@ export default {
       })
     },
     delRole(id) {
-      let params = {
-        record_id: id
-      }
-      deleteRole(params).then(res => {
-        if (res.success){
-          this.$message.success(res.msg)
-          this.getList()
+      this.$confirm('确实删除吗？', '删除', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        let params = {
+          record_id: id
         }
+        deleteRole(params).then(res => {
+          if (res.success){
+            this.$message.success(res.msg)
+            this.getList()
+          }
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
       })
     },
     addRole() {
@@ -125,6 +138,7 @@ export default {
       updateRole(params).then(res => {
         if (res.success){
           this.$message.success(res.msg)
+          this.dialogVisible = false
           this.getList()
         }
       })
@@ -145,35 +159,36 @@ export default {
         { label: 'id', key: 'id', width: '150' },
         { label: '角色名称', key: 'role_name' },
         { label: '角色等级', key: 'lvl' },
-        { label: '权限管理', key: '' },
-        {
-          label: '使用状态',
-          key: true,
-          render: (h, { row }) => {
-            return h(
-              'div',
-              [
-                h(
-                  'el-switch',
-                  {
-                    props: {
-                      value: 1,
-                      "active-color":"#00BF9B",
-                      "inactive-color":"#F7F7F7",
-                      "active-value": 1,
-                      "inactive-value": 0,
-                    },
-                    on: {
-                      change: (value) => {
-                        value = value == 1 ? 0 : 1;
-                      },
-                    },
-                  }
-                )
-              ]
-            )
-          }
-        },
+        { label: '备注', key: 'remarks' },
+        // { label: '权限管理', key: '' },
+        // {
+        //   label: '使用状态',
+        //   key: true,
+        //   render: (h, { row }) => {
+        //     return h(
+        //       'div',
+        //       [
+        //         h(
+        //           'el-switch',
+        //           {
+        //             props: {
+        //               value: 1,
+        //               "active-color":"#00BF9B",
+        //               "inactive-color":"#F7F7F7",
+        //               "active-value": 1,
+        //               "inactive-value": 0,
+        //             },
+        //             on: {
+        //               change: (value) => {
+        //                 value = value == 1 ? 0 : 1;
+        //               },
+        //             },
+        //           }
+        //         )
+        //       ]
+        //     )
+        //   }
+        // },
         {
           label: '操作',
           width: '160',

@@ -1,27 +1,135 @@
 <template>
   <div class="main">
     <!--    <ListHeader title="角色名称" buttonTitle="角色" />-->
-    <el-row :gutter="20" type="flex" style="height: 100%;background: #f0f2f8">
+    <el-row
+      :gutter="20"
+      type="flex"
+      style="height: 100%;background: #f0f2f8"
+    >
       <el-col :span="4">
         <div class="organ">
-          <el-input placeholder="请输入内容" v-model="departName" style="margin-bottom: 20px">
-            <template slot="append">查询</template>
+          <el-input
+            v-model="departName"
+            placeholder="请输入内容"
+            style="margin-bottom: 20px"
+          >
+            <template slot="append">
+              <el-button
+                @click="getOrgList"
+              >
+                查询
+              </el-button>
+            </template>
           </el-input>
-          <svg-icon icon-class="tree"></svg-icon>
-          <span class="organ_text" style="margin-left: 8px">组织架构</span>
-          <el-tree :data="data" :props="defaultProps" style="margin-top: 20px" @node-click="handleNodeClick"
-                   :highlight-current="true"
-          ></el-tree>
+          <svg-icon icon-class="tree" />
+          <span
+            class="organ_text"
+            style="margin-left: 8px"
+          >
+            组织架构
+          </span>
+          <el-tree
+            :data="data"
+            :props="defaultProps"
+            :highlight-current="true"
+            style="margin-top: 20px"
+            @node-click="handleNodeClick"
+          />
         </div>
       </el-col>
-      <el-col :span="20" style="background: #fff;padding: 20px 20px 0 20px">
+      <el-col
+        :span="20"
+        style="background: #fff;padding: 20px 20px 0 20px"
+      >
         <div class="title_header">
-          <el-input placeholder="请输入关键字" v-model="username" class="search">
-            <template slot="append">查询</template>
+          <el-input v-model="username" class="search" placeholder="请输入关键字">
+            <template slot="append">
+              <el-button
+                class="addButton"
+                @click="getUserList()"
+              >
+                查询
+              </el-button>
+            </template>
           </el-input>
-          <el-button class="addButton" @click="openDrawer()">新增用户</el-button>
+          <el-button
+            class="addButton"
+            @click="openDrawer()"
+          >
+            新增用户
+          </el-button>
         </div>
-        <BaseTable v-loading="loading" :height="height" :columns="columns" :data="tableData" />
+        <!--                <BaseTable v-loading="loading" :height="height" :columns="columns" :data="tableData" />-->
+        <el-table
+          :data="tableData"
+          :max-height="height"
+          style="width: 100%"
+          v-loading="loading"
+          @expand-change="getRoleInfo()"
+        >
+          <el-table-column type="expand">
+            <template slot-scope="props">
+              <el-form label-position="top" inline class="demo-table-expand">
+                <el-form-item label="所在组织及角色">
+                  <span>{{ props.row.name || '暂无' }}</span>
+                </el-form-item>
+              </el-form>
+            </template>
+          </el-table-column>
+          <el-table-column
+            type="index"
+            :index="count"
+            label="序号"
+            width="50"
+          >
+          </el-table-column>
+          <el-table-column
+            label="用户账号"
+            prop="username"
+          >
+          </el-table-column>
+          <el-table-column
+            label="所属组织"
+            prop="org_name"
+          >
+          </el-table-column>
+          <el-table-column
+            label="用户名称"
+            prop="full_name"
+          >
+          </el-table-column>
+          <el-table-column
+            label="手机号"
+            prop="phone_number"
+          >
+          </el-table-column>
+          <el-table-column
+            label="账户使用状态"
+          >
+            <template slot-scope="scope">
+              <el-switch
+                v-model="scope.row.is_active"
+                active-color="#13ce66"
+                inactive-color="#ff4949"
+                @change="changeState(scope.row)"
+              >
+              </el-switch>
+            </template>
+          </el-table-column>
+          <el-table-column label="操作">
+            <template slot-scope="scope">
+              <!--              <el-button-->
+              <!--                size="text"-->
+              <!--                @click="">编辑权限</el-button>-->
+              <el-button
+                type="text"
+                @click="openDrawer(scope.row)"
+              >编辑
+              </el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+
         <el-pagination
           align="right"
           style="padding: 20px"
@@ -38,6 +146,7 @@
 
     <el-drawer
       title="新增用户"
+      v-drawer-drag
       :visible.sync="drawer"
       :modal="false"
       :direction="direction"
@@ -47,18 +156,19 @@
           label-position="top"
           label-width="80px"
           :model="users"
+          :rules="rule"
         >
-          <el-form-item label="用户账号">
+          <el-form-item label="用户账号" prop="username">
             <el-input placeholder="请输入" v-model="users.username">
 
             </el-input>
           </el-form-item>
-          <el-form-item label="联系方式">
+          <el-form-item label="手机号码" prop="phone_number">
             <el-input placeholder="请输入" v-model="users.phone_number">
 
             </el-input>
           </el-form-item>
-          <el-form-item label="所属组织">
+          <el-form-item label="所属组织" prop="org_id">
             <el-select v-model="users.org_name" placeholder="请选择" :popper-append-to-body="false" style="width: 100%">
               <el-option
                 v-for="item in organOptions"
@@ -69,34 +179,12 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <!--          <el-form-item label="所属部门">-->
-          <!--            <el-select v-model="DepartValue" placeholder="请选择" class="select" :popper-append-to-body="false">-->
-          <!--              <el-option-->
-          <!--                v-for="item in DepartOptions"-->
-          <!--                :key="item.value"-->
-          <!--                :label="item.label"-->
-          <!--                :value="item.value"-->
-          <!--              >-->
-          <!--              </el-option>-->
-          <!--            </el-select>-->
-          <!--          </el-form-item>-->
-          <!--          <el-form-item label="所属角色">-->
-          <!--            <el-select v-model="RoleValue" placeholder="请选择" :popper-append-to-body="false">-->
-          <!--              <el-option-->
-          <!--                v-for="item in RoleOptions"-->
-          <!--                :key="item.value"-->
-          <!--                :label="item.label"-->
-          <!--                :value="item.value"-->
-          <!--              >-->
-          <!--              </el-option>-->
-          <!--            </el-select>-->
-          <!--          </el-form-item>-->
-          <el-form-item label="电子邮箱" prop="full_name">
+          <el-form-item label="电子邮箱" prop="email">
             <el-input placeholder="请输入" v-model="users.email">
 
             </el-input>
           </el-form-item>
-          <el-form-item label="可以ip地址" prop="full_name">
+          <el-form-item label="ip地址" prop="access_ip">
             <el-input placeholder="请输入" v-model="users.access_ip">
 
             </el-input>
@@ -111,12 +199,23 @@
 
             </el-input>
           </el-form-item>
-          <el-form-item label="使用状态">
-            <template>
-              <el-radio v-model="users.is_active" :label="true">开启</el-radio>
-              <el-radio v-model="users.is_active" :label="false">关闭</el-radio>
-            </template>
+          <el-form-item label="角色" v-if="RoleFlag">
+            <el-select v-model="RoleValue" multiple placeholder="请选择" :popper-append-to-body="false" style="width: 100%">
+              <el-option
+                v-for="item in RoleOptions"
+                :key="item.id"
+                :label="item.role_name"
+                :value="item.id"
+              >
+              </el-option>
+            </el-select>
           </el-form-item>
+<!--          <el-form-item label="使用状态" prop="is_active">-->
+<!--            <template>-->
+<!--              <el-radio v-model="users.is_active" :label="true">开启</el-radio>-->
+<!--              <el-radio v-model="users.is_active" :label="false">关闭</el-radio>-->
+<!--            </template>-->
+<!--          </el-form-item>-->
         </el-form>
         <div class="demo-drawer__footer">
           <el-button @click="drawer = false">取 消</el-button>
@@ -129,13 +228,32 @@
 
 <script>
 import BaseTable from '@/components/BaseTable'
-import { addUser, getOrg, getOrgTree, getUser, changePassword, register } from '@/api/user'
+import { addUser, getOrg, getOrgTree, getUser, changePassword, register, updateUserRole, getRole } from '@/api/user'
 import ListHeader from '@/components/ListHeader'
 
 export default {
   name: 'index',
   components: { BaseTable, ListHeader },
   data() {
+    let isMobileNumber= (rule, value, callback) => {
+      if (!value) {
+        return new Error("请输入电话号码");
+      } else {
+        const reg = /^1[3|4|5|7|8][0-9]\d{8}$/;
+        const isPhone = reg.test(value);
+        value = Number(value); //转换为数字
+        if (typeof value === "number" && !isNaN(value)) {//判断是否为数字
+          value = value.toString(); //转换成字符串
+          if (value.length < 0 || value.length > 12 || !isPhone) { //判断是否为11位手机号
+            callback(new Error("手机号码格式如:173********"));
+          } else {
+            callback();
+          }
+        } else {
+          callback(new Error("请输入电话号码"));
+        }
+      }
+    };
     return {
       page: {
         currentPage: 1,
@@ -157,24 +275,9 @@ export default {
       },
       organOptions: [],
 
-      DepartOptions: [{
-        value: '1',
-        label: '1'
-      }, {
-        value: '2',
-        label: '2'
-      }],
-      DepartValue: '',
-
-      RoleOptions: [{
-        value: '1',
-        label: '1'
-      }, {
-        value: '2',
-        label: '2'
-      }],
+      RoleOptions: [],
       RoleValue: '',
-
+      RoleFlag:true,
       users: {
         id: '',
         username: '',
@@ -197,9 +300,120 @@ export default {
         org_name: '',
         email: '',
         access_ip: ''
-      }
+      },
+      rule: {
+        username: [{ required: true, message: "请输入用户账号", trigger: "blur" },],
+        full_name: [{ required: true, message: "请输入用户名称", trigger: "blur" }],
+        phone_number: [
+          { required: true, message: "手机号码不能为空", trigger: "blur" },
+          { validator: isMobileNumber, trigger: "blur" }
+        ],
+        // is_active: [{ required: true, message: "选择不能为空", trigger: "blur" },],
+      },
     }
   },
+  mounted() {
+    this.getList()
+    this.getUserList()
+    this.getRoleList()
+    this.height = document.body.offsetHeight - 317
+  },
+  // computed: {
+  //   columns() {
+  //     const arr = [
+  //       // 表格列项
+  //       { label: '序号', key: '', width: '150' },
+  //       { label: '用户账号', key: 'username' },
+  //       { label: '所属组织', key: 'org_name' },
+  //       { label: '用户名称', key: 'full_name' },
+  //       { label: '手机号', key: 'phone_number' },
+  //       {
+  //         label: '使用状态',
+  //         key: 'is_active',
+  //         render: (h, { row }) => {
+  //           return h(
+  //             'div',
+  //             [
+  //               h(
+  //                 'el-switch',
+  //                 {
+  //                   props: {
+  //                     value: row.is_active,
+  //                     'active-color': '#00BF9B',
+  //                     'inactive-color': '#F7F7F7',
+  //                     'active-value': true,
+  //                     'inactive-value': false
+  //                   },
+  //                   on: {
+  //                     change: (value) => {
+  //                       row.is_active = row.is_active !== true
+  //                       this.changeState(row)
+  //                     }
+  //                   }
+  //                 }
+  //               )
+  //             ]
+  //           )
+  //         }
+  //       },
+  //       {
+  //         label: '操作',
+  //         width: '160',
+  //         fixed: 'right',
+  //         render: (h, { row }) => {
+  //           return h(
+  //             'div',
+  //             [
+  //               h(
+  //                 'el-button',
+  //                 {
+  //                   props: {
+  //                     type: 'text'
+  //                   },
+  //                   on: {
+  //                     click: () => {
+  //                       // this.deleteRole(row.id)
+  //                     }
+  //                   }
+  //                 },
+  //                 '查看'
+  //               ),
+  //               h(
+  //                 'el-button',
+  //                 {
+  //                   props: {
+  //                     type: 'text'
+  //                   },
+  //                   on: {
+  //                     click: () => {
+  //                       this.openDrawer(row)
+  //                     }
+  //                   }
+  //                 },
+  //                 '编辑'
+  //               )
+  //               // h(
+  //               //   'el-button',
+  //               //   {
+  //               //     props: {
+  //               //       type: 'text'
+  //               //     },
+  //               //     on: {
+  //               //       click: () => {
+  //               //
+  //               //       }
+  //               //     }
+  //               //   },
+  //               //   '修改密码'
+  //               // )
+  //             ]
+  //           )
+  //         }
+  //       }
+  //     ]
+  //     return arr
+  //   }
+  // },
   methods: {
     handleNodeClick(data) {
       this.loading = true
@@ -214,7 +428,6 @@ export default {
         this.tableData = res.data
         this.page.total = res.counts
         this.loading = false
-        console.log(res)
       })
     },
     openDrawer(data) {
@@ -222,15 +435,16 @@ export default {
       this.getOrgList()
       if (data) {
         this.users = data
+        this.RoleFlag=true
       } else {
         this.users = Object.assign({}, this.values)
+        this.RoleFlag=false
       }
-      console.log(this.users)
     },
     //获取组织树
     getList() {
       let params = {
-        org_id: ''
+        org_id: ""
       }
       getOrgTree(params).then(res => {
         this.data = res.data
@@ -239,26 +453,38 @@ export default {
     //获取组织列表
     getOrgList() {
       let params = {
-        org_id: ''
+        org_id: ""
       }
       getOrg(params).then(res => {
         this.organOptions = res.data
-        console.log('列表', this.organOptions)
       })
     },
     //获取角色列表
     getUserList() {
+      this.loading=true
       let params = {
         page: this.page.currentPage,
         page_size: this.page.pageSize,
         total_flg: true,
-        query_str: '',
+        query_str: this.username,
         org_id: ''
       }
       getUser(params).then(res => {
         this.tableData = res.data
         this.page.total = res.counts
-        console.log(res)
+        this.loading=false
+      })
+    },
+    //更新用户角色列表
+    updateRole() {
+      let params = {
+        record_id: this.users.id,
+        role_ids: this.RoleValue
+      }
+      updateUserRole(params).then(res => {
+        if (res.success){
+          this.$message.success(res.msg)
+        }
       })
     },
     //添加角色 或者 编辑角色
@@ -272,26 +498,35 @@ export default {
         email: this.users.email,
         is_active: this.users.is_active,
         access_ip: this.users.access_ip,
-        password:this.users.password
+        password: this.users.password
       }
-      if (this.users.id === ''){
-        this.users.password ? register(params).then(res=>{if(res.success){this.$message.success(res.msg)}}) : addUser(params).then(res=>{if(res.success){this.$message.success(res.msg)}})
+      if (this.users.id === '') {
+        this.users.password ? register(params).then(res => {
+          if (res.success) {
+            this.$message.success(res.msg)
+          }
+        }) : addUser(params).then(res => {
+          if (res.success) {
+            this.$message.success(res.msg)
+          }
+        })
         this.drawer = false
         this.getUserList()
-      }else {
+      } else {
         addUser(params).then(res => {
-          console.log(res)
           if (res.success) {
-            this.users.password ? this.changeWord(this.users.id,this.users.password) : this.$message.success(res.msg)
+            this.users.password ? this.changeWord(this.users.id, this.users.password) : this.$message.success(res.msg)
             this.drawer = false
             this.getUserList()
           }
         })
       }
+      if (this.RoleValue){
+        this.updateRole()
+      }
     },
     //修改角色状态
     changeState(data) {
-      console.log(data)
       let params = {
         id: data.id,
         is_active: data.is_active,
@@ -302,143 +537,48 @@ export default {
       }
       addUser(params).then(res => {
         this.getUserList()
+        if (res.success){
+          this.$message.success(res.msg)
+        }
       })
     },
-    //删除角色配置
-    // deleteUser(data){
-    //   let params={
-    //     record_id:''
-    //   }
-    //   deleteRole(params).then(res=>{
-    //
-    //   })
-    // },
     //修改密码
-    changeWord(id,password) {
+    changeWord(id, password) {
       let params = {
         record_id: id,
         password: password
       }
       changePassword(params).then(res => {
         if (res.success) {
-          this.$message.success("更新成功")
+          this.$message.success('更新成功')
         }
       })
+    },
+    //获取角色列表
+    getRoleList() {
+      getRole().then(res => {
+        this.RoleOptions = res.data
+      })
+    },
+    //获取用户下的角色详情
+    getRoleInfo(){
 
     },
     //换页
     handleSizeChange(val) {
       this.page.currentPage = 1
       this.page.pageSize = val
-      this.getList(this.page)
+      this.getUserList()
     },
     // 当前页改变时触发 跳转其他页
     handleCurrentChange(val) {
       this.page.currentPage = val
-      this.getList()
-    }
+      this.getUserList()
+    },
+    count(index) {
+      return ( this.page.currentPage - 1) * this.page.pageSize + index + 1
+    },
   },
-  computed: {
-    columns() {
-      const arr = [
-        // 表格列项
-        { label: '序号', key: '', width: '150' },
-        { label: '用户账号', key: 'username' },
-        { label: '所属组织', key: 'org_name' },
-        { label: '用户名称', key: 'full_name' },
-        { label: '手机号', key: 'phone_number' },
-        {
-          label: '使用状态',
-          key: 'is_active',
-          render: (h, { row }) => {
-            return h(
-              'div',
-              [
-                h(
-                  'el-switch',
-                  {
-                    props: {
-                      value: row.is_active,
-                      'active-color': '#00BF9B',
-                      'inactive-color': '#F7F7F7',
-                      'active-value': true,
-                      'inactive-value': false
-                    },
-                    on: {
-                      change: (value) => {
-                        row.is_active = row.is_active !== true
-                        this.changeState(row)
-                      }
-                    }
-                  }
-                )
-              ]
-            )
-          }
-        },
-        {
-          label: '操作',
-          width: '160',
-          fixed: 'right',
-          render: (h, { row }) => {
-            return h(
-              'div',
-              [
-                h(
-                  'el-button',
-                  {
-                    props: {
-                      type: 'text'
-                    },
-                    on: {
-                      click: () => {
-                        // this.deleteRole(row.id)
-                      }
-                    }
-                  },
-                  '查看'
-                ),
-                h(
-                  'el-button',
-                  {
-                    props: {
-                      type: 'text'
-                    },
-                    on: {
-                      click: () => {
-                        this.openDrawer(row)
-                      }
-                    }
-                  },
-                  '编辑'
-                ),
-                // h(
-                //   'el-button',
-                //   {
-                //     props: {
-                //       type: 'text'
-                //     },
-                //     on: {
-                //       click: () => {
-                //
-                //       }
-                //     }
-                //   },
-                //   '修改密码'
-                // )
-              ]
-            )
-          }
-        }
-      ]
-      return arr
-    }
-  },
-  mounted() {
-    this.getList()
-    this.getUserList()
-    this.height = document.body.offsetHeight - 317
-  }
 }
 </script>
 

@@ -95,3 +95,12 @@ export function getOrgTree(data){
   })
 }
 
+//更新用户的角色清单
+export function updateUserRole(data){
+  return request({
+    url:'/system/update_user_roles',
+    method: 'post',
+    data
+  })
+}
+
