@@ -1,6 +1,6 @@
 <template>
   <el-drawer
-    title="编辑"
+    :title="this.type?'编辑':'新增'"
     v-drawerDrag
     :visible.sync="dialogVisible"
     :direction="direction"
@@ -381,6 +381,12 @@ export default {
     border-radius: 4px;
     border: 1px solid rgba(25, 188, 156, 0.6);
     color: #00C5A5;
+  }
+}
+::v-deep .el-drawer {
+  background-color: rgba(255, 255, 255, 1);
+  .el-drawer__header{
+    padding: 0 20px 0 0;
   }
 }
 </style>

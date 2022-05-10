@@ -103,4 +103,12 @@ export function updateUserRole(data){
     data
   })
 }
+//获取用户角色清单
+export function getUserRole(data){
+  return request({
+    url:'/system/get_user_roles',
+    method:'post',
+    data
+  })
+}
 

@@ -65,13 +65,15 @@
           :max-height="height"
           style="width: 100%"
           v-loading="loading"
-          @expand-change="getRoleInfo()"
+          @expand-change="expandChange"
         >
           <el-table-column type="expand">
             <template slot-scope="props">
               <el-form label-position="top" inline class="demo-table-expand">
-                <el-form-item label="所在组织及角色">
-                  <span>{{ props.row.name || '暂无' }}</span>
+                <el-form-item label="所属角色">
+                  <div v-for="(item,i) in props.row.role">
+                    <span>{{ item.role_name || '暂无角色' }}</span>
+                  </div>
                 </el-form-item>
               </el-form>
             </template>
@@ -145,7 +147,7 @@
     </el-row>
 
     <el-drawer
-      title="新增用户"
+      :title="users.id?'编辑用户':'新增用户'"
       v-drawer-drag
       :visible.sync="drawer"
       :modal="false"
@@ -153,6 +155,7 @@
     >
       <el-scrollbar class="page-scroll">
         <el-form
+          ref="Form"
           label-position="top"
           label-width="80px"
           :model="users"
@@ -199,8 +202,10 @@
 
             </el-input>
           </el-form-item>
-          <el-form-item label="角色" v-if="RoleFlag">
-            <el-select v-model="RoleValue" multiple placeholder="请选择" :popper-append-to-body="false" style="width: 100%">
+          <el-form-item label="角色">
+            <el-select v-model="RoleValue" multiple placeholder="请选择" :popper-append-to-body="false"
+                       style="width: 100%"
+            >
               <el-option
                 v-for="item in RoleOptions"
                 :key="item.id"
@@ -210,12 +215,12 @@
               </el-option>
             </el-select>
           </el-form-item>
-<!--          <el-form-item label="使用状态" prop="is_active">-->
-<!--            <template>-->
-<!--              <el-radio v-model="users.is_active" :label="true">开启</el-radio>-->
-<!--              <el-radio v-model="users.is_active" :label="false">关闭</el-radio>-->
-<!--            </template>-->
-<!--          </el-form-item>-->
+          <!--          <el-form-item label="使用状态" prop="is_active">-->
+          <!--            <template>-->
+          <!--              <el-radio v-model="users.is_active" :label="true">开启</el-radio>-->
+          <!--              <el-radio v-model="users.is_active" :label="false">关闭</el-radio>-->
+          <!--            </template>-->
+          <!--          </el-form-item>-->
         </el-form>
         <div class="demo-drawer__footer">
           <el-button @click="drawer = false">取 消</el-button>
@@ -228,32 +233,42 @@
 
 <script>
 import BaseTable from '@/components/BaseTable'
-import { addUser, getOrg, getOrgTree, getUser, changePassword, register, updateUserRole, getRole } from '@/api/user'
+import {
+  addUser,
+  getOrg,
+  getOrgTree,
+  getUser,
+  changePassword,
+  register,
+  updateUserRole,
+  getRole,
+  getUserRole
+} from '@/api/user'
 import ListHeader from '@/components/ListHeader'
 
 export default {
   name: 'index',
   components: { BaseTable, ListHeader },
   data() {
-    let isMobileNumber= (rule, value, callback) => {
+    let isMobileNumber = (rule, value, callback) => {
       if (!value) {
-        return new Error("请输入电话号码");
+        return new Error('请输入电话号码')
       } else {
-        const reg = /^1[3|4|5|7|8][0-9]\d{8}$/;
-        const isPhone = reg.test(value);
-        value = Number(value); //转换为数字
-        if (typeof value === "number" && !isNaN(value)) {//判断是否为数字
-          value = value.toString(); //转换成字符串
+        const reg = /^1[3|4|5|7|8][0-9]\d{8}$/
+        const isPhone = reg.test(value)
+        value = Number(value) //转换为数字
+        if (typeof value === 'number' && !isNaN(value)) {//判断是否为数字
+          value = value.toString() //转换成字符串
           if (value.length < 0 || value.length > 12 || !isPhone) { //判断是否为11位手机号
-            callback(new Error("手机号码格式如:173********"));
+            callback(new Error('手机号码格式如:173********'))
           } else {
-            callback();
+            callback()
           }
         } else {
-          callback(new Error("请输入电话号码"));
+          callback(new Error('请输入电话号码'))
         }
       }
-    };
+    }
     return {
       page: {
         currentPage: 1,
@@ -277,7 +292,6 @@ export default {
 
       RoleOptions: [],
       RoleValue: '',
-      RoleFlag:true,
       users: {
         id: '',
         username: '',
@@ -302,14 +316,15 @@ export default {
         access_ip: ''
       },
       rule: {
-        username: [{ required: true, message: "请输入用户账号", trigger: "blur" },],
-        full_name: [{ required: true, message: "请输入用户名称", trigger: "blur" }],
+        username: [{ required: true, message: '请输入用户账号', trigger: 'blur' }],
+        full_name: [{ required: true, message: '请输入用户名称', trigger: 'blur' }],
         phone_number: [
-          { required: true, message: "手机号码不能为空", trigger: "blur" },
-          { validator: isMobileNumber, trigger: "blur" }
+          { required: true, message: '手机号码不能为空', trigger: 'blur' },
+          { validator: isMobileNumber, trigger: 'blur' }
         ],
+        password: [{ required: true, message: '请输入用户密码', trigger: 'blur' }]
         // is_active: [{ required: true, message: "选择不能为空", trigger: "blur" },],
-      },
+      }
     }
   },
   mounted() {
@@ -318,102 +333,6 @@ export default {
     this.getRoleList()
     this.height = document.body.offsetHeight - 317
   },
-  // computed: {
-  //   columns() {
-  //     const arr = [
-  //       // 表格列项
-  //       { label: '序号', key: '', width: '150' },
-  //       { label: '用户账号', key: 'username' },
-  //       { label: '所属组织', key: 'org_name' },
-  //       { label: '用户名称', key: 'full_name' },
-  //       { label: '手机号', key: 'phone_number' },
-  //       {
-  //         label: '使用状态',
-  //         key: 'is_active',
-  //         render: (h, { row }) => {
-  //           return h(
-  //             'div',
-  //             [
-  //               h(
-  //                 'el-switch',
-  //                 {
-  //                   props: {
-  //                     value: row.is_active,
-  //                     'active-color': '#00BF9B',
-  //                     'inactive-color': '#F7F7F7',
-  //                     'active-value': true,
-  //                     'inactive-value': false
-  //                   },
-  //                   on: {
-  //                     change: (value) => {
-  //                       row.is_active = row.is_active !== true
-  //                       this.changeState(row)
-  //                     }
-  //                   }
-  //                 }
-  //               )
-  //             ]
-  //           )
-  //         }
-  //       },
-  //       {
-  //         label: '操作',
-  //         width: '160',
-  //         fixed: 'right',
-  //         render: (h, { row }) => {
-  //           return h(
-  //             'div',
-  //             [
-  //               h(
-  //                 'el-button',
-  //                 {
-  //                   props: {
-  //                     type: 'text'
-  //                   },
-  //                   on: {
-  //                     click: () => {
-  //                       // this.deleteRole(row.id)
-  //                     }
-  //                   }
-  //                 },
-  //                 '查看'
-  //               ),
-  //               h(
-  //                 'el-button',
-  //                 {
-  //                   props: {
-  //                     type: 'text'
-  //                   },
-  //                   on: {
-  //                     click: () => {
-  //                       this.openDrawer(row)
-  //                     }
-  //                   }
-  //                 },
-  //                 '编辑'
-  //               )
-  //               // h(
-  //               //   'el-button',
-  //               //   {
-  //               //     props: {
-  //               //       type: 'text'
-  //               //     },
-  //               //     on: {
-  //               //       click: () => {
-  //               //
-  //               //       }
-  //               //     }
-  //               //   },
-  //               //   '修改密码'
-  //               // )
-  //             ]
-  //           )
-  //         }
-  //       }
-  //     ]
-  //     return arr
-  //   }
-  // },
   methods: {
     handleNodeClick(data) {
       this.loading = true
@@ -427,24 +346,27 @@ export default {
       getUser(params).then(res => {
         this.tableData = res.data
         this.page.total = res.counts
+        this.tableData.forEach(item => {
+          this.$set(item,'role','')
+        })
         this.loading = false
       })
     },
     openDrawer(data) {
       this.drawer = true
+      this.$refs['Form'].clearValidate()
       this.getOrgList()
+      this.RoleValue=''
       if (data) {
         this.users = data
-        this.RoleFlag=true
       } else {
         this.users = Object.assign({}, this.values)
-        this.RoleFlag=false
       }
     },
     //获取组织树
     getList() {
       let params = {
-        org_id: ""
+        org_id: ''
       }
       getOrgTree(params).then(res => {
         this.data = res.data
@@ -453,7 +375,7 @@ export default {
     //获取组织列表
     getOrgList() {
       let params = {
-        org_id: ""
+        org_id: ''
       }
       getOrg(params).then(res => {
         this.organOptions = res.data
@@ -461,7 +383,7 @@ export default {
     },
     //获取角色列表
     getUserList() {
-      this.loading=true
+      this.loading = true
       let params = {
         page: this.page.currentPage,
         page_size: this.page.pageSize,
@@ -472,21 +394,13 @@ export default {
       getUser(params).then(res => {
         this.tableData = res.data
         this.page.total = res.counts
-        this.loading=false
+        this.tableData.forEach(item => {
+          this.$set(item,'role','')
+        })
+        this.loading = false
       })
     },
-    //更新用户角色列表
-    updateRole() {
-      let params = {
-        record_id: this.users.id,
-        role_ids: this.RoleValue
-      }
-      updateUserRole(params).then(res => {
-        if (res.success){
-          this.$message.success(res.msg)
-        }
-      })
-    },
+
     //添加角色 或者 编辑角色
     insertUser() {
       let params = {
@@ -498,14 +412,11 @@ export default {
         email: this.users.email,
         is_active: this.users.is_active,
         access_ip: this.users.access_ip,
-        password: this.users.password
+        password: this.users.password,
+        role_ids: this.RoleValue
       }
       if (this.users.id === '') {
-        this.users.password ? register(params).then(res => {
-          if (res.success) {
-            this.$message.success(res.msg)
-          }
-        }) : addUser(params).then(res => {
+        register(params).then(res => {
           if (res.success) {
             this.$message.success(res.msg)
           }
@@ -521,9 +432,6 @@ export default {
           }
         })
       }
-      if (this.RoleValue){
-        this.updateRole()
-      }
     },
     //修改角色状态
     changeState(data) {
@@ -536,9 +444,9 @@ export default {
         org_id: data.org_id
       }
       addUser(params).then(res => {
-        this.getUserList()
-        if (res.success){
+        if (res.success) {
           this.$message.success(res.msg)
+          this.getUserList()
         }
       })
     },
@@ -561,8 +469,17 @@ export default {
       })
     },
     //获取用户下的角色详情
-    getRoleInfo(){
-
+    expandChange(row,dataArray) {
+      if(dataArray.indexOf(row) !== -1){
+        console.log(row)
+        let params = {
+          record_id: row.id
+        }
+        getUserRole(params).then(res => {
+          console.log(res)
+          res.data.length > 0 ?  row.role=res.data : row.role=[{role_name:'暂无角色'}]
+        })
+      }
     },
     //换页
     handleSizeChange(val) {
@@ -576,9 +493,9 @@ export default {
       this.getUserList()
     },
     count(index) {
-      return ( this.page.currentPage - 1) * this.page.pageSize + index + 1
-    },
-  },
+      return (this.page.currentPage - 1) * this.page.pageSize + index + 1
+    }
+  }
 }
 </script>
 
@@ -669,7 +586,11 @@ export default {
 }
 
 ::v-deep .el-drawer {
-  background-color: rgba(255, 255, 255, 0.9);
+  background-color: rgba(255, 255, 255, 1);
+
+  .el-drawer__header {
+    padding: 0 20px 0 0;
+  }
 }
 
 ::v-deep .el-tree-node__content {

@@ -315,4 +315,5 @@ export default {
   background: rgba(250, 100, 0, 0.1);
   cursor : pointer;
 }
+
 </style>
