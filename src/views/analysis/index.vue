@@ -14,7 +14,7 @@
 
 <script>
 import EchartsCom from "@/components/echarts-com.vue";
-import { classIdCount, manualIdCount } from "@/api/analysi.js";
+import { getApi } from "@/api/database.js";
 export default {
   data() {
     return {
@@ -58,8 +58,7 @@ export default {
         },
         dataset: {
           // 提供一份数据。
-          source: [
-          ],
+          source: [],
         },
         // 声明一个 X 轴，类目轴（category）。默认情况下，类目轴对应到 dataset 第一列。
         xAxis: { type: "category" },
@@ -74,16 +73,16 @@ export default {
   methods: {
     async getInit() {
       let data = {
-        datas_id: this.$route.query.id,
+        datas_id: this.$route.query.id||"a2a7b528",
       };
-      let res1 = await classIdCount(data);
-      console.log(res1);
+      let res1 = await getApi("/datas/get_class_id_count",data);
+      // console.log(res1);
       let barData = res1.data.map((item) => {
         return [item.class_id, item.count];
       });
       this.optionBar.dataset.source = barData;
-      console.log(this.optionBar);
-      let res2 = await manualIdCount(data);
+      // console.log(this.optionBar);
+      let res2 = await getApi("/datas/get_manual_tag_count",data);
       let setData = res2.data.map((it) => {
         return {
           name: it.manual_tag,
@@ -111,7 +110,7 @@ export default {
   }
 }
 .analysis {
-    padding: 0 10px;
+  padding: 0 10px;
   h1 {
     padding: 10px 20px;
     border-bottom: solid 1px #ddd;

@@ -1,40 +1,18 @@
 <template>
   <div class="task_main">
-<!--    <div class="task_header">-->
-<!--      <div class="left_header">-->
-<!--        <div class="left_number">-->
-<!--          <span class="font">总任务数 </span>-->
-<!--          <span style="font-size: 30px">{{ taskNum }}</span>-->
-<!--        </div>-->
-<!--        <el-progress :text-inside="true" :stroke-width="15" :percentage="70" color="#13ce66" />-->
-<!--      </div>-->
-<!--      <el-divider direction="vertical" />-->
-<!--      <div class="right_header">-->
-<!--        <div class="right_title">-->
-<!--          <div style="display: flex;align-items: center">-->
-<!--            <div class="icon_title" style="background: #0d85fc" />-->
-<!--            <span style="">正在执行数</span>-->
-<!--          </div>-->
-<!--          <span>{{ executionNum }}</span>-->
-<!--        </div>-->
-<!--        <div class="right_title">-->
-<!--          <div style="display: flex;align-items: center">-->
-<!--            <div class="icon_title" style="background: #13ce66" />-->
-<!--            <span>执行成功数</span>-->
-<!--          </div>-->
-<!--          <span>{{ successNum }}</span>-->
-<!--        </div>-->
-<!--        <div class="right_title">-->
-<!--          <div style="display: flex;align-items: center">-->
-<!--            <div class="icon_title" style="background: #ff4949" />-->
-<!--            <span>执行失败</span>-->
-<!--          </div>-->
-<!--          <span>{{ errorNum }}</span>-->
-<!--        </div>-->
-<!--      </div>-->
-<!--    </div>-->
-    <ListHeader title="任务名称" :show-create="false" :search="search" @handle-search="getList" />
-    <BaseTable v-loading="loading" :height="height" :columns="columns" :data="tableData"  />
+    <ListHeader
+      title="任务名称"
+      :show-create="true"
+      :search="search"
+      @handle-search="getList"
+      @handle-create="openAddTaskFlow"
+    />
+    <BaseTable
+      v-loading="loading"
+      :height="height"
+      :columns="columns"
+      :data="tableData"
+    />
     <el-pagination
       align="right"
       style="padding: 20px"
@@ -50,119 +28,191 @@
 </template>
 
 <script>
-import BaseTable from '@/components/BaseTable'
-import { formatDates, interval } from '@/utils'
-import ListHeader from '@/components/ListHeader'
-import { taskList } from '@/api/task'
-import router from '@/router'
+import BaseTable from "@/components/BaseTable";
+import { formatDates, interval } from "@/utils";
+import ListHeader from "@/components/ListHeader";
+import { getApi } from "@/api/database";
+import router from "@/router";
 
 export default {
-  name: 'Index',
+  name: "Index",
   components: {
     BaseTable,
-    ListHeader
+    ListHeader,
   },
   data() {
     return {
-      search: '',
+      search: "",
       loading: false,
       height: null,
       tableData: [],
       page: {
         currentPage: 1,
         pageSize: 10,
-        query_str: '',
-        total: 0
+        query_str: "",
+        total: 0,
       },
-      taskNum: '',
-      executionNum: '',
-      successNum: '',
-      errorNum: ''
-
-    }
+      taskNum: "",
+      executionNum: "",
+      successNum: "",
+      errorNum: "",
+    };
   },
   computed: {
     columns() {
       const arr = [
         // 表格列项
-        { label: '任务名称', key: 'task_name', width: '150' },
-        { label: '创建人', key: 'full_name' },  
-        { label: '数据集名称', key: 'datas_name'},
+        { label: "任务名称", key: "task_name", width: "150" },
+        { label: "创建人", key: "full_name" },
+        { label: "数据集名称", key: "datas_name" },
         {
-          label: '执行状态',
+          label: "执行状态",
           render: (h, params) => {
             return h(
-              'el-link',
+              "el-link",
               {
                 props: {
                   underline: false,
-                  type: params.row.task_status === 2 ? 'success' : params.row.task_status === 1 ? 'primary' : 'danger'
-                }
+                  type:
+                    params.row.task_status === 2
+                      ? "success"
+                      : params.row.task_status === 1
+                      ? "primary"
+                      : "danger",
+                },
               },
-              '●' + (params.row.task_status === 2 ? '成功' : params.row.task_status === 1 ? '进行中' : '执行失败')
-            )
-          }
+              "●" +
+                (params.row.task_status === 2
+                  ? "成功"
+                  : params.row.task_status === 1
+                  ? "进行中"
+                  : "执行失败")
+            );
+          },
         },
         {
-          label: '开始执行时间',
-          width: '180px',
-          render: (h, params) => <span>{formatDates(params.row.create_time)}</span>
+          label: "开始执行时间",
+          width: "180px",
+          render: (h, params) => (
+            <span>{formatDates(params.row.create_date)}</span>
+          ),
         },
         {
-          label: '结束时间',
-          width: '180px',
-          render: (h, params) => <span>{formatDates(params.row.end_time)}</span>
+          label: "结束时间",
+          width: "180px",
+          render: (h, params) => (
+            <span>{formatDates(params.row.update_time)}</span>
+          ),
         },
         {
-          label: '执行时长',
-          render: (h, params) => <span>{interval(params.row.create_time,params.row.end_time)}</span>
+          label: "执行时长",
+          render: (h, params) => (
+            <span>
+              {interval(params.row.create_date, params.row.update_time)}
+            </span>
+          ),
         },
         {
-          label: '操作',
-          width: '160',
-          fixed: 'right',
+          label: "操作",
+          width: "160",
+          fixed: "right",
           render: (h, { row }) => {
-            return h(
-              'div',
-              [
-                h(
-                  'el-button',
-                  {
-                    props: {
-                      type: 'text',
-                    },
-                    on: {
-                      click: () => {
-                        this.routerTaskLog(row.id,row.datas_name)
-                      }
-                    }
+            return h("div", [
+              h(
+                "el-button",
+                {
+                  props: {
+                    type: "text",
                   },
-                  '执行日志'
-                )
-              ]
-            )
-          }
-        }
-      ]
-      return arr
-    }
+                  on: {
+                    click: () => {
+                      this.routerTaskLog(row.id, row.datas_name);
+                    },
+                  },
+                },
+                "执行日志"
+              ),
+              h(
+                "el-button",
+                {
+                  props: {
+                    type: "text",
+                  },
+                  on: {
+                    click: () => {
+                      this.routerEdit(row.id, row.datas_name);
+                    },
+                  },
+                },
+                "编辑"
+              ),
+              h(
+                "el-button",
+                {
+                  props: {
+                    type: "text",
+                  },
+                  on: {
+                    click: () => {
+                      this.deleteTask(row.id, row.datas_name);
+                    },
+                  },
+                },
+                "删除"
+              ),
+            ]);
+          },
+        },
+      ];
+      return arr;
+    },
   },
   mounted() {
-    this.getList()
+    this.getList();
   },
   methods: {
-    routerTaskLog(id,name){
-      this.$router.push({name:"Taskstate",query:{id,name}})
+    openAddTaskFlow() {
+      this.$router.push({ name: "TaskFlow" });
     },
+    routerTaskLog(id, name) {
+      this.$router.push({ name: "Taskstate", query: { id, name } });
+    },
+    routerEdit(id) {
+      this.$router.push({ name: "TaskFlow", query: { id } });
+    },
+    // 删除任务
+
+    deleteTask(id) {
+      this.$confirm("确实删除吗？", "删除", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(async () => {
+          let { msg, success } = await getApi("task/deleteTaskFlow", {
+            task_id: id,
+          });
+          let message = success ? "success" : "error";
+          this.$message({ type: message, message: msg });
+          this.getList();
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除",
+          });
+        });
+    },
+
     handleSizeChange(val) {
-      this.page.currentPage = 1
-      this.page.pageSize = val
-      this.getList()
+      this.page.currentPage = 1;
+      this.page.pageSize = val;
+      this.getList();
     },
     // 当前页改变时触发 跳转其他页
     handleCurrentChange(val) {
-      this.page.currentPage = val
-      this.getList()
+      this.page.currentPage = val;
+      this.getList();
     },
     getList(str) {
       const params = {
@@ -170,19 +220,19 @@ export default {
         page_size: this.page.pageSize,
         total_flg: true,
         task_name: str || "",
-        dataset_id: this.$route.query.dataset_id || ''
-      }
-      taskList(params).then(res => {
-        this.tableData = res.data
-        this.taskNum = res.counts
-        this.successNum = res.cntSuccess
-        this.errorNum = res.cntError
-        this.executionNum = res.cntRun
-        this.page.total = res.counts
-      })
-    }
-  }
-}
+        dataset_id: this.$route.query.dataset_id || "",
+      };
+      getApi("task/get_task_flow", params).then((res) => {
+        this.tableData = res.data;
+        this.taskNum = res.counts;
+        this.successNum = res.cntSuccess;
+        this.errorNum = res.cntError;
+        this.executionNum = res.cntRun;
+        this.page.total = res.counts;
+      });
+    },
+  },
+};
 </script>
 
 <style scoped lang="scss">

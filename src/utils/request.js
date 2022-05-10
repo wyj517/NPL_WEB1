@@ -89,9 +89,9 @@ service.interceptors.response.use(
   (error) => {
     let errRes = error.response.data;
     console.log("err" + error); // for debug
-    setTimeout(() => {
-      location.reload();
-    }, 1000);
+    // setTimeout(() => {
+    //   location.reload();
+    // }, 1000);
     Message({
       message: errRes.detail,
       type: "error",

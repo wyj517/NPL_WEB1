@@ -1,0 +1,119 @@
+.approve-example-container {
+}
+.node-panel {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  width: 100px;
+  padding: 20px 10px;
+  background-color: white;
+  box-shadow: 0 0 10px 1px rgb(228, 224, 219);
+  border-radius: 6px;
+  text-align: center;
+  z-index: 101;
+}
+.approve-node {
+  display: block;
+  height: 60px;
+  width: 60px;
+  margin: 5px auto;
+  position: relative;
+}
+.approve-node.node-rect{
+  height: 30px;
+  width: 80px;
+}
+.approve-node.node-apply,.approve-node.node-ellipse{
+  height: 40px;
+  width: 60px;
+}
+.node-polygon .node-shape{
+    position: absolute;
+    left: 50%;
+    top: 50%;
+   margin-left: -20px;
+   margin-top: -20px;
+}
+.node-polygon .node-shape .node-label{
+  margin-left: -14px;
+  margin-top: -14px;
+  width: 30px;
+}
+.node-label {
+  position:absolute;
+  font-size: 12px;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  transform: translate(-50%,-50%);
+}
+.node-polygon  .node-label{
+  transform: rotate(-45deg);
+}
+.node-circle .node-label{
+}s
+.node-jugement .node-label {
+  margin-top: 15px;
+}
+.property-panel {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 20px;
+  margin: 0;
+  background-color: white;
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
+  z-index: 101;
+  box-shadow: 0 0 10px 1px rgb(228, 224, 219);
+}
+.property-panel-footer {
+  width: 100%;
+  text-align: center;
+}
+.property-panel-footer .property-panel-footer-hide {
+  width: 200px;
+}
+.approve-example-container .lf-control{
+  position: fixed;
+  top: 75px;
+  left: calc(50vw - 200px);
+  width: 320px;
+  box-shadow: 0 0 10px #888888;
+}
+.form-property{
+  width: 30%;
+}
+.hover-panel{
+  position: fixed;
+}
+
+li{
+  list-style: none;
+
+}
+.params-box{
+  position: absolute;
+  width: 300px;
+  height: calc(100% - 10px);
+  overflow: auto;
+  top: 5px;
+  right: 5px;
+  z-index: 99;
+  background-color: white;
+  padding: 0 10px;
+  border: solid 2px rgb(233, 233, 233);
+}
+.save-flow{
+  position: absolute;
+  top: 5px;
+  right: 310px;
+  z-index: 101;
+}
+.db-item{
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+  border-bottom: solid 1px #ebebeb ;
+
+}

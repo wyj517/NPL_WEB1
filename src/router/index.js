@@ -103,12 +103,27 @@ export const constantRoutes = [
         name: 'Analysis',
         hidden: true,
         meta: { title: '数据分析', icon: 'count', affix: true }
-      },{
-        path: 'charts',
-        component: () => import('@/views/task-management/task-chart/index'),
-        name: 'Charts',
+      },
+      // {
+      //   path: 'charts',
+      //   component: () => import('@/views/task-management/task-chart/index'),
+      //   name: 'Charts',
+      //   hidden: true,
+      //   meta: { title: '图表', icon: 'count', affix: true }
+      // },
+      {
+        path: 'task-flow',
+        component: () => import('@/views/flow-management/index'),
+        name: 'TaskFlow',
         hidden: true,
-        meta: { title: '图表', icon: 'count', affix: true }
+        meta: { title: '任务流程', icon: 'count', affix: true }
+      },
+      {
+        path: 'task-flow-test',
+        component: () => import('@/views/flow-management/flow-test'),
+        name: 'TaskFlowTest',
+        hidden: true,
+        meta: { title: '任务流程', icon: 'count', affix: true }
       }
     ]
   },

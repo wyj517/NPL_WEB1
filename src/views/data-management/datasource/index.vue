@@ -311,7 +311,7 @@ export default {
       };
 
       sourceTest(data).then((res) => {
-        console.log(res);
+        // console.log(res);
         if (res.success) {
           this.$message.success(res.msg);
         }

@@ -1,5 +1,13 @@
 import request from '@/utils/request'
 
+export function getApi(url,data,method ="post"){
+  return request({
+    url,
+    method,
+    data
+  })
+}
+
 // 返回数据源清单
 export function sourceList(data) {
   return request({
