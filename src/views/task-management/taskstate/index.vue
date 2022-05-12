@@ -26,7 +26,7 @@
 import { codemirror } from "vue-codemirror";
 import "codemirror/mode/python/python.js";
 import "codemirror/theme/base16-light.css";
-import { getTaskLog } from "@/api/task.js";
+import { getApi } from '@/api/database';
 export default {
   name: "Index",
   components: {
@@ -83,8 +83,8 @@ export default {
     async getLogInfo() {
       this.code = ""
       let data = { task_id: this.$route.query.id };
-      let res = await getTaskLog(data);
-      this.code = res.data.content;
+      let res = await getApi("task/getNodeStatusAndLog",data);
+      this.code = res.data.log;
       // console.log(res);
     },
   },

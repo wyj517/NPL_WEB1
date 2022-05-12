@@ -8,6 +8,7 @@ import LogicFlow, {
   RectNodeModel,
   PolygonNode,
   PolygonNodeModel,
+  PolylineEdge, PolylineEdgeModel
 } from "@logicflow/core";
 
 export default function RegisteNode(lf) {
@@ -214,4 +215,47 @@ export default function RegisteNode(lf) {
       view: CustomEllipseNode,
       model: CustomEllipseModel
     });
+
+    class CustomEdge extends PolylineEdge {}
+    class CustomEdgeModel extends PolylineEdgeModel {
+      getEdgeStyle() {
+        const style = super.getEdgeStyle();
+        style.stroke = "red";
+        style.strokeDasharray = "5 5";
+        return style;
+      }
+      getTextStyle() {
+        const style = super.getTextStyle();
+        style.color = 'red';
+        return style;
+      }
+    }
+    
+    // 执行失败连接线
+    lf.register({
+      type: "polyline-error",
+      view: CustomEdge,
+      model: CustomEdgeModel,
+    });
+
+    class SuccessEdge extends PolylineEdge {}
+    class SuccessEdgeModel extends PolylineEdgeModel {
+      getEdgeStyle() {
+        const style = super.getEdgeStyle();
+        style.stroke = "green";
+        return style;
+      }
+      getTextStyle() {
+        const style = super.getTextStyle();
+        style.color = 'green';
+        return style;
+      }
+    }
+    // 执行成功连接线
+    lf.register({
+      type: "polyline-success",
+      view: SuccessEdge,
+      model: SuccessEdgeModel,
+    });
+
 }

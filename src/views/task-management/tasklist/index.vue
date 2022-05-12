@@ -63,7 +63,6 @@ export default {
       const arr = [
         // 表格列项
         { label: "任务名称", key: "task_name", width: "150" },
-        { label: "创建人", key: "full_name" },
         { label: "数据集名称", key: "datas_name" },
         {
           label: "执行状态",
@@ -91,25 +90,10 @@ export default {
           },
         },
         {
-          label: "开始执行时间",
-          width: "180px",
-          render: (h, params) => (
-            <span>{formatDates(params.row.create_date)}</span>
-          ),
-        },
-        {
-          label: "结束时间",
+          label: "更新时间",
           width: "180px",
           render: (h, params) => (
             <span>{formatDates(params.row.update_time)}</span>
-          ),
-        },
-        {
-          label: "执行时长",
-          render: (h, params) => (
-            <span>
-              {interval(params.row.create_date, params.row.update_time)}
-            </span>
           ),
         },
         {

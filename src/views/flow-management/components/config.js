@@ -105,6 +105,19 @@ export const approveNodes = [
   },
   {
     type: 'rect',
+    label: '情感分析',
+    style: {
+      width: '80px',
+      height: '30px',
+      borderRadius: '2px',
+      border: '2px solid #3CB371',
+    },
+    property: {
+      approveType:"wf_sentiment"
+    }
+  },
+  {
+    type: 'rect',
     label: 'NER',
     style: {
       width: '80px',
