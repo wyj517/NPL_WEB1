@@ -8,9 +8,10 @@ import LogicFlow, {
   RectNodeModel,
   PolygonNode,
   PolygonNodeModel,
-  PolylineEdge, PolylineEdgeModel
+  PolylineEdge,
+  PolylineEdgeModel,
 } from "@logicflow/core";
-
+const color = ["#f58b32", "#68bc45", "#0089cf", "#00a99d", "#283890"];
 export default function RegisteNode(lf) {
   class ApplyNodeModel extends EllipseNodeModel {
     getConnectedTargetRules() {
@@ -36,7 +37,8 @@ export default function RegisteNode(lf) {
     }
     getNodeStyle() {
       const style = super.getNodeStyle();
-      style.stroke = "#FF6347";
+      style.stroke = "";
+      style.fill = color[0];
       return style;
     }
   }
@@ -99,21 +101,27 @@ export default function RegisteNode(lf) {
   });
 
   class JugementModel extends PolygonNodeModel {
-    constructor(data, graphModel) {
-      super(data, graphModel);
-      this.points = [
-        [35, 0],
-        [70, 35],
-        [35, 70],
-        [0, 35],
-      ];
-      this.properties = {
-        api: "",
-      };
+    // constructor(data, graphModel) {
+    //   super(data, graphModel);
+    //   this.points = [
+    //     [35, 0],
+    //     [70, 35],
+    //     [35, 70],
+    //     [0, 35],
+    //   ];
+    //   this.properties = {
+    //     api: "",
+    //   };
+    // }
+    getNodeStyle() {
+      const style = super.getNodeStyle();
+      style.stroke = "";
+      style.fill = color[2];
+      return style;
     }
   }
   lf.register({
-    type: "jugement",
+    type: "polygon",
     view: PolygonNode,
     model: JugementModel,
   });
@@ -142,7 +150,8 @@ export default function RegisteNode(lf) {
     }
     getNodeStyle() {
       const style = super.getNodeStyle();
-      style.stroke = "#FF6347";
+      style.stroke = "";
+      style.fill = color[0];
       return style;
     }
   }
@@ -164,98 +173,154 @@ export default function RegisteNode(lf) {
     }
     getNodeStyle() {
       const style = super.getNodeStyle();
-      style.stroke = "#3CB371";
+      style.stroke = "";
+      style.fill = color[2];
+      return style;
+    }
+  }
+
+  class RectModel1 extends CustomRectModel {
+    getNodeStyle() {
+      const style = super.getNodeStyle();
+      style.fill = color[2];
+      return style;
+    }
+  }
+
+  class RectModel2 extends CustomRectModel {
+    getNodeStyle() {
+      const style = super.getNodeStyle();
+      style.fill = color[3];
+      return style;
+    }
+  }
+  class RectModel3 extends CustomRectModel {
+    getNodeStyle() {
+      const style = super.getNodeStyle();
+      style.fill = color[4];
+      return style;
+    }
+  }
+  class RectModel4 extends CustomRectModel {
+    getNodeStyle() {
+      const style = super.getNodeStyle();
+      style.fill = color[1];
+      return style;
+    }
+  }
+
+  lf.register({
+    type: "rect",
+    view: CustomRectNode,
+    model: CustomRectModel,
+  });
+
+  lf.register({
+    type: "rect1",
+    view: CustomRectNode,
+    model: RectModel1,
+  });
+
+  lf.register({
+    type: "rect2",
+    view: CustomRectNode,
+    model: RectModel2,
+  });
+  lf.register({
+    type: "rect3",
+    view: CustomRectNode,
+    model: RectModel3,
+  });
+  lf.register({
+    type: "rect4",
+    view: CustomRectNode,
+    model: RectModel4,
+  });
+
+  
+
+  // 小椭圆
+  class CustomEllipseNode extends EllipseNode {}
+  class CustomEllipseModel extends EllipseNodeModel {
+    // getConnectedSourceRules() {
+    //   const rules = super.getConnectedSourceRules();
+    //   const geteWayOnlyAsTarget = {
+    //     message: "只能有一条线",
+    //     validate: (source, target) => {
+    //       let isValid = true;
+    //       console.log(source,lf.getGraphData());
+    //       let edges = lf.getGraphData().edges
+    //       edges.map(item=>{
+    //         console.log(item.id, source.id);
+    //         if (item.id == source.id) {
+    //           isValid = false;
+    //         }
+    //       })
+    //       return isValid;
+    //     },
+    //   };
+    // @ts-ignore
+    //   rules.push(geteWayOnlyAsTarget);
+    //   return rules;
+    // }
+
+    initNodeData(data) {
+      super.initNodeData(data);
+      this.rx = 60;
+      this.ry = 30;
+    }
+    getNodeStyle() {
+      const style = super.getNodeStyle();
+      style.stroke = "";
+      style.fill = color[1];
       return style;
     }
   }
   lf.register({
-    type: "rect",
-    view: CustomRectNode,
-    model: CustomRectModel
+    type: "ellipse",
+    view: CustomEllipseNode,
+    model: CustomEllipseModel,
   });
 
-    // 小椭圆
-    class CustomEllipseNode extends EllipseNode {}
-    class CustomEllipseModel extends EllipseNodeModel {
-      // getConnectedSourceRules() {
-      //   const rules = super.getConnectedSourceRules();
-      //   const geteWayOnlyAsTarget = {
-      //     message: "只能有一条线",
-      //     validate: (source, target) => {
-      //       let isValid = true;
-      //       console.log(source,lf.getGraphData());
-      //       let edges = lf.getGraphData().edges
-      //       edges.map(item=>{
-      //         console.log(item.id, source.id);
-      //         if (item.id == source.id) {
-      //           isValid = false;
-      //         }
-      //       })
-      //       return isValid;
-      //     },
-      //   };
-        // @ts-ignore
-      //   rules.push(geteWayOnlyAsTarget);
-      //   return rules;
-      // }
-
-      initNodeData(data) {
-        super.initNodeData(data);
-        this.rx = 60;
-        this.ry = 30;
-      }
-      getNodeStyle() {
-        const style = super.getNodeStyle();
-        style.stroke = "#242424";
-        return style;
-      }
+  class CustomEdge extends PolylineEdge {}
+  class CustomEdgeModel extends PolylineEdgeModel {
+    getEdgeStyle() {
+      const style = super.getEdgeStyle();
+      style.stroke = "";
+      style.strokeDasharray = "5 5";
+      return style;
     }
-    lf.register({
-      type: "ellipse",
-      view: CustomEllipseNode,
-      model: CustomEllipseModel
-    });
-
-    class CustomEdge extends PolylineEdge {}
-    class CustomEdgeModel extends PolylineEdgeModel {
-      getEdgeStyle() {
-        const style = super.getEdgeStyle();
-        style.stroke = "red";
-        style.strokeDasharray = "5 5";
-        return style;
-      }
-      getTextStyle() {
-        const style = super.getTextStyle();
-        style.color = 'red';
-        return style;
-      }
+    getTextStyle() {
+      const style = super.getTextStyle();
+      style.color = "red";
+      return style;
     }
-    
-    // 执行失败连接线
-    lf.register({
-      type: "polyline-error",
-      view: CustomEdge,
-      model: CustomEdgeModel,
-    });
+  }
 
-    class SuccessEdge extends PolylineEdge {}
-    class SuccessEdgeModel extends PolylineEdgeModel {
-      getEdgeStyle() {
-        const style = super.getEdgeStyle();
-        style.stroke = "green";
-        return style;
-      }
-      getTextStyle() {
-        const style = super.getTextStyle();
-        style.color = 'green';
-        return style;
-      }
+  // 执行失败连接线
+  lf.register({
+    type: "polyline-error",
+    view: CustomEdge,
+    model: CustomEdgeModel,
+  });
+
+  class SuccessEdge extends PolylineEdge {}
+  class SuccessEdgeModel extends PolylineEdgeModel {
+    getEdgeStyle() {
+      const style = super.getEdgeStyle();
+      style.stroke = "green";
+      return style;
     }
-    // 执行成功连接线
-    lf.register({
-      type: "polyline-success",
-      view: SuccessEdge,
-      model: SuccessEdgeModel,
-    });
-
+    getTextStyle() {
+      const style = super.getTextStyle();
+      style.color = "green";
+      return style;
+    }
+  }
+  // 执行成功连接线
+  lf.register({
+    type: "polyline-success",
+    view: SuccessEdge,
+    model: SuccessEdgeModel,
+  });
 }

@@ -2,25 +2,31 @@ import { approveNodes } from "./config";
 
 export default {
   // 拖拽创建
-  props:["lf"],
+  props: ["lf"],
   methods: {
     dragNode(item) {
       console.log(item);
-        this.lf.dnd.startDrag({
-          type: item.type,
-          text: item.label,
-          properties: { type: item.property.approveType },
-        });
+      this.lf.dnd.startDrag({
+        type: item.type,
+        text: item.label,
+        properties: { type: item.property.approveType },
+      });
     },
   },
-  mounted(){
+  mounted() {
     // console.log(this.lf);
+    document.querySelector("#approveNode").onselectstart = function () {
+      return false;
+    };
   },
   render(h) {
     const nodeList = [];
     approveNodes.forEach((item, key) => {
       nodeList.push(
-        <div class={`approve-node node-${item.type}`} key={key}>
+        <div
+          class={`approve-node node-${item.type}`}
+          key={key}
+        >
           <div
             class="node-shape"
             // on-click={()=>this.dragNode(item)}
@@ -32,12 +38,6 @@ export default {
         </div>
       );
     });
-    return (
-      <div class="node-panel">
-        {nodeList}
-      </div>
-    );
+    return <div class="node-panel"    id="approveNode">{nodeList}</div>;
   },
 };
-
-
