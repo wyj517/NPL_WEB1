@@ -87,7 +87,7 @@ service.interceptors.response.use(
     }
   },
   (error) => {
-    let errRes = error.response.data;
+    let errRes = error.response?.data;
     console.log("err" + error); // for debug
     // setTimeout(() => {
     //   location.reload();

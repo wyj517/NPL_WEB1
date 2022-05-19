@@ -91,20 +91,6 @@ export default {
                   'el-tag',
                   {
                     props:{
-                      type: 'success'
-                    },
-                    on: {
-                      click: () => {
-                        this.openTask(row.id)
-                      }
-                    }
-                  },
-                '添加任务'
-                ),
-                h(
-                  'el-tag',
-                  {
-                    props:{
                       type: 'info'
                     },
                     on: {

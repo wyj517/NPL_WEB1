@@ -37,11 +37,13 @@ export default {
       logo: require("../../../assets/logo.png"),
     };
   },
-  mounted(){
+  mounted() {
     if (process.env.VUE_APP_TITLE == "龙港语义分析平台") {
-        this.logo= require("../../../assets/logo-lg.png")
+      this.logo = require("../../../assets/logo-lg.png");
+    } else if (process.env.VUE_APP_TITLE == "文成语义分析平台") {
+      this.logo = require("../../../assets/logo-wc.png");
     }
-  }
+  },
 };
 </script>
 

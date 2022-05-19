@@ -72,17 +72,17 @@
         <p>关键字提取类型数量：</p>
         <p>
           <el-input
-            v-model="combineAna.num"
+            v-model="keyword.num"
             type="Number"
-            @change="updateParams($event, 3)"
+            @change="updateParams($event, 6)"
           />
         </p>
         <p>关键字提取SCHEME：</p>
         <p>
           <el-select
-            v-model="combineAna.scheme"
+            v-model="keyword.scheme"
             placeholder="请选择SCHEME"
-            @change="updateParams($event, 3)"
+            @change="updateParams($event, 6)"
           >
             <el-option label="tfidf" value="tfidf"> </el-option>
           </el-select>
@@ -185,8 +185,9 @@ export default {
       classifyInt: "",
       clusterInt: "",
       combineAna: {},
+      keyword:{},
       datasetOptions: [],
-      arrNer:[],
+      arrNer: [],
       arrFilter: [],
       wordOptions: ["PER", "LOC", "TIME", "ORG"],
       filterOptions: [],
@@ -196,21 +197,48 @@ export default {
   watch: {
     selectNode(newValue) {
       console.log("selectNode", newValue);
-      if (
-        newValue.properties.type == "wf_filter" ||
-        newValue.properties.type == "wf_combine"
-      ) {
+
+      let properties = newValue.properties;
+      let type = newValue.properties.type
+      if(type == "wf_corpus"){
+          this.datsetId = properties.dataset_id
+      }else if (type == "wf_segment" ) {
+          this.segmentInt = properties.num
+      }else if(type == "wf_vector"){
+          this.vectorInt = properties.num
+      }else if(type == "wf_classify"){
+        this.classifyInt = properties.num
+      }else if(type == "wf_cluster"){
+        this.clusterInt = properties.num
+      }else if(type == "wf_combineAna"){
+        this.combineAna = properties.num
+      }else if (type =="wf_keyword") {
+        this.keyword = properties 
+      }else if (type =="wf_ner") {
+        this.arrNer = properties.typeList
+      }else if(type == "wf_filter"){
+        this.arrFilter =[]
+        properties.filters.map(item=>{
+          if (item.isNull == 1) {
+            this.arrFilter.push(item.field)
+          }
+        })
+      }else if(type == "wf_combine"){
+        this.formCombine.combineList= properties.combineList || []
+      }
+
+      if (type == "wf_filter" || type == "wf_combine") {
         this.getFilterOptions(newValue.id);
       }
     },
-    formCombine:{
-      deep:true,
-      handler(updateData){
-        let tempStr = JSON.stringify(updateData.combineList)
-        let combineList =  JSON.parse(tempStr)
-         this.$parent.updateProperty(this.selectNode.id, {combineList});
-      }
-    }
+    formCombine: {
+      deep: true,
+      handler(updateData) {
+        let tempStr = JSON.stringify(updateData.combineList);
+        let combineList = JSON.parse(tempStr);
+        this.$parent.updateProperty(this.selectNode.id, { combineList });
+      },
+    },
   },
   methods: {
     async getFilterOptions(id) {
@@ -241,7 +269,7 @@ export default {
     },
     async updateParams(value, type) {
       let updateData = {};
-      console.log(value, type);
+      // console.log(value, type);
       let keyName = "";
       if (type == 1) {
         keyName = "dataset_id";
@@ -251,7 +279,11 @@ export default {
         updateData[keyName] = value;
       } else if (type == 3) {
         updateData = this.combineAna;
-      } else if (type == 4) {
+      } else if (type == 6) {
+        // 关键字获取
+        keyword = this.keyword;
+      }
+      else if (type == 4) {
         updateData.typeList = value;
       } else if (type == 5) {
         console.log(value);
@@ -269,12 +301,13 @@ export default {
           });
         });
         updateData.filters = arrField;
-      } 
+      }
       console.log(updateData, "updateData");
       this.$parent.updateProperty(this.selectNode.id, updateData);
     },
   },
   mounted() {
+    console.log("this.nodeData", this.nodeData);
     this.getDataSet();
   },
 };

@@ -7,6 +7,7 @@
     "dev": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "build:longgang": "vue-cli-service build  --mode longgang",
+    "build:wencheng": "vue-cli-service build  --mode wencheng",
     "build:stage": "vue-cli-service build --mode staging",
     "preview": "node build/index.js --preview",
     "svgo": "svgo -f src/icons/svg --config=src/icons/svgo.yml",

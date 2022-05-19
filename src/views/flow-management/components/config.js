@@ -1,3 +1,4 @@
+const color = ["#f58b32","#68bc45","#0089cf","#00a99d","#283890",]
 export const approveNodes = [
   {
     type: 'apply',
@@ -6,7 +7,7 @@ export const approveNodes = [
       width: '60px',
       height: '40px',
       borderRadius: '50%',
-      border: '2px solid #FF6347',
+      background:color[0],
     },
     property: {
       approveType:"wf_start"
@@ -19,98 +20,112 @@ export const approveNodes = [
       width: '60px',
       height: '40px',
       borderRadius: '50%',
-      border: '2px solid #242424',
+      background:color[1],
     },
     property: {
       approveType:"wf_corpus"
     },
   },
   {
-    type: 'rect',
+    type: 'rect1',
     label: '分词',
     style: {
       width: '80px',
       height: '30px',
       borderRadius: '4px',
-      border: '2px solid #3CB371',
+      background:color[2]
+      
     },
     property: {
       approveType:"wf_segment"
     }
   },
   {
-    type: 'rect',
+    type: 'rect2',
     label: '向量化',
     style: {
       width: '80px',
       height: '30px',
       borderRadius: '2px',
-      border: '2px solid #3CB371',
+      background:color[3],
     },
     property: {
       approveType:"wf_vector"
     }
   },
   {
-    type: 'rect',
+    type: 'rect3',
     label: '文本分类',
     style: {
       width: '80px',
       height: '30px',
       borderRadius: '2px',
-      border: '2px solid #3CB371',
+      background:color[4],
     },
     property: {
       approveType:"wf_classify"
     }
   },
   {
-    type: 'rect',
+    type: 'rect4',
     label: '文本聚类',
     style: {
       width: '80px',
       height: '30px',
       borderRadius: '2px',
-      border: '2px solid #3CB371'
+      background:color[1],
     },
     property: {
       approveType:"wf_cluster"
     }
   },
   {
-    type: 'rect',
+    type: 'rect1',
     label: '文本分析',
     style: {
       width: '80px',
       height: '30px',
       borderRadius: '2px',
-      border: '2px solid #3CB371',
+      background:color[2],
     },
     property: {
       approveType:"wf_combineAna"
     }
   },
   {
-    type: 'rect',
+    type: 'rect2',
     label: '关键词获取',
     style: {
       width: '80px',
       height: '30px',
       borderRadius: '2px',
-      border: '2px solid #3CB371',
+      background:color[3],
     },
     property: {
       approveType:"wf_keyword"
     }
   },
   {
-    type: 'rect',
+    type: 'rect3',
+    label: '情感分析',
+    style: {
+      width: '80px',
+      height: '30px',
+      borderRadius: '2px',
+      background:color[4],
+    },
+    property: {
+      approveType:"wf_sentiment"
+    }
+  },
+  {
+    type: 'rect4',
     label: 'NER',
     style: {
       width: '80px',
       height: '30px',
       borderRadius: '2px',
-      border: '2px solid #3CB371',
+      background:color[1],
     },
     property: {
       approveType:"wf_ner"
@@ -123,7 +138,7 @@ export const approveNodes = [
       width: '40px',
       height: '40px',
       borderRadius: '2px',
-      border: '2px solid #6495ED',
+      background:color[2],
       transform: 'rotate(45deg)'
     },
     property: {
@@ -137,7 +152,7 @@ export const approveNodes = [
       width: '40px',
       height: '40px',
       borderRadius: '2px',
-      border: '2px solid #6495ED',
+      background:color[2],
       transform: 'rotate(45deg)'
     },
     property: {
@@ -149,9 +164,10 @@ export const approveNodes = [
     label: '结束',
     style: {
       width: '60px',
-      height: '60px',
-      borderRadius: '15px',
-      border: '2px solid #FF6347',
+      height: '40px',
+      borderRadius: '50%',
+      background:"#f58b32",
+      color:"#fff"
     },
     property: {
       approveType:"wf_end"

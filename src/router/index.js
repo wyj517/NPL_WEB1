@@ -117,13 +117,13 @@ export const asyncRoutes = [
         hidden: true,
         meta: { title: '任务流程', icon: 'count', affix: true }
       },
-      {
-        path: 'task-flow-test',
-        component: () => import('@/views/flow-management/flow-test'),
-        name: 'TaskFlowTest',
-        hidden: true,
-        meta: { title: '任务流程', icon: 'count', affix: true }
-      }
+      // {
+      //   path: 'task-test',
+      //   component: () => import('@/views/flow-management/components/node-panel.js'),
+      //   name: 'TaskTest',
+      //   hidden: true,
+      //   meta: { title: '任务流程', icon: 'count', affix: true }
+      // },
     ]
   },
   // 用户管理
@@ -132,6 +132,7 @@ export const asyncRoutes = [
     component: Layout,
     name: 'userManage',
     redirect: '/user/userlist',
+    name:"UserManage",
     meta: {
       title: '人员管理',
       icon: 'usermanages'
@@ -142,13 +143,13 @@ export const asyncRoutes = [
         component: () => import('@/views/user-management/users/index'),
         name: 'Users',
         meta: { title: '用户管理', icon: 'users', affix: true },
-        children: []
+        children: [],
       },
       {
         path: 'roles',
         component: () => import('@/views/user-management/roles/index'),
         name: 'Roles',
-        meta: { title: '角色管理', icon: 'role', affix: true }
+        meta: { title: '角色管理', icon: 'role', affix: true },
       }
     ]
   },

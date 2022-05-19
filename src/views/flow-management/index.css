@@ -18,41 +18,49 @@
   width: 60px;
   margin: 5px auto;
   position: relative;
+  color: #fff;
 }
-.approve-node.node-rect{
+.approve-node {
   height: 30px;
   width: 80px;
 }
-.approve-node.node-apply,.approve-node.node-ellipse{
+
+.approve-node.node-polygon {
+  height: 60px;
+}
+.approve-node.node-apply,
+.approve-node.node-ellipse,
+.approve-node.node-finish {
   height: 40px;
   width: 60px;
 }
-.node-polygon .node-shape{
-    position: absolute;
-    left: 50%;
-    top: 50%;
-   margin-left: -20px;
-   margin-top: -20px;
+.node-polygon .node-shape {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  margin-left: -20px;
+  margin-top: -20px;
 }
-.node-polygon .node-shape .node-label{
+.node-polygon .node-shape .node-label {
   margin-left: -14px;
   margin-top: -14px;
   width: 30px;
 }
 .node-label {
-  position:absolute;
+  position: absolute;
   font-size: 12px;
   top: 50%;
   left: 50%;
   width: 100%;
-  transform: translate(-50%,-50%);
+  transform: translate(-50%, -50%);
+  cursor: pointer;
 }
-.node-polygon  .node-label{
+.node-polygon .node-label {
   transform: rotate(-45deg);
 }
-.node-circle .node-label{
-}s
-.node-jugement .node-label {
+.node-circle .node-label {
+}
+s .node-jugement .node-label {
   margin-top: 15px;
 }
 .property-panel {
@@ -75,25 +83,24 @@
 .property-panel-footer .property-panel-footer-hide {
   width: 200px;
 }
-.approve-example-container .lf-control{
+.approve-example-container .lf-control {
   position: fixed;
   top: 75px;
   left: calc(50vw - 200px);
   width: 320px;
   box-shadow: 0 0 10px #888888;
 }
-.form-property{
+.form-property {
   width: 30%;
 }
-.hover-panel{
+.hover-panel {
   position: fixed;
 }
 
-li{
+li {
   list-style: none;
-
 }
-.params-box{
+.params-box {
   position: absolute;
   width: 300px;
   height: calc(100% - 10px);
@@ -105,15 +112,18 @@ li{
   padding: 0 10px;
   border: solid 2px rgb(233, 233, 233);
 }
-.save-flow{
+.save-flow {
   position: absolute;
   top: 5px;
   right: 310px;
   z-index: 101;
 }
-.db-item{
+.db-item {
   padding-bottom: 10px;
   margin-bottom: 10px;
-  border-bottom: solid 1px #ebebeb ;
+  border-bottom: solid 1px #ebebeb;
+}
 
+.lf-node-content .lf-element-text {
+  color: #fff;
 }
