@@ -4,6 +4,7 @@
       title="数据源名称"
       @handle-create="addSource"
       @handle-search="getList"
+      @handle-inputSearch="getList"
       buttonTitle="数据源"
     />
     <BaseTable
@@ -229,9 +230,6 @@ export default {
         ds_id: id,
       };
       this.ruleForm = this.tableData[index - 1];
-      // sourceDetail(data).then(res => {
-      //   this.ruleForm = res.data
-      // })
     },
     addSource() {
       // 新增
@@ -251,7 +249,6 @@ export default {
               this.getList();
             });
           } else {
-            console.log(this.ruleForm);
             sourceUpdate(this.ruleForm).then((res) => {
               if (res.success) {
                 this.$message.success("编辑成功");
@@ -311,7 +308,6 @@ export default {
       };
 
       sourceTest(data).then((res) => {
-        // console.log(res);
         if (res.success) {
           this.$message.success(res.msg);
         }

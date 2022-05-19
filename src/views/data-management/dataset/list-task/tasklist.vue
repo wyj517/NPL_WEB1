@@ -25,7 +25,7 @@
         <el-button type="primary" size="mini">删除</el-button>
       </div>
       <div>
-        <div v-for="(item,index) in tableData" @click="openTaskInfo(item.id,item.task_name)">
+        <div v-for="(item,index) in tableData" :key="index" @click="openTaskInfo(item.id,item.task_name)">
           <el-container>
             <el-header class="list_header" style="height: 40px">
               <el-checkbox class="title">测试数据集任务1-1-1</el-checkbox>
@@ -33,11 +33,6 @@
                        :type="item.task_status === 2 ? 'success' : item.task_status === 1 ? 'primary' : 'danger'"
               >●{{ item.task_status === 2 ? '执行成功' : item.task_status === 1 ? '正在执行' : '执行失败' }}
               </el-link>
-              <!--            <el-switch-->
-              <!--              v-model="switchValue"-->
-              <!--              active-color="#13ce66"-->
-              <!--              inactive-color="#ff4949">-->
-              <!--            </el-switch>-->
             </el-header>
             <el-main class="main">
               <el-form
@@ -92,7 +87,6 @@
 </template>
 
 <script>
-import { setDetail } from '@/api/dataset'
 import { taskList } from '@/api/task'
 import { formatDates } from '@/utils'
 

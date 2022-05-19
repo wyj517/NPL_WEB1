@@ -57,7 +57,7 @@
             </el-input>
             <ul class="el-scrollbar__view el-select-dropdown__list">
               <el-scrollbar>
-                <li v-for="(item, index) in TagOptions" class="list_item" @click="updateClassTag(1,'',item)">
+                <li v-for="(item, index) in TagOptions" :key="index" class="list_item" @click="updateClassTag(1,'',item)">
                   <span>{{item}}</span>
                 </li>
               </el-scrollbar>
@@ -257,7 +257,6 @@ export default {
     this.getClass();
     this.getManual();
     this.getTaskType();
-    // console.log(this.$route.query.params_json)
   },
   methods: {
     // 分析
@@ -278,7 +277,6 @@ export default {
         if (this.TagOptions[i] === val) {
           flag = false;
         }
-        // console.log(this.TagOptions[i])
       }
       if (flag) {
         this.TagOptions.unshift(val);
@@ -311,7 +309,6 @@ export default {
           });
           this.params_json = res.data[i].params_json;
         }
-        // console.log('json', this.params_json[0])
       });
     },
 
@@ -362,7 +359,6 @@ export default {
           autoWidth: true,
           filename: "分类列表",
         };
-        console.log(params);
         excel.export_array_to_excel(params);
         this.exportLoading = false;
       } else {

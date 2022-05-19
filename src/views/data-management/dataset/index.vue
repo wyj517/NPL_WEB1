@@ -1,6 +1,6 @@
 <template>
   <div class="set_main">
-    <ListHeader title="数据集名称" @handle-create="openAddDialog" @handle-search="getSet" buttonTitle="数据集" />
+    <ListHeader title="数据集名称" @handle-create="openAddDialog" @handle-search="getSet" @handle-inputSearch="getSet" buttonTitle="数据集" />
     <BaseTable v-loading="loading" :height="height" :columns="columns" :data="tableData" />
     <el-pagination
       align="right"
@@ -170,49 +170,6 @@ export default {
                   },
                   '删除'
                 ),
-                // h(
-                //   'el-button',
-                //   {
-                //     props: {
-                //       type: 'text'
-                //     },
-                //     on: {
-                //       click: () => {
-                //         this.openTask(row.id)
-                //       }
-                //     }
-                //   },
-                //   '创建任务'
-                // ),
-                // h(
-                //   'el-button',
-                //   {
-                //     props: {
-                //       type: 'text'
-                //     },
-                //     on: {
-                //       click: () => {
-                //         this.$router.push({ path: 'task/tasklist', query: { dataset_id: row.id } })
-                //       }
-                //     }
-                //   },
-                //   '任务列表'
-                // ),
-                // h(
-                //   'el-button',
-                //   {
-                //     props: {
-                //       type: 'text'
-                //     },
-                //     on: {
-                //       click: () => {
-                //
-                //         this.$router.push({ path: 'task/taskresult', query: { dataset_id: row.id, task_name:row.last_task_name,last_task_id:row.last_task_id} })
-                //       }
-                //     }
-                //   },
-                //   '执行结果'
-                // )
               ]
             )
           }

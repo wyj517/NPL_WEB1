@@ -5,7 +5,7 @@
         <span style="font-size: 14px">
           {{ title === '' ? $route.meta.title : title }}：
         </span>
-        <el-input v-model="find" placeholder="输入关键字" size="small" style="width: 200px" />
+        <el-input v-model="find" placeholder="输入关键字" size="small" style="width: 200px" @input="createInputSearch" />
         <el-button v-if="showSearch" type="primary" size="small" style="margin-left: 20px" plain @click="createSearch">
           搜索
         </el-button>
@@ -73,8 +73,10 @@ export default {
       this.$emit('handle-create', null)
     },
     createSearch() {
-      console.log(this.find)
       this.$emit('handle-search', this.find)
+    },
+    createInputSearch() {
+      this.$emit('handle-inputSearch', this.find)
     }
   }
 }

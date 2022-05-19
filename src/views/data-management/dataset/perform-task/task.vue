@@ -24,7 +24,6 @@
           </el-select>
         </el-form-item>
         <el-form-item label="任务参数">
-          <!--          <codemirror v-model="code" :options="cmOptions" />-->
           <span class="des"> {{ this.params_json[0].des }}</span>
           <div>
             <el-input
@@ -82,12 +81,10 @@ export default {
     //获取任务类型 参数
     getTaskType() {
       getType().then(res => {
-        console.log(res)
         for (let i = 0; i < res.data.length; i++) {
           this.DataOption.push({ value: res.data[i].task_type, label: res.data[i].task_type_name })
           this.params_json = res.data[i].params_json
         }
-        console.log('json', this.params_json[0])
       })
     },
     //创建任务
@@ -97,12 +94,6 @@ export default {
         task_name: this.TaskName,
         task_type: this.DataValue,
         params_json: this.para
-        // label_ids: [],
-        // tag: '',
-        // is_total: true,
-        // class_id: '',
-        // doc: '',
-        // last_task_id: ''
       }
       createTask(params).then(res => {
         if (res.success) {

@@ -75,9 +75,6 @@ export default {
   },
   mounted() {
     this.getLogInfo();
-    // var t2 =window.setInterval(() => {
-    //   this.getLogInfo();
-    // },2000);
   },
   methods: {
     async getLogInfo() {
@@ -85,7 +82,6 @@ export default {
       let data = { task_id: this.$route.query.id };
       let res = await getTaskLog(data);
       this.code = res.data.content;
-      // console.log(res);
     },
   },
 };
