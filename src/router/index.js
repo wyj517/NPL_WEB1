@@ -132,7 +132,6 @@ export const asyncRoutes = [
     component: Layout,
     name: 'userManage',
     redirect: '/user/userlist',
-    name:"UserManage",
     meta: {
       title: '人员管理',
       icon: 'usermanages'

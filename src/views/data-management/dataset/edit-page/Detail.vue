@@ -254,7 +254,6 @@ export default {
           datas_id: id,
         };
         setDetail(data).then((res) => {
-          console.log("详情", res.data);
           this.ruleForm = res.data;
           setTimeout(() => {
             this.getSchemaName(this.ruleForm.ds_id);
@@ -285,7 +284,6 @@ export default {
     async getDsName() {
       let res = await setDsList();
       this.sourceOption = res.data;
-      console.log(this.sourceOption);
     },
     // 获取schemeName
     async getSchemaName(ds_id,type) {
