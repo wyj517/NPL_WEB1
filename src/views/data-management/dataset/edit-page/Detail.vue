@@ -10,11 +10,10 @@
       <div>
         <el-form
           ref="ruleForm"
-          label-position="right"
           label-width="150px"
           :model="ruleForm"
           :rules="rule"
-          :label-position="labelPosition"
+          label-position="top"
           class="w100"
         >
           <el-row>
@@ -198,7 +197,6 @@ export default {
   },
   data() {
     return {
-      labelPosition: 'top',
       dialogVisible: false,
       sourceOption: [],
       schemaOption: [],

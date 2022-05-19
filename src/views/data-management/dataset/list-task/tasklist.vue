@@ -25,7 +25,7 @@
         <el-button type="primary" size="mini">删除</el-button>
       </div>
       <div>
-        <div v-for="(item,index) in tableData" :key="index" @click="openTaskInfo(item.id,item.task_name)">
+        <div v-for="(item,index) in tableData" @click="openTaskInfo(item.id,item.task_name)" :key="index">
           <el-container>
             <el-header class="list_header" style="height: 40px">
               <el-checkbox class="title">测试数据集任务1-1-1</el-checkbox>

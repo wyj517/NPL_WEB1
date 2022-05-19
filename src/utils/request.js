@@ -8,7 +8,7 @@ import router from "@/router";
 const service = axios.create({
   baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
   // withCredentials: true, // send cookies when cross-domain requests
-  timeout: 5000, // request timeout
+  timeout: 10000, // request timeout
 });
 
 // request interceptor
@@ -83,17 +83,15 @@ service.interceptors.response.use(
           type: "error",
           message: res.data.msg,
         });
+        return res.data || {};
       }
     }
   },
   (error) => {
-    let errRes = error.response?.data;
+    let errRes = error.response?.data || "";
     console.log("err" + error); // for debug
-    // setTimeout(() => {
-    //   location.reload();
-    // }, 1000);
     Message({
-      message: errRes.detail,
+      message: errRes.detail || "请求超时",
       type: "error",
       duration: 5 * 1000,
     });

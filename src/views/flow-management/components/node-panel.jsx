@@ -20,24 +20,56 @@ export default {
     };
   },
   render(h) {
-    const nodeList = [];
+    const nodeList1 = [];
+    const nodeList2 = [];
+    const nodeList3 = [];
+
     approveNodes.forEach((item, key) => {
-      nodeList.push(
-        <div
-          class={`approve-node node-${item.type}`}
-          key={key}
-        >
-          <div
-            class="node-shape"
-            // on-click={()=>this.dragNode(item)}
-            style={item.style}
-            onmousedown={() => this.dragNode(item)}
-          >
-            <div class="node-label">{item.label}</div>
+      if (item.genus == "1") {
+        nodeList1.push(
+          <div class={`approve-node node-${item.type}`} key={key}>
+            <div
+              class="node-shape"
+              style={item.style}
+              onmousedown={() => this.dragNode(item)}
+            >
+              <div class="node-label">{item.label}</div>
+            </div>
           </div>
-        </div>
-      );
+        );
+      }else  if (item.genus == "2") {
+        nodeList2.push(
+          <div class={`approve-node node-${item.type}`} key={key}>
+            <div
+              class="node-shape"
+              style={item.style}
+              onmousedown={() => this.dragNode(item)}
+            >
+              <div class="node-label">{item.label}</div>
+            </div>
+          </div>
+        );
+      }else  if (item.genus == "3") {
+        nodeList3.push(
+          <div class={`approve-node node-${item.type}`} key={key}>
+            <div
+              class="node-shape"
+              style={item.style}
+              onmousedown={() => this.dragNode(item)}
+            >
+              <div class="node-label">{item.label}</div>
+            </div>
+          </div>
+        );
+      }
+   
     });
-    return <div class="node-panel"    id="approveNode">{nodeList}</div>;
+    return (
+      <div class="node-panel" id="approveNode">
+        <div class="node-box"> {nodeList1} </div>
+        <div class="node-box"> {nodeList2} </div>
+        <div class="node-box"> {nodeList3} </div>
+      </div>
+    );
   },
 };

@@ -218,6 +218,7 @@ export default {
         this.arrNer = properties.typeList
       }else if(type == "wf_filter"){
         this.arrFilter =[]
+        properties.filters=properties.filters || []
         properties.filters.map(item=>{
           if (item.isNull == 1) {
             this.arrFilter.push(item.field)
@@ -227,6 +228,7 @@ export default {
         this.formCombine.combineList= properties.combineList || []
       }
 
+    // 获取下拉类别
       if (type == "wf_filter" || type == "wf_combine") {
         this.getFilterOptions(newValue.id);
       }

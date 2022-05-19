@@ -1,51 +1,59 @@
 .approve-example-container {
 }
 .node-panel {
+  background: #fff;
+  width: 240px;
+  height: 100%;
   position: absolute;
-  top: 10px;
-  left: 10px;
-  width: 100px;
-  padding: 20px 10px;
-  background-color: white;
-  box-shadow: 0 0 10px 1px rgb(228, 224, 219);
-  border-radius: 6px;
+  top: 0px;
+  left: 0px;
   text-align: center;
   z-index: 101;
 }
 .approve-node {
   display: block;
-  height: 60px;
-  width: 60px;
   margin: 5px auto;
   position: relative;
   color: #fff;
+  height: 40px;
+  width: 160px;
 }
-.approve-node {
-  height: 30px;
-  width: 80px;
+
+.approve-node .node-shape {
+  border: solid 1px #666;
 }
 
 .approve-node.node-polygon {
-  height: 60px;
+  height: 90px;
 }
 .approve-node.node-apply,
 .approve-node.node-ellipse,
 .approve-node.node-finish {
-  height: 40px;
-  width: 60px;
+  height: 50px;
+}
+.node-panel {
+  padding: 10px;
+}
+.node-panel .node-box {
+  border: solid 1px #D3E6F4;
+  background: #F6FAFD;
+  margin-bottom: 10px;
+  padding: 10px;
 }
 .node-polygon .node-shape {
   position: absolute;
   left: 50%;
   top: 50%;
-  margin-left: -20px;
-  margin-top: -20px;
+  margin-left: -30px;
+  margin-top: -30px;
 }
 .node-polygon .node-shape .node-label {
   margin-left: -14px;
   margin-top: -14px;
   width: 30px;
 }
+
+
 .node-label {
   position: absolute;
   font-size: 12px;
@@ -54,6 +62,7 @@
   width: 100%;
   transform: translate(-50%, -50%);
   cursor: pointer;
+  color: #333;
 }
 .node-polygon .node-label {
   transform: rotate(-45deg);
@@ -83,12 +92,17 @@ s .node-jugement .node-label {
 .property-panel-footer .property-panel-footer-hide {
   width: 200px;
 }
-.approve-example-container .lf-control {
-  position: fixed;
-  top: 75px;
-  left: calc(50vw - 200px);
-  width: 320px;
-  box-shadow: 0 0 10px #888888;
+.flow-center .lf-control {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  width: 300px;
+  float: right;
+  border-bottom: solid 1px #ccc;
+  box-shadow: none;
+  border-radius: 0;
+  margin: 0;
+  padding: 5px;
 }
 .form-property {
   width: 30%;
@@ -100,17 +114,17 @@ s .node-jugement .node-label {
 li {
   list-style: none;
 }
+/* 属性框 */
 .params-box {
   position: absolute;
-  width: 300px;
-  height: calc(100% - 10px);
+  width: 260px;
+  height: 100%;
   overflow: auto;
-  top: 5px;
-  right: 5px;
+  top: 0px;
+  right: 0px;
   z-index: 99;
   background-color: white;
   padding: 0 10px;
-  border: solid 2px rgb(233, 233, 233);
 }
 .save-flow {
   position: absolute;
@@ -125,5 +139,5 @@ li {
 }
 
 .lf-node-content .lf-element-text {
-  color: #fff;
+  color: #000;
 }
