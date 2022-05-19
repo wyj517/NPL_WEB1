@@ -111,4 +111,11 @@ export function getUserRole(data){
     data
   })
 }
+//获取自己角色列表
+export function getMyRoles(){
+  return request({
+    url:'/system/get_my_roles',
+    method:'post'
+  })
+}
 

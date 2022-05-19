@@ -1,6 +1,6 @@
 <template>
   <div style="padding: 20px">
-    <ListHeader title="角色名称" @handle-create="openDialog()" buttonTitle="角色" />
+    <ListHeader title="角色名称" @handle-create="openDialog()"  buttonTitle="角色" />
     <BaseTable v-loading="loading" :height="height" :columns="columns" :data="tableData" />
 
     <el-dialog
@@ -9,45 +9,61 @@
       width="35%"
     >
       <main>
-        <div>
-          <el-form
-            ref="ruleForm"
-            label-position="right"
-            label-width="100px"
-            :model="ruleForm"
-            :rules="rule"
-          >
-<!--            <el-form-item label="id" prop="id">-->
-<!--              <el-input-->
-<!--                v-model="ruleForm.id"-->
-<!--                placeholder="请输入id"-->
-<!--              />-->
-<!--            </el-form-item>-->
-            <el-form-item label="角色名称" prop="role_name">
-              <el-input
-                v-model="ruleForm.role_name"
-                placeholder="请输入角色名称"
-              />
-            </el-form-item>
-            <el-form-item label="父级角色" prop="parent_id">
-              <el-input
-                v-model="ruleForm.parent_id"
-                placeholder="请输入父级角色id"
-              />
-            </el-form-item>
-            <el-form-item label="角色层级" prop="lvl">
-              <el-input
-                v-model="ruleForm.lvl"
-                placeholder="请输入角色层级"
-              />
-            </el-form-item>
-            <el-form-item label="角色备注" prop="remarks">
-              <el-input
-                v-model="ruleForm.remarks"
-                placeholder="请输入角色备注"
-              />
-            </el-form-item>
-          </el-form>
+        <div class="role_center">
+          <div>
+            <el-form
+              ref="ruleForm"
+              label-position="right"
+              label-width="100px"
+              :model="ruleForm"
+              :rules="rule"
+            >
+              <!--            <el-form-item label="id" prop="id">-->
+              <!--              <el-input-->
+              <!--                v-model="ruleForm.id"-->
+              <!--                placeholder="请输入id"-->
+              <!--              />-->
+              <!--            </el-form-item>-->
+              <el-form-item label="角色名称" prop="role_name">
+                <el-input
+                  v-model="ruleForm.role_name"
+                  placeholder="请输入角色名称"
+                />
+              </el-form-item>
+              <!--            <el-form-item label="父级角色" prop="parent_id">-->
+              <!--              <el-input-->
+              <!--                v-model="ruleForm.parent_id"-->
+              <!--                placeholder="请输入父级角色id"-->
+              <!--              />-->
+              <!--            </el-form-item>-->
+              <!--            <el-form-item label="角色层级" prop="lvl">-->
+              <!--              <el-input-->
+              <!--                v-model="ruleForm.lvl"-->
+              <!--                placeholder="请输入角色层级"-->
+              <!--              />-->
+              <!--            </el-form-item>-->
+              <el-form-item label="角色备注" prop="remarks">
+                <el-input
+                  v-model="ruleForm.remarks"
+                  placeholder="请输入角色备注"
+                />
+              </el-form-item>
+
+            </el-form>
+          </div>
+          <div>
+            <el-tree
+              :data="treeData"
+              show-checkbox
+              node-key="name"
+              :check-strictly="true"
+              :default-expanded-keys="[]"
+              :default-checked-keys="menusId"
+              :props="defaultProps"
+              ref="tree"
+            >
+            </el-tree>
+          </div>
         </div>
       </main>
       <span slot="footer" class="dialog-footer">
@@ -55,7 +71,6 @@
           <el-button type="primary" @click="addRole()">确 定</el-button>
       </span>
     </el-dialog>
-
 
 
   </div>
@@ -67,6 +82,7 @@ import { formatDates, interval } from '@/utils'
 import { deleteRole, getRole, updateRole } from '@/api/user'
 import ListHeader from '@/components/ListHeader'
 import { setRemove } from '@/api/dataset'
+import Layout from '@/layout'
 
 export default {
   name: 'index',
@@ -93,8 +109,59 @@ export default {
       },
       rule: {
         role_name: [{ required: true, message: '角色名称不能为空', trigger: 'blur' }],
-        lvl: [{ required: true, message: '角色等级不能为空', trigger: 'blur' }],
-      }
+        lvl: [{ required: true, message: '角色等级不能为空', trigger: 'blur' }]
+      },
+      treeData: [
+        {
+          name:'dataManage',
+          label:'数据管理',
+          children:[{
+            name:'Dataset',
+            label:'数据集管理',
+          },{
+            name:'Datasource',
+            label:'数据源管理',
+          }]
+        },
+        {
+          name:'taskManage',
+          label:'任务管理',
+          children:[{
+            name:'Tasklist',
+            label:'任务列表',
+          },{
+            name:'Taskresult',
+            label:'任务执行结果',
+          },{
+            name:'Taskstate',
+            label:'任务执行日志',
+          },{
+            name:'Analysis',
+            label:'数据分析',
+          },{
+            name:'TaskFlow',
+            label:'任务流程',
+          }]
+        },
+        {
+          name:'userManage',
+          label:'人员管理',
+          children:[{
+            name:'Users',
+            label:'用户管理',
+          },{
+            name:'Roles',
+            label:'角色管理',
+          }]
+        },
+
+      ],
+      defaultProps: {
+        children: 'children',
+        label: 'label',
+        value:'name'
+      },
+      menusId:[]
     }
   },
   methods: {
@@ -115,7 +182,7 @@ export default {
           record_id: id
         }
         deleteRole(params).then(res => {
-          if (res.success){
+          if (res.success) {
             this.$message.success(res.msg)
             this.getList()
           }
@@ -132,11 +199,11 @@ export default {
         id: this.ruleForm.id,
         role_name: this.ruleForm.role_name,
         parent_id: this.ruleForm.parent_id,
-        lvl: this.ruleForm.lvl,
-        remarks: this.ruleForm.remarks
+        remarks: this.ruleForm.remarks,
+        permission_list:this.$refs.tree.getCheckedKeys()
       }
       updateRole(params).then(res => {
-        if (res.success){
+        if (res.success) {
           this.$message.success(res.msg)
           this.dialogVisible = false
           this.getList()
@@ -145,12 +212,12 @@ export default {
     },
     openDialog(data) {
       this.dialogVisible = true
-      if (data){
-        this.ruleForm=data
-      }else {
-        this.ruleForm=this.value
+      if (data) {
+        this.ruleForm = data
+      } else {
+        this.ruleForm = this.value
       }
-    }
+    },
   },
   computed: {
     columns() {
@@ -160,35 +227,6 @@ export default {
         { label: '角色名称', key: 'role_name' },
         { label: '角色等级', key: 'lvl' },
         { label: '备注', key: 'remarks' },
-        // { label: '权限管理', key: '' },
-        // {
-        //   label: '使用状态',
-        //   key: true,
-        //   render: (h, { row }) => {
-        //     return h(
-        //       'div',
-        //       [
-        //         h(
-        //           'el-switch',
-        //           {
-        //             props: {
-        //               value: 1,
-        //               "active-color":"#00BF9B",
-        //               "inactive-color":"#F7F7F7",
-        //               "active-value": 1,
-        //               "inactive-value": 0,
-        //             },
-        //             on: {
-        //               change: (value) => {
-        //                 value = value == 1 ? 0 : 1;
-        //               },
-        //             },
-        //           }
-        //         )
-        //       ]
-        //     )
-        //   }
-        // },
         {
           label: '操作',
           width: '160',
@@ -240,5 +278,9 @@ export default {
 </script>
 
 <style scoped>
+.role_center {
+  display: flex;
+  flex-direction: row;
 
+}
 </style>

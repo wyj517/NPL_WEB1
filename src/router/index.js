@@ -5,6 +5,7 @@ Vue.use(Router)
 
 /* Layout */
 import Layout from '@/layout'
+import store from '@/store'
 
 /**
  * Note: sub-menu only appear when route children.length >= 1
@@ -37,16 +38,20 @@ export const constantRoutes = [
     hidden: true
   },
 
+
   {
     path: '/404',
     component: () => import('@/views/404'),
     hidden: true
   },
-
+  // 404 page must be placed at the end !!!
+]
+export const asyncRoutes = [
   // 新路由
   {
     path: '/',
     component: Layout,
+    name: 'dataManage',
     redirect: '/dataset',
     meta: {
       title: '数据管理',
@@ -71,6 +76,7 @@ export const constantRoutes = [
   {
     path: '/task',
     component: Layout,
+    name: 'taskManage',
     redirect: '/task/tasklist',
     meta: {
       title: '任务管理',
@@ -97,20 +103,13 @@ export const constantRoutes = [
         name: 'Taskstate',
         hidden: true,
         meta: { title: '任务执行日志', icon: 'datasour', affix: true }
-      },{
+      }, {
         path: 'analysis',
         component: () => import('@/views/analysis/index'),
         name: 'Analysis',
         hidden: true,
         meta: { title: '数据分析', icon: 'count', affix: true }
       },
-      // {
-      //   path: 'charts',
-      //   component: () => import('@/views/task-management/task-chart/index'),
-      //   name: 'Charts',
-      //   hidden: true,
-      //   meta: { title: '图表', icon: 'count', affix: true }
-      // },
       {
         path: 'task-flow',
         component: () => import('@/views/flow-management/index'),
@@ -131,6 +130,7 @@ export const constantRoutes = [
   {
     path: '/user',
     component: Layout,
+    name: 'userManage',
     redirect: '/user/userlist',
     meta: {
       title: '人员管理',
@@ -153,7 +153,6 @@ export const constantRoutes = [
     ]
   },
 
-  // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
 ]
 
@@ -165,10 +164,25 @@ const createRouter = () => new Router({
 
 const router = createRouter()
 
+export function addRoutes(routes) {
+  let userRoutes = asyncRoutes.filter(route => {
+    return routes.some(menu => menu === route.name)
+  })
+  for (let i = 0; i < userRoutes.length; i++) {
+    userRoutes[i].children=userRoutes[i].children.filter(route=>{
+      return routes.some(menu => menu === route.name)
+    })
+  }
+  userRoutes.push({ path: '*', redirect: '/404', hidden: true })
+  router.options.routes = userRoutes;
+  router.addRoutes(userRoutes)
+}
+
 // Detail see: https://github.com/vuejs/vue-router/issues/1234#issuecomment-357941465
 export function resetRouter() {
   const newRouter = createRouter()
   router.matcher = newRouter.matcher // reset router
 }
+
 
 export default router

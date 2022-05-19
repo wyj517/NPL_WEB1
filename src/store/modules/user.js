@@ -1,4 +1,4 @@
-import { login, logout, getInfo } from '@/api/user'
+import { login, logout, getInfo, getMyRoles } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import { resetRouter } from '@/router'
 
@@ -24,6 +24,9 @@ const mutations = {
   },
   SET_AVATAR: (state, avatar) => {
     state.avatar = avatar
+  },
+  SET_ROLE: (state, avatar) => {
+    state.role = avatar
   }
 }
 
@@ -55,6 +58,23 @@ const actions = {
         const { username, full_name } = data
         commit('SET_NAME', username)
         commit('SET_AVATAR', full_name)
+        resolve(data)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+
+  // get user role
+  getRole({ commit, state }) {
+    return new Promise((resolve, reject) => {
+      getMyRoles(state.token).then(res => {
+        const  data  = res.data[0].permission_list
+        if (!data) {
+          return reject('Verification failed, please Login again.')
+        }
+        const { permission_list } = data
+        commit('SET_ROLE', permission_list)
         resolve(data)
       }).catch(error => {
         reject(error)

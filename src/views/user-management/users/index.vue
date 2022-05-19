@@ -42,7 +42,7 @@
         style="background: #fff;padding: 20px 20px 0 20px"
       >
         <div class="title_header">
-          <el-input v-model="username" class="search" placeholder="请输入关键字">
+          <el-input v-model="username" @input="getUserList()" class="search" placeholder="请输入关键字">
             <template slot="append">
               <el-button
                 class="addButton"
@@ -59,7 +59,6 @@
             新增用户
           </el-button>
         </div>
-        <!--                <BaseTable v-loading="loading" :height="height" :columns="columns" :data="tableData" />-->
         <el-table
           :data="tableData"
           :max-height="height"
@@ -71,7 +70,7 @@
             <template slot-scope="props">
               <el-form label-position="top" inline class="demo-table-expand">
                 <el-form-item label="所属角色">
-                  <div v-for="(item,i) in props.row.role">
+                  <div v-for="(item,i) in props.row.role" :key="i">
                     <span>{{ item.role_name || '暂无角色' }}</span>
                   </div>
                 </el-form-item>
@@ -120,9 +119,6 @@
           </el-table-column>
           <el-table-column label="操作">
             <template slot-scope="scope">
-              <!--              <el-button-->
-              <!--                size="text"-->
-              <!--                @click="">编辑权限</el-button>-->
               <el-button
                 type="text"
                 @click="openDrawer(scope.row)"
@@ -182,16 +178,6 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="电子邮箱" prop="email">
-            <el-input placeholder="请输入" v-model="users.email">
-
-            </el-input>
-          </el-form-item>
-          <el-form-item label="ip地址" prop="access_ip">
-            <el-input placeholder="请输入" v-model="users.access_ip">
-
-            </el-input>
-          </el-form-item>
           <el-form-item label="名称" prop="full_name">
             <el-input placeholder="请输入" v-model="users.full_name">
 
@@ -203,7 +189,7 @@
             </el-input>
           </el-form-item>
           <el-form-item label="角色">
-            <el-select v-model="RoleValue" multiple placeholder="请选择" :popper-append-to-body="false"
+            <el-select v-model="RoleValue" placeholder="请选择" :popper-append-to-body="false"
                        style="width: 100%"
             >
               <el-option
@@ -215,12 +201,6 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <!--          <el-form-item label="使用状态" prop="is_active">-->
-          <!--            <template>-->
-          <!--              <el-radio v-model="users.is_active" :label="true">开启</el-radio>-->
-          <!--              <el-radio v-model="users.is_active" :label="false">关闭</el-radio>-->
-          <!--            </template>-->
-          <!--          </el-form-item>-->
         </el-form>
         <div class="demo-drawer__footer">
           <el-button @click="drawer = false">取 消</el-button>
@@ -347,16 +327,18 @@ export default {
         this.tableData = res.data
         this.page.total = res.counts
         this.tableData.forEach(item => {
-          this.$set(item,'role','')
+          this.$set(item, 'role', '')
         })
         this.loading = false
       })
     },
     openDrawer(data) {
       this.drawer = true
-      this.$refs['Form'].clearValidate()
+      this.$nextTick(() => {
+        this.$refs['Form'].clearValidate()
+      })
       this.getOrgList()
-      this.RoleValue=''
+      this.RoleValue = ''
       if (data) {
         this.users = data
       } else {
@@ -395,7 +377,7 @@ export default {
         this.tableData = res.data
         this.page.total = res.counts
         this.tableData.forEach(item => {
-          this.$set(item,'role','')
+          this.$set(item, 'role', '')
         })
         this.loading = false
       })
@@ -403,6 +385,8 @@ export default {
 
     //添加角色 或者 编辑角色
     insertUser() {
+      let roles=[]
+      roles.push(this.RoleValue)
       let params = {
         id: this.users.id,
         username: this.users.username,
@@ -413,7 +397,7 @@ export default {
         is_active: this.users.is_active,
         access_ip: this.users.access_ip,
         password: this.users.password,
-        role_ids: this.RoleValue
+        role_ids: roles
       }
       if (this.users.id === '') {
         register(params).then(res => {
@@ -469,15 +453,13 @@ export default {
       })
     },
     //获取用户下的角色详情
-    expandChange(row,dataArray) {
-      if(dataArray.indexOf(row) !== -1){
-        console.log(row)
+    expandChange(row, dataArray) {
+      if (dataArray.indexOf(row) !== -1) {
         let params = {
           record_id: row.id
         }
         getUserRole(params).then(res => {
-          console.log(res)
-          res.data.length > 0 ?  row.role=res.data : row.role=[{role_name:'暂无角色'}]
+          res.data.length > 0 ? row.role = res.data : row.role = [{ role_name: '暂无角色' }]
         })
       }
     },

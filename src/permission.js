@@ -1,9 +1,10 @@
-import router from './router'
+import router, { addRoutes } from './router'
 import store from './store'
 import { Message } from 'element-ui'
 import NProgress from 'nprogress' // progress bar
 import 'nprogress/nprogress.css' // progress bar style
-import { getToken } from '@/utils/auth' // get token from cookie
+import { getToken } from '@/utils/auth'
+import Layout from '@/layout' // get token from cookie
 
 NProgress.configure({ showSpinner: false }) // NProgress Configuration
 
@@ -32,8 +33,13 @@ router.beforeEach(async(to, from, next) => {
         try {
           // get user info
           await store.dispatch('user/getInfo')
+          const tes = await store.dispatch('user/getRole')
+          await addRoutes(tes)
+          next({
+            ...to,
+            replace: true
+          })
 
-          next()
         } catch (error) {
           // remove token and go to login page to re-login
           await store.dispatch('user/resetToken')
