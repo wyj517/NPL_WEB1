@@ -34,18 +34,40 @@
       v-drawerDrag
       size="60%"
     >
+      <el-button
+        type="primary"
+        plain
+        class="exprot"
+        size="small"
+        @click="exportExcel"
+        :loading="exportLoading"
+        >导出</el-button
+      >
       <div class="demo-drawer__content" style="padding: 10px">
         <el-table :data="tableData">
-          <el-table-column prop="id" label="id" width="120" />
-          <el-table-column prop="doc" label="doc" />
+          <el-table-column
+            :prop="item"
+            :label="item"
+            :width="index ? 'auto' : '60'"
+            v-for="(item, index) in tableColumn"
+            :key="index"
+          />
         </el-table>
+
+        <el-pagination
+          layout="prev, pager, next"
+          :total="totalPage"
+          @current-change="getNodeDetail"
+          class="pagination"
+        >
+        </el-pagination>
       </div>
     </el-drawer>
   </section>
 </template>
 
 <script>
-import { Message, TableColumn } from "element-ui";
+import { Message } from "element-ui";
 import LogicFlow from "@logicflow/core";
 import {
   DndPanel,
@@ -61,7 +83,7 @@ import "@logicflow/core/dist/style/index.css";
 import "@logicflow/extension/lib/style/index.css";
 import RegisteNode from "./components/registerNode";
 import { getApi } from "@/api/database";
-
+import excel from "@/utils/excel";
 let lf = {};
 export default {
   data() {
@@ -75,8 +97,11 @@ export default {
       taskName: "",
       dialogVisible: false,
       drawer: false,
+      exportLoading: false,
       taskId: "",
       tableData: [],
+      tableColumn: [],
+      totalPage: 0,
     };
   },
   components: {
@@ -131,30 +156,58 @@ export default {
       this.drawer = true;
       this.getNodeDetail();
     },
-    // 节点详情
-    async getNodeDetail(page = 1) {
-      this.tableData= []
+    // 导出
+    async exportExcel() {
+      this.exportLoading = true;
       let params = {
-        page: page,
-        page_size: "10",
-        total_flg: true,
+        page: 1,
+        page_size: 99999,
         node_id: this.selectNode.id,
         task_id: this.taskId,
       };
       let { data } = await getApi("task/get_nodes_result", params);
-      let dataArr1 = [];
-      let dataArr2 = [];
-      let { id, doc } = data;
-      for (const key in id) {
-        dataArr1.push({ id: id[key] });
+      console.log(data);
+      this.exportExcelFu(data, this.tableColumn);
+    },
+    // 导出参数
+    exportExcelFu(tableData, tableColumn) {
+      if (tableData) {
+        const params = {
+          title: tableColumn,
+          key: tableColumn,
+          data: tableData,
+          autoWidth: true,
+          filename: "节点分析结果",
+        };
+        excel.export_array_to_excel(params);
+        this.exportLoading = false;
+      } else {
+        console.error("表格数据不能为空！");
+        // this.$Message.success('表格数据不能为空！')
       }
-      for (const key in doc) {
-        dataArr2.push({ doc: doc[key] });
+    },
+
+    // 节点详情 执行结果
+    async getNodeDetail(page = 1, page_size = 10) {
+      this.tableData = [];
+      let params = {
+        page: page,
+        page_size,
+        total_flg: true,
+        node_id: this.selectNode.id,
+        task_id: this.taskId,
+      };
+      let { data, counts } = await getApi("task/get_nodes_result", params);
+      this.totalPage = counts;
+      let tempObj = {};
+      this.tableColumn = [];
+      if (data.length) {
+        tempObj = data[0];
       }
-      dataArr1.map((it,index) => {
-        it.doc = dataArr2[index].doc
-      });
-      this.tableData = dataArr1
+      for (const key in tempObj) {
+        this.tableColumn.push(key);
+      }
+      this.tableData = data;
     },
 
     saveFlow() {
@@ -303,5 +356,21 @@ const initFlow = (than) => {
 .custom-minimap {
   background: url("../../icons/save.png");
   background-size: contain;
+}
+.pagination {
+  margin: 10px 0 20px 0;
+  text-align: right;
+}
+
+.drawer .el-drawer__header {
+  margin-bottom: 5px;
+}
+.exprot {
+  position: absolute;
+  top: 20px;
+  right: 60px;
+  &.el-button.is-loading{
+      position: absolute;
+  }
 }
 </style>

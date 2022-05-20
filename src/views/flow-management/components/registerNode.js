@@ -248,6 +248,7 @@ export default function RegisteNode(lf) {
 
   lf.register({
     type: "rect1",
+    icon: "https://static.zhihu.com/heifetz/assets/logo.804f083e.png",
     view: CustomRectNode,
     model: RectModel1,
   });

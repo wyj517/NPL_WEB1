@@ -20,7 +20,7 @@
             @change="getResult"
             clearable
             size="small"
-             style="width: 150px"
+            style="width: 150px"
           >
             <el-option
               v-for="(item, index) in TypeOptions"
@@ -41,31 +41,44 @@
           />
         </div>
         <div>
-          <el-button type="primary" @click="getResult" size="small" class="screen" >筛选</el-button>
+          <el-button
+            type="primary"
+            @click="getResult"
+            size="small"
+            class="screen"
+            >筛选</el-button
+          >
         </div>
       </div>
       <div class="right">
         <div>
-          <el-popover
-            placement="top"
-            width="200"
-            trigger="click">
-            <el-input
-              placeholder="请输入任务名称"
-              v-model="searchName">
+          <el-popover placement="top" width="200" trigger="click">
+            <el-input placeholder="请输入任务名称" v-model="searchName">
               <i slot="prefix" class="el-input__icon el-icon-search"></i>
             </el-input>
             <ul class="el-scrollbar__view el-select-dropdown__list">
               <el-scrollbar>
-                <li v-for="(item, index) in TagOptions" :key="index" class="list_item" @click="updateClassTag(1,'',item)">
-                  <span>{{item}}</span>
+                <li
+                  v-for="(item, index) in TagOptions"
+                  :key="index"
+                  class="list_item"
+                  @click="updateClassTag(1, '', item)"
+                >
+                  <span>{{ item }}</span>
                 </li>
               </el-scrollbar>
             </ul>
             <el-button slot="reference" type="primary" size="small" class="tags"
-            >批量标签 ˇ</el-button>
+              >批量标签 ˇ</el-button
+            >
           </el-popover>
-          <el-button type="success" plain @click="dialogAnalysis = true" size="small" class="rethink" style="margin-left: 12px"
+          <el-button
+            type="success"
+            plain
+            @click="dialogAnalysis = true"
+            size="small"
+            class="rethink"
+            style="margin-left: 12px"
             >重新分析</el-button
           >
           <el-button
@@ -76,11 +89,7 @@
             :loading="exportLoading"
             >导出</el-button
           >
-            <el-button
-            type="primary"
-            plain
-            size="small"
-            @click="toAnalysis"
+          <el-button type="primary" plain size="small" @click="toAnalysis"
             >统计</el-button
           >
         </div>
@@ -92,7 +101,6 @@
         v-loading="isLoading"
         :data="tableData"
         tooltip-effect="dark"
-
         style="width: 100%"
         @selection-change="handleSelectionChange"
       >
@@ -180,7 +188,11 @@
       <main>
         <el-form label-position="right" label-width="100px">
           <el-form-item label="任务类型">
-            <el-select v-model="DataValue" placeholder="请选择" style="width: 100%">
+            <el-select
+              v-model="DataValue"
+              placeholder="请选择"
+              style="width: 100%"
+            >
               <el-option
                 v-for="(item, index) in DataOption"
                 :key="index"
@@ -199,8 +211,16 @@
       </main>
 
       <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogAnalysis = false" size="small" class="cancel">取 消</el-button>
-        <el-button type="primary" @click="reAnalyze" size="small" class="rethink">确 定</el-button>
+        <el-button @click="dialogAnalysis = false" size="small" class="cancel"
+          >取 消</el-button
+        >
+        <el-button
+          type="primary"
+          @click="reAnalyze"
+          size="small"
+          class="rethink"
+          >确 定</el-button
+        >
       </span>
     </el-dialog>
   </div>
@@ -216,7 +236,7 @@ export default {
   components: {},
   data() {
     return {
-      searchName:'',
+      searchName: "",
       exportLoading: false,
       isLoading: true,
       dialogVisible: false,
@@ -260,8 +280,11 @@ export default {
   },
   methods: {
     // 分析
-    toAnalysis(){
-      this.$router.push({name:"Analysis",query:{id:this.$route.query.dataset_id}})
+    toAnalysis() {
+      this.$router.push({
+        name: "Analysis",
+        query: { id: this.$route.query.dataset_id },
+      });
     },
     handleSelectionChange(val) {
       this.multipleSelection = val;
@@ -480,44 +503,44 @@ export default {
   padding: 10px;
   border-radius: 3px;
 }
-.screen{
-  background: #19BC9C;
+.screen {
+  background: #19bc9c;
   box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.06);
   border-radius: 1px;
-  border-color: #19BC9C;
+  border-color: #19bc9c;
 }
-.tags{
+.tags {
   background: rgba(25, 188, 156, 0.2);
   border: 1px solid rgba(25, 188, 156, 0.6);
-  color: #00BF9B;
-  ::v-deep .el-input__inner{
+  color: #00bf9b;
+  ::v-deep .el-input__inner {
     background: rgba(25, 188, 156, 0.2);
-    color: #00BF9B;
+    color: #00bf9b;
     width: 96px;
     height: 32px;
   }
-  ::v-deep .el-input__inner::placeholder{
-    color: #00BF9B !important;
+  ::v-deep .el-input__inner::placeholder {
+    color: #00bf9b !important;
   }
 }
-.rethink{
-  background: #19BC9C;
-  border-color: #19BC9C;
+.rethink {
+  background: #19bc9c;
+  border-color: #19bc9c;
   color: #fff;
 }
-.cancel{
+.cancel {
   background: rgba(25, 188, 156, 0.2);
   border: 1px solid rgba(25, 188, 156, 0.6);
-  color: #00BF9B;
+  color: #00bf9b;
 }
-.taskpara{
-  .taskdes{
+.taskpara {
+  .taskdes {
     position: absolute;
     left: -73px;
     top: 15px;
   }
 }
-.list_item{
+.list_item {
   box-shadow: inset 0px -1px 0px 0px rgba(0, 0, 0, 0.1);
   color: #333333;
   height: 45px;
@@ -525,12 +548,11 @@ export default {
   font-size: 14px;
   font-weight: 400;
 }
-.list_item:hover{
-  background: #F0F5F8;
-  cursor:pointer;
+.list_item:hover {
+  background: #f0f5f8;
+  cursor: pointer;
 }
-::v-deep.el-scrollbar .el-scrollbar__view{
-   height: 260px;
+::v-deep.el-scrollbar .el-scrollbar__view {
+  height: 260px;
 }
-
 </style>
