@@ -1,6 +1,10 @@
 <template>
   <div style="padding: 20px">
-    <ListHeader title="角色名称" @handle-create="openDialog()"  buttonTitle="角色" />
+    <ListHeader
+      title="角色名称"
+      buttonTitle="角色"
+      @handle-create="openDialog()"
+    />
     <BaseTable v-loading="loading" :height="height" :columns="columns" :data="tableData" />
 
     <el-dialog

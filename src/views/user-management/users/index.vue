@@ -41,7 +41,12 @@
         style="background: #fff;padding: 20px 20px 0 20px"
       >
         <div class="title_header">
-          <el-input v-model="username" @input="getUserList()" class="search" placeholder="请输入关键字">
+          <el-input
+            v-model="username"
+            class="search"
+            placeholder="请输入关键字"
+            @input="getUserList()"
+          >
             <template slot="append">
               <el-button
                 class="addButton"
@@ -59,17 +64,24 @@
           </el-button>
         </div>
         <el-table
+          v-loading="loading"
           :data="tableData"
           :max-height="height"
           style="width: 100%"
-          v-loading="loading"
           @expand-change="expandChange"
         >
           <el-table-column type="expand">
             <template slot-scope="props">
-              <el-form label-position="top" inline class="demo-table-expand">
+              <el-form
+                label-position="top"
+                inline
+                class="demo-table-expand"
+              >
                 <el-form-item label="所属角色">
-                  <div v-for="(item,i) in props.row.role" :key="i">
+                  <div
+                    v-for="(item,i) in props.row.role"
+                    :key="i"
+                  >
                     <span>{{ item.role_name || '暂无角色' }}</span>
                   </div>
                 </el-form-item>
@@ -81,28 +93,23 @@
             :index="count"
             label="序号"
             width="50"
-          >
-          </el-table-column>
+          />
           <el-table-column
             label="用户账号"
             prop="username"
-          >
-          </el-table-column>
+          />
           <el-table-column
             label="所属组织"
             prop="org_name"
-          >
-          </el-table-column>
+          />
           <el-table-column
             label="用户名称"
             prop="full_name"
-          >
-          </el-table-column>
+          />
           <el-table-column
             label="手机号"
             prop="phone_number"
-          >
-          </el-table-column>
+          />
           <el-table-column
             label="账户使用状态"
           >
@@ -112,8 +119,7 @@
                 active-color="#13ce66"
                 inactive-color="#ff4949"
                 @change="changeState(scope.row)"
-              >
-              </el-switch>
+              />
             </template>
           </el-table-column>
           <el-table-column label="操作">
@@ -121,7 +127,14 @@
               <el-button
                 type="text"
                 @click="openDrawer(scope.row)"
-              >编辑
+              >
+                编辑
+              </el-button>
+              <el-button
+                type="text"
+                @click="openPassword(scope.row.id)"
+              >
+                修改密码
               </el-button>
             </template>
           </el-table-column>
@@ -142,8 +155,8 @@
     </el-row>
 
     <el-drawer
-      :title="users.id?'编辑用户':'新增用户'"
       v-drawer-drag
+      :title="users.id?'编辑用户':'新增用户'"
       :visible.sync="drawer"
       :modal="false"
       :direction="direction"
@@ -156,62 +169,111 @@
           :model="users"
           :rules="rule"
         >
-          <el-form-item label="用户账号" prop="username">
-            <el-input placeholder="请输入" v-model="users.username">
-
-            </el-input>
+          <el-form-item
+            label="用户账号"
+            prop="username"
+          >
+            <el-input
+              v-model="users.username"
+              placeholder="请输入"
+            />
           </el-form-item>
-          <el-form-item label="手机号码" prop="phone_number">
-            <el-input placeholder="请输入" v-model="users.phone_number">
-
-            </el-input>
+          <el-form-item
+            label="手机号码"
+            prop="phone_number"
+          >
+            <el-input
+              v-model="users.phone_number"
+              placeholder="请输入"
+            />
           </el-form-item>
-          <el-form-item label="所属组织" prop="org_id">
-            <el-select v-model="users.org_name" placeholder="请选择" :popper-append-to-body="false" style="width: 100%">
+          <el-form-item
+            label="所属组织"
+            prop="org_id"
+          >
+            <el-select
+              v-model="users.org_name"
+              placeholder="请选择"
+              :popper-append-to-body="false"
+              style="width: 100%"
+            >
               <el-option
                 v-for="item in organOptions"
                 :key="item.id"
                 :label="item.org_name"
                 :value="item.id"
-              >
-              </el-option>
+              />
             </el-select>
           </el-form-item>
-          <el-form-item label="名称" prop="full_name">
-            <el-input placeholder="请输入" v-model="users.full_name">
-
-            </el-input>
+          <el-form-item
+            label="名称"
+            prop="full_name"
+          >
+            <el-input
+              v-model="users.full_name"
+              placeholder="请输入"
+            />
           </el-form-item>
-          <el-form-item label="密码" prop="password">
-            <el-input placeholder="请输入" v-model="users.password">
-
-            </el-input>
+          <el-form-item
+            label="密码"
+            prop="password"
+            v-if="this.users.id===''"
+          >
+            <el-input
+              v-model="users.password"
+              placeholder="请输入"
+            />
           </el-form-item>
           <el-form-item label="角色">
-            <el-select v-model="RoleValue" placeholder="请选择" :popper-append-to-body="false"
-                       style="width: 100%"
+            <el-select
+              v-model="RoleValue"
+              placeholder="请选择"
+              :popper-append-to-body="false"
+              style="width: 100%"
             >
               <el-option
                 v-for="item in RoleOptions"
                 :key="item.id"
                 :label="item.role_name"
                 :value="item.id"
-              >
-              </el-option>
+              />
             </el-select>
           </el-form-item>
         </el-form>
         <div class="demo-drawer__footer">
-          <el-button @click="drawer = false">取 消</el-button>
-          <el-button type="primary" @click="insertUser">确 定</el-button>
+          <el-button
+            @click="drawer = false"
+          >
+            取 消
+          </el-button>
+          <el-button
+            type="primary"
+            @click="insertUser"
+          >
+            确 定
+          </el-button>
         </div>
       </el-scrollbar>
     </el-drawer>
+    <el-dialog
+      title="修改密码"
+      :visible.sync="dialogVisible"
+      :modal="false"
+      width="30%"
+    >
+        <el-input
+          v-model="users.password"
+          placeholder="请输入新密码"
+        />
+      <span slot="footer" class="dialog-footer">
+         <el-button @click="dialogVisible = false">取 消</el-button>
+         <el-button type="primary" @click="changeWord()">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import BaseTable from '@/components/BaseTable'
 import {
   addUser,
   getOrg,
@@ -219,15 +281,12 @@ import {
   getUser,
   changePassword,
   register,
-  updateUserRole,
   getRole,
   getUserRole
 } from '@/api/user'
-import ListHeader from '@/components/ListHeader'
 
 export default {
-  name: 'index',
-  components: { BaseTable, ListHeader },
+  name: 'Index',
   data() {
     let isMobileNumber = (rule, value, callback) => {
       if (!value) {
@@ -249,6 +308,7 @@ export default {
       }
     }
     return {
+      dialogVisible:false,
       page: {
         currentPage: 1,
         pageSize: 20,
@@ -433,17 +493,22 @@ export default {
         }
       })
     },
+    openPassword(id){
+      this.dialogVisible=true
+      this.users.id=id
+    },
     //修改密码
-    changeWord(id, password) {
+    changeWord() {
       let params = {
-        record_id: id,
-        password: password
+        record_id: this.users.id,
+        password: this.users.password
       }
       changePassword(params).then(res => {
         if (res.success) {
           this.$message.success('更新成功')
         }
       })
+      this.dialogVisible=false
     },
     //获取角色列表
     getRoleList() {
