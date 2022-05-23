@@ -22,30 +22,12 @@
               :model="ruleForm"
               :rules="rule"
             >
-              <!--            <el-form-item label="id" prop="id">-->
-              <!--              <el-input-->
-              <!--                v-model="ruleForm.id"-->
-              <!--                placeholder="请输入id"-->
-              <!--              />-->
-              <!--            </el-form-item>-->
               <el-form-item label="角色名称" prop="role_name">
                 <el-input
                   v-model="ruleForm.role_name"
                   placeholder="请输入角色名称"
                 />
               </el-form-item>
-              <!--            <el-form-item label="父级角色" prop="parent_id">-->
-              <!--              <el-input-->
-              <!--                v-model="ruleForm.parent_id"-->
-              <!--                placeholder="请输入父级角色id"-->
-              <!--              />-->
-              <!--            </el-form-item>-->
-              <!--            <el-form-item label="角色层级" prop="lvl">-->
-              <!--              <el-input-->
-              <!--                v-model="ruleForm.lvl"-->
-              <!--                placeholder="请输入角色层级"-->
-              <!--              />-->
-              <!--            </el-form-item>-->
               <el-form-item label="角色备注" prop="remarks">
                 <el-input
                   v-model="ruleForm.remarks"
@@ -216,8 +198,14 @@ export default {
     },
     openDialog(data) {
       this.dialogVisible = true
+      this.$nextTick(() => {
+        this.$refs.tree.setCheckedKeys([]);
+      });
       if (data) {
         this.ruleForm = data
+        this.$nextTick(() => {
+          this.$refs.tree.setCheckedKeys(data.permission_list);
+        });
       } else {
         this.ruleForm = this.value
       }
