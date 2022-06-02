@@ -7,12 +7,86 @@
       @handle-search="getList"
       @handle-create="openAddTaskFlow"
     />
-    <BaseTable
-      v-loading="loading"
-      :height="height"
-      :columns="columns"
+<!--    <BaseTable-->
+<!--      v-loading="loading"-->
+<!--      :height="height"-->
+<!--      :columns="columns"-->
+<!--      :data="tableData"-->
+
+<!--    />-->
+
+    <el-table
       :data="tableData"
-    />
+      :header-cell-style="{background:'#f6f6f6'}"
+      stripe
+      style="width: 100%;margin-top: 20px">
+      <el-table-column
+        label="任务名称"
+        header-align="center"
+        align="center"
+        width="150">
+        <template slot-scope="scope">
+          <span @click="cellEdit(scope)" v-if="!scope.row.editFlag">{{ scope.row.task_name }}</span>
+          <span v-if="scope.row.editFlag"><el-input ref="editTask" v-model="taskName" placeholder="请输入内容" @blur="cellChange(scope)" /></span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        prop="datas_name"
+        header-align="center"
+        align="center"
+        label="数据集名称">
+      </el-table-column>
+      <el-table-column
+        header-align="center"
+        align="center"
+        label="执行状态"
+      >
+        <template slot-scope="scope">
+          <el-link :underline="false" :type="scope.row.task_status===2?'success':scope.row.task_status === 1 ? 'primary' : 'danger'">
+            ●{{scope.row.task_status === 2 ? "成功" : scope.row.task_status === 1 ? "进行中" : "执行失败"}}
+          </el-link>
+        </template>
+      </el-table-column>
+      <el-table-column
+        label="更新时间"
+        header-align="center"
+        align="center"
+        width="180"
+      >
+        <template slot-scope="scope">
+          <span>{{scope.row.update_time}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        label="操作"
+        header-align="center"
+        align="center"
+        width="160"
+      >
+        <template slot-scope="scope">
+          <el-button
+            type="text"
+            @click="routerTaskLog(scope.row.id, scope.row.datas_name);"
+          >
+            执行日志
+          </el-button>
+          <el-button
+            type="text"
+            @click="routerEdit(scope.row.id, scope.row.datas_name);"
+          >
+            编辑
+          </el-button>
+          <el-button
+            type="text"
+            @click="deleteTask(scope.row.id, scope.row.datas_name);"
+          >
+            删除
+          </el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+
+
     <el-pagination
       align="right"
       style="padding: 20px"
@@ -33,6 +107,7 @@ import { formatDates, interval } from "@/utils";
 import ListHeader from "@/components/ListHeader";
 import { getApi } from "@/api/database";
 import router from "@/router";
+import { updateTaskFlow } from '@/api/task'
 
 export default {
   name: "Index",
@@ -56,105 +131,135 @@ export default {
       executionNum: "",
       successNum: "",
       errorNum: "",
+      editFlag:false,
+      taskName:''
     };
   },
   computed: {
-    columns() {
-      const arr = [
-        // 表格列项
-        { label: "任务名称", key: "task_name", width: "150" },
-        { label: "数据集名称", key: "datas_name" },
-        {
-          label: "执行状态",
-          render: (h, params) => {
-            return h(
-              "el-link",
-              {
-                props: {
-                  underline: false,
-                  type:
-                    params.row.task_status === 2
-                      ? "success"
-                      : params.row.task_status === 1
-                      ? "primary"
-                      : "danger",
-                },
-              },
-              "●" +
-                (params.row.task_status === 2
-                  ? "成功"
-                  : params.row.task_status === 1
-                  ? "进行中"
-                  : "执行失败")
-            );
-          },
-        },
-        {
-          label: "更新时间",
-          width: "180px",
-          render: (h, params) => (
-            <span>{formatDates(params.row.update_time)}</span>
-          ),
-        },
-        {
-          label: "操作",
-          width: "160",
-          fixed: "right",
-          render: (h, { row }) => {
-            return h("div", [
-              h(
-                "el-button",
-                {
-                  props: {
-                    type: "text",
-                  },
-                  on: {
-                    click: () => {
-                      this.routerTaskLog(row.id, row.datas_name);
-                    },
-                  },
-                },
-                "执行日志"
-              ),
-              h(
-                "el-button",
-                {
-                  props: {
-                    type: "text",
-                  },
-                  on: {
-                    click: () => {
-                      this.routerEdit(row.id, row.datas_name);
-                    },
-                  },
-                },
-                "编辑"
-              ),
-              h(
-                "el-button",
-                {
-                  props: {
-                    type: "text",
-                  },
-                  on: {
-                    click: () => {
-                      this.deleteTask(row.id, row.datas_name);
-                    },
-                  },
-                },
-                "删除"
-              ),
-            ]);
-          },
-        },
-      ];
-      return arr;
-    },
+    // columns() {
+    //   const arr = [
+    //     // 表格列项
+    //     {
+    //       label: "任务名称",
+    //       width: "150",
+    //       render: (h, params) => (
+    //         this.editFlag ? <span><el-input v-model={this.taskName} ref='editTask' refInFor={true} placeholder="请输入内容" /></span> : <span onClick={this.cellEdit.bind(this,params)}>{params.row.task_name}</span>
+    //       )
+    //     },
+    //     { label: "数据集名称", key: "datas_name" },
+    //     {
+    //       label: "执行状态",
+    //       render: (h, params) => {
+    //         return h(
+    //           "el-link",
+    //           {
+    //             props: {
+    //               underline: false,
+    //               type:
+    //                 params.row.task_status === 2
+    //                   ? "success"
+    //                   : params.row.task_status === 1
+    //                   ? "primary"
+    //                   : "danger",
+    //             },
+    //           },
+    //           "●" +
+    //             (params.row.task_status === 2
+    //               ? "成功"
+    //               : params.row.task_status === 1
+    //               ? "进行中"
+    //               : "执行失败")
+    //         );
+    //       },
+    //     },
+    //     {
+    //       label: "更新时间",
+    //       width: "180px",
+    //       render: (h, params) => (
+    //         <span>{formatDates(params.row.update_time)}</span>
+    //       ),
+    //     },
+    //     {
+    //       label: "操作",
+    //       width: "160",
+    //       fixed: "right",
+    //       render: (h, { row }) => {
+    //         return h("div", [
+    //           h(
+    //             "el-button",
+    //             {
+    //               props: {
+    //                 type: "text",
+    //               },
+    //               on: {
+    //                 click: () => {
+    //                   this.routerTaskLog(row.id, row.datas_name);
+    //                 },
+    //               },
+    //             },
+    //             "执行日志"
+    //           ),
+    //           h(
+    //             "el-button",
+    //             {
+    //               props: {
+    //                 type: "text",
+    //               },
+    //               on: {
+    //                 click: () => {
+    //                   this.routerEdit(row.id, row.datas_name);
+    //                 },
+    //               },
+    //             },
+    //             "编辑"
+    //           ),
+    //           h(
+    //             "el-button",
+    //             {
+    //               props: {
+    //                 type: "text",
+    //               },
+    //               on: {
+    //                 click: () => {
+    //                   this.deleteTask(row.id, row.datas_name);
+    //                 },
+    //               },
+    //             },
+    //             "删除"
+    //           ),
+    //         ]);
+    //       },
+    //     },
+    //   ];
+    //   return arr;
+    // },
   },
   mounted() {
     this.getList();
   },
   methods: {
+    test(font){
+      console.log(font)
+    },
+    cellEdit(params){
+      this.taskName=params.row.task_name
+      params.row.editFlag=true
+      this.$nextTick(() => this.$refs.editTask.focus());
+    },
+    cellChange(params){
+      if (params.row.task_name!=this.taskName){
+        params.row.task_name=this.taskName
+        let data={
+          id:params.row.id,
+          task_name:params.row.task_name
+        }
+        console.log(data)
+        updateTaskFlow(data).then(res=>{
+          console.log('res',res)
+        })
+      }
+      params.row.editFlag=false
+    },
     openAddTaskFlow() {
       this.$router.push({ name: "TaskFlow" });
     },
@@ -208,6 +313,11 @@ export default {
       };
       getApi("task/get_task_flow", params).then((res) => {
         this.tableData = res.data;
+
+        this.tableData.forEach(res=>{
+          this.$set(res,'editFlag',false);
+        })
+        console.log(this.tableData)
         this.taskNum = res.counts;
         this.successNum = res.cntSuccess;
         this.errorNum = res.cntError;

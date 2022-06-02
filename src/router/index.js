@@ -116,14 +116,7 @@ export const asyncRoutes = [
         name: 'TaskFlow',
         hidden: true,
         meta: { title: '任务流程', icon: 'count', affix: true }
-      },
-      // {
-      //   path: 'task-test',
-      //   component: () => import('@/views/flow-management/components/node-panel.js'),
-      //   name: 'TaskTest',
-      //   hidden: true,
-      //   meta: { title: '任务流程', icon: 'count', affix: true }
-      // },
+      }
     ]
   },
   // 用户管理

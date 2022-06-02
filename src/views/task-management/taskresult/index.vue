@@ -53,7 +53,7 @@
       <div class="right">
         <div>
           <el-popover placement="top" width="200" trigger="click">
-            <el-input placeholder="请输入任务名称" v-model="searchName">
+            <el-input placeholder="请输入标签" v-model="searchName" @keyup.enter.native="addTag(searchName)">
               <i slot="prefix" class="el-input__icon el-icon-search"></i>
             </el-input>
             <ul class="el-scrollbar__view el-select-dropdown__list">
@@ -303,6 +303,8 @@ export default {
       }
       if (flag) {
         this.TagOptions.unshift(val);
+        this.searchName=''
+        this.$message.success('标签添加成功')
       }
     },
     toggleSelection(rows) {
@@ -428,7 +430,7 @@ export default {
         updateLabel(params).then((res) => {
           if (res.success) {
             this.$message.success(res.msg);
-            this.addTag(tag);
+            // this.addTag(tag);
             this.dialogVisible = false;
             this.getResult();
           }
