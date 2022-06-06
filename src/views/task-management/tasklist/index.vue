@@ -238,9 +238,6 @@ export default {
     this.getList();
   },
   methods: {
-    test(font){
-      console.log(font)
-    },
     cellEdit(params){
       this.taskName=params.row.task_name
       params.row.editFlag=true
@@ -253,7 +250,6 @@ export default {
           id:params.row.id,
           task_name:params.row.task_name
         }
-        console.log(data)
         updateTaskFlow(data).then(res=>{
           console.log('res',res)
         })
@@ -317,7 +313,7 @@ export default {
         this.tableData.forEach(res=>{
           this.$set(res,'editFlag',false);
         })
-        console.log(this.tableData)
+
         this.taskNum = res.counts;
         this.successNum = res.cntSuccess;
         this.errorNum = res.cntError;
