@@ -61,3 +61,19 @@ export function sourceTest(data) {
     data
   })
 }
+//上传文件
+export function uploadFile(data){
+  return request({
+    url: '/ds/upload_excel_file',
+    method: 'post',
+    data
+  })
+}
+//新增excel数据源
+export function excelDs(data){
+  return request({
+    url: '/ds/create_excel_ds',
+    method: 'post',
+    data
+  })
+}

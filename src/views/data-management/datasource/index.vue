@@ -25,7 +25,7 @@
       @current-change="handleCurrentChange"
     />
     <el-drawer
-      title="编辑"
+      :title="dialogtitle"
       :visible.sync="drawer"
       :direction="direction"
       custom-class="demo-drawer"
@@ -33,6 +33,21 @@
     >
       <div class="demo-drawer__content">
         <el-form ref="ruleForm" :model="ruleForm" :rules="rule" :inline="true" label-position="top" class="">
+          <el-form-item label="数据源类型" size="small" label-width="150px" prop="data_source_type">
+            <el-select
+              v-model="ruleForm.data_source_type"
+              placeholder="请选择数据源类型"
+              size="small"
+              style="width: 182px"
+            >
+              <el-option
+                v-for="(item, index) in SourceTypeOption"
+                :key="index"
+                :label="item"
+                :value="item"
+              />
+            </el-select>
+          </el-form-item>
           <el-form-item label="数据库类型" size="small" label-width="150px" prop="ds_type">
             <el-select
               v-model="ruleForm.ds_type"
@@ -56,10 +71,11 @@
           >
             <el-input v-model="ruleForm.ds_name" placeholder="请输入数据源名称" />
           </el-form-item>
-          <el-form-item label="描述" label-width="150px" size="small">
+          <el-form-item label="描述" label-width="150px" size="small" prop="des">
             <el-input v-model="ruleForm.des" placeholder="请输入描述" />
           </el-form-item>
           <el-form-item
+            v-if="ruleForm.data_source_type!=='EXCEL'"
             label="连接串"
             label-width="150px"
             size="small"
@@ -68,6 +84,7 @@
             <el-input v-model="ruleForm.conn_str" placeholder="请输入连接串" />
           </el-form-item>
           <el-form-item
+            v-if="ruleForm.data_source_type!=='EXCEL'"
             label="用户名"
             label-width="150px"
             size="small"
@@ -76,6 +93,7 @@
             <el-input v-model="ruleForm.user_name" placeholder="请输入用户名" />
           </el-form-item>
           <el-form-item
+            v-if="ruleForm.data_source_type!=='EXCEL'"
             label="密码"
             label-width="150px"
             size="small"
@@ -90,6 +108,20 @@
         </el-form>
         <span>
         <el-button type="primary" class="conn" @click="startSource(ruleForm.id)">测试连接</el-button></span>
+        <div style="text-align: center;margin-top: 20px" v-if="ruleForm.data_source_type==='EXCEL'">
+          <el-upload
+            class="upload-demo"
+            drag
+            :action="`${BASEURL}/ds/upload_excel_file`"
+            :headers="headers"
+
+            :on-success="onSuccess"
+            :on-error="onError"
+            :multiple="false">
+            <i class="el-icon-upload"></i>
+            <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+          </el-upload>
+        </div>
         <div class="demo-drawer__footer">
           <el-button @click="drawer = false">取 消</el-button>
           <el-button type="primary" @click="handleAdd">确 定</el-button>
@@ -102,14 +134,16 @@
 <script>
 import BaseTable from "@/components/BaseTable";
 import ListHeader from "@/components/ListHeader";
+import request from '@/utils/request'
+import { getToken } from "@/utils/auth";
 import {
   sourceList,
   sourceRemove,
   sourceTest,
   sourceDetail,
   sourceUpdate,
-  sourceCreate,
-} from "@/api/database";
+  sourceCreate, excelDs
+} from '@/api/database'
 
 export default {
   name: "Index",
@@ -119,6 +153,9 @@ export default {
   },
   data() {
     return {
+      excel_table:'',
+      BASEURL:'',
+      headers:'',
       drawer: false,
       direction: 'rtl',
       page: {
@@ -134,11 +171,14 @@ export default {
       height: null,
       tableData: [],
       TypeOption: ["MYSQL", "ORACLE", "SQLServer"],
+      SourceTypeOption: ["DB", "EXCEL"],
       ruleForm: {
         password: "",
       },
-
       rule: {
+        data_source_type: [
+          { required: true, message: "请选择数据源类型", trigger: "blur" },
+        ],
         ds_type: [
           { required: true, message: "请选择数据库类型", trigger: "blur" },
         ],
@@ -154,6 +194,9 @@ export default {
         password: [
           { required: true, message: "密码不能为空", trigger: "blur" },
         ],
+        des: [
+          { required: true, message: "描述不能为空", trigger: "blur" },
+        ]
       },
     };
   },
@@ -209,6 +252,11 @@ export default {
   mounted() {
     this.getList();
     this.height = document.body.offsetHeight - 257;
+    this.BASEURL=request.defaults.baseURL
+    this.headers={
+      Authorization:getToken()
+    }
+    console.log(this.headers)
   },
   methods: {
     // 每页条数改变时触发 选择一页显示多少行
@@ -242,13 +290,29 @@ export default {
         if (valid) {
           if (this.dialogtitle === "新增数据源") {
             this.ruleForm.id = "";
-            sourceCreate(this.ruleForm).then((res) => {
-              if (res.success) {
-                this.$message.success("新增成功");
+            if (this.ruleForm.data_source_type==='DB'){
+              sourceCreate(this.ruleForm).then((res) => {
+                if (res.success) {
+                  this.$message.success("新增成功");
+                }
+                this.getList();
+              });
+            }else {
+              let params={
+                ds_name:this.ruleForm.ds_name,
+                des:this.ruleForm.des,
+                data_source_type:this.ruleForm.data_source_type,
+                excel_table:this.excel_table
               }
-              this.getList();
-            });
-          } else {
+              console.log(params)
+              excelDs(params).then((res)=>{
+                if (res.success) {
+                  this.$message.success("新增成功");
+                }
+                this.getList();
+              })
+            }
+          }else {
             sourceUpdate(this.ruleForm).then((res) => {
               if (res.success) {
                 this.$message.success("编辑成功");
@@ -312,6 +376,18 @@ export default {
           this.$message.success(res.msg);
         }
       });
+    },
+
+    onSuccess(res) {
+      // message 弹出消息
+      this.$message.success("导入成功！");
+      this.excel_table=res.data.file_name
+      console.log(this.excel_table)
+    },
+    onError(res) {
+      // message 弹出消息
+      this.$message.warning("导入失败！");
+      console.log(res)
     },
   },
 };
