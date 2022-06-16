@@ -90,7 +90,7 @@ export default {
   margin-left: 8px;
 
   .no-redirect {
-    color: #fff;
+    color: #999;
     cursor: text;
   }
 }

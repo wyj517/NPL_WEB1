@@ -1,6 +1,4 @@
-import LogicFlow, {
-  BaseNodeModel,
-  ConnectRule,
+import {
   EllipseNodeModel,
   EllipseNode,
   h,
@@ -11,11 +9,10 @@ import LogicFlow, {
   PolylineEdge,
   PolylineEdgeModel,
 } from "@logicflow/core";
-
 import { bgColor, borderColor } from "./config";
 
 export default function RegisteNode(lf) {
-  class ApplyNodeModel extends EllipseNodeModel {
+  class ApplyNodeModel extends RectNodeModel {
     getConnectedTargetRules() {
       const rules = super.getConnectedTargetRules();
       const geteWayOnlyAsTarget = {
@@ -36,12 +33,13 @@ export default function RegisteNode(lf) {
       super.initNodeData(data);
       this.rx = 80;
       this.ry = 30;
+      this.text.editable = false;
     }
     getNodeStyle() {
       const style = super.getNodeStyle();
       style.stroke = "#9996ca";
       style.fill = "#dfe0ff";
-     //  style.strokeDasharray = "3 3";
+      //  style.strokeDasharray = "3 3";
       return style;
     }
   }
@@ -103,15 +101,18 @@ export default function RegisteNode(lf) {
     model: ApproverModel,
   });
 
-
   // 菱形
   class JugementModel extends PolygonNodeModel {
     getNodeStyle() {
       const style = super.getNodeStyle();
       style.stroke = "#1a7ec8";
       style.fill = "#d3e6f4";
-     //  style.strokeDasharray = "3 3";
+      //  style.strokeDasharray = "3 3";
       return style;
+    }
+    initNodeData(data) {
+      super.initNodeData(data);
+      this.text.editable = false;
     }
   }
   lf.register({
@@ -141,12 +142,13 @@ export default function RegisteNode(lf) {
       super.initNodeData(data);
       this.rx = 80;
       this.ry = 30;
+      this.text.editable = false;
     }
     getNodeStyle() {
       const style = super.getNodeStyle();
       style.stroke = "#9996ca";
       style.fill = "#dfe0ff";
-     //  style.strokeDasharray = "3 3";
+      //  style.strokeDasharray = "3 3";
       return style;
     }
   }
@@ -165,10 +167,13 @@ export default function RegisteNode(lf) {
       this.width = 150;
       this.height = 40;
       this.radius = 2;
+      this.text.editable = false;
+      this.isHovered = false;
+      this.isSelected = false;
     }
     getNodeStyle() {
       const style = super.getNodeStyle();
-     //  style.strokeDasharray = "3 3";
+      //  style.strokeDasharray = "3 3";
       return style;
     }
   }
@@ -248,11 +253,9 @@ export default function RegisteNode(lf) {
 
   lf.register({
     type: "rect1",
-    icon: "https://static.zhihu.com/heifetz/assets/logo.804f083e.png",
     view: CustomRectNode,
     model: RectModel1,
   });
-
   lf.register({
     type: "rect2",
     view: CustomRectNode,
@@ -289,7 +292,6 @@ export default function RegisteNode(lf) {
     model: RectModel8,
   });
 
-
   // 数据集椭圆
   class CustomEllipseNode extends EllipseNode {}
   class CustomEllipseModel extends EllipseNodeModel {
@@ -297,12 +299,13 @@ export default function RegisteNode(lf) {
       super.initNodeData(data);
       this.rx = 80;
       this.ry = 30;
+      this.text.editable = false;
     }
     getNodeStyle() {
       const style = super.getNodeStyle();
       style.stroke = borderColor[3];
       style.fill = bgColor[3];
-     //  style.strokeDasharray = "3 3";
+      //  style.strokeDasharray = "3 3";
       return style;
     }
   }
@@ -312,13 +315,12 @@ export default function RegisteNode(lf) {
     model: CustomEllipseModel,
   });
 
-
   class CustomEdge extends PolylineEdge {}
   class CustomEdgeModel extends PolylineEdgeModel {
     getEdgeStyle() {
       const style = super.getEdgeStyle();
       style.stroke = "#C5C6D5";
-     //  style.strokeDasharray = "3 3";
+      //  style.strokeDasharray = "3 3";
       return style;
     }
     getTextStyle() {
@@ -353,7 +355,6 @@ export default function RegisteNode(lf) {
     view: ErrorEdge,
     model: ErrorEdgeModel,
   });
-
 
   class SuccessEdge extends PolylineEdge {}
   class SuccessEdgeModel extends PolylineEdgeModel {

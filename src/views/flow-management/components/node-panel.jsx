@@ -18,6 +18,9 @@ export default {
     document.querySelector("#approveNode").onselectstart = function () {
       return false;
     };
+    document.ondragstart = function () {
+      return false;
+    };
   },
   render(h) {
     const nodeList1 = [];
@@ -28,41 +31,31 @@ export default {
       if (item.genus == "1") {
         nodeList1.push(
           <div class={`approve-node node-${item.type}`} key={key}>
-            <div
-              class="node-shape"
-              style={item.style}
-              onmousedown={() => this.dragNode(item)}
-            >
+            <div class="node-shape" onmousedown={() => this.dragNode(item)}>
+              <img src={require(`@/icons/flow/${item.type}.png`)} />
               <div class="node-label">{item.label}</div>
             </div>
           </div>
         );
-      }else  if (item.genus == "2") {
+      } else if (item.genus == "2") {
         nodeList2.push(
           <div class={`approve-node node-${item.type}`} key={key}>
-            <div
-              class="node-shape"
-              style={item.style}
-              onmousedown={() => this.dragNode(item)}
-            >
+            <div class="node-shape" onmousedown={() => this.dragNode(item)}>
+              <img src={require(`@/icons/flow/${item.type}.png`)} />
               <div class="node-label">{item.label}</div>
             </div>
           </div>
         );
-      }else  if (item.genus == "3") {
+      } else if (item.genus == "3") {
         nodeList3.push(
           <div class={`approve-node node-${item.type}`} key={key}>
-            <div
-              class="node-shape"
-              style={item.style}
-              onmousedown={() => this.dragNode(item)}
-            >
+            <div class="node-shape" onmousedown={() => this.dragNode(item)}>
+              <img src={require(`@/icons/flow/${item.type}.png`)} />
               <div class="node-label">{item.label}</div>
             </div>
           </div>
         );
       }
-   
     });
     return (
       <div class="node-panel" id="approveNode">

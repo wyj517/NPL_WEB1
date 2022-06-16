@@ -129,7 +129,7 @@ export const approveNodes = [
     },
   },
   {
-    type: "polygon",
+    type: "data-rect2",
     label: "过滤节点",
     genus: "3",
     style: {
@@ -146,7 +146,7 @@ export const approveNodes = [
     },
   },
   {
-    type: "polygon",
+    type: "data-rect3",
     label: "数据合并",
     genus: "3",
     style: {

@@ -136,103 +136,112 @@ export default {
     };
   },
   computed: {
-    // columns() {
-    //   const arr = [
-    //     // 表格列项
-    //     {
-    //       label: "任务名称",
-    //       width: "150",
-    //       render: (h, params) => (
-    //         this.editFlag ? <span><el-input v-model={this.taskName} ref='editTask' refInFor={true} placeholder="请输入内容" /></span> : <span onClick={this.cellEdit.bind(this,params)}>{params.row.task_name}</span>
-    //       )
-    //     },
-    //     { label: "数据集名称", key: "datas_name" },
-    //     {
-    //       label: "执行状态",
-    //       render: (h, params) => {
-    //         return h(
-    //           "el-link",
-    //           {
-    //             props: {
-    //               underline: false,
-    //               type:
-    //                 params.row.task_status === 2
-    //                   ? "success"
-    //                   : params.row.task_status === 1
-    //                   ? "primary"
-    //                   : "danger",
-    //             },
-    //           },
-    //           "●" +
-    //             (params.row.task_status === 2
-    //               ? "成功"
-    //               : params.row.task_status === 1
-    //               ? "进行中"
-    //               : "执行失败")
-    //         );
-    //       },
-    //     },
-    //     {
-    //       label: "更新时间",
-    //       width: "180px",
-    //       render: (h, params) => (
-    //         <span>{formatDates(params.row.update_time)}</span>
-    //       ),
-    //     },
-    //     {
-    //       label: "操作",
-    //       width: "160",
-    //       fixed: "right",
-    //       render: (h, { row }) => {
-    //         return h("div", [
-    //           h(
-    //             "el-button",
-    //             {
-    //               props: {
-    //                 type: "text",
-    //               },
-    //               on: {
-    //                 click: () => {
-    //                   this.routerTaskLog(row.id, row.datas_name);
-    //                 },
-    //               },
-    //             },
-    //             "执行日志"
-    //           ),
-    //           h(
-    //             "el-button",
-    //             {
-    //               props: {
-    //                 type: "text",
-    //               },
-    //               on: {
-    //                 click: () => {
-    //                   this.routerEdit(row.id, row.datas_name);
-    //                 },
-    //               },
-    //             },
-    //             "编辑"
-    //           ),
-    //           h(
-    //             "el-button",
-    //             {
-    //               props: {
-    //                 type: "text",
-    //               },
-    //               on: {
-    //                 click: () => {
-    //                   this.deleteTask(row.id, row.datas_name);
-    //                 },
-    //               },
-    //             },
-    //             "删除"
-    //           ),
-    //         ]);
-    //       },
-    //     },
-    //   ];
-    //   return arr;
-    // },
+    columns() {
+      const arr = [
+        // 表格列项
+        { label: "任务名称", key: "task_name", width: "150" },
+        { label: "数据集名称", key: "datas_name" },
+        {
+          label: "执行状态",
+          render: (h, params) => {
+            return h(
+              "el-link",
+              {
+                props: {
+                  underline: false,
+                  type:
+                    params.row.task_status === 2
+                      ? "success"
+                      : params.row.task_status === 1
+                      ? "primary"
+                      : "danger",
+                },
+              },
+              "●" +
+                (params.row.task_status === 2
+                  ? "成功"
+                  : params.row.task_status === 1
+                  ? "进行中"
+                  : "执行失败")
+            );
+          },
+        },
+        {
+          label: "更新时间",
+          width: "180px",
+          render: (h, params) => (
+            <span>{formatDates(params.row.update_time)}</span>
+          ),
+        },
+        {
+          label: "操作",
+          width: "200",
+          fixed: "right",
+          render: (h, { row }) => {
+            return h("div", [
+              // h(
+              //   "el-button",
+              //   {
+              //     props: {
+              //       type: "text",
+              //     },
+              //     on: {
+              //       click: () => {
+              //         this.routerTaskLog(row.id, row.datas_name);
+              //       },
+              //     },
+              //   },
+              //   "执行日志"
+              // ),
+              h(
+                "el-button",
+                {
+                  props: {
+                    type: "text",
+                  },
+                  on: {
+                    click: () => {
+                      this.copyTask(row.id, row.task_name);
+                    },
+                  },
+                },
+                "复制"
+              ),
+
+              h(
+                "el-button",
+                {
+                  props: {
+                    type: "text",
+                  },
+                  on: {
+                    click: () => {
+                      this.routerEdit(row.id, row.datas_name);
+                    },
+                  },
+                },
+                "编辑"
+              ),
+              h(
+                "el-button",
+                {
+                  props: {
+                    type: "text",
+                  },
+                  on: {
+                    click: () => {
+                      this.deleteTask(row.id, row.datas_name);
+                    },
+                  },
+                },
+                "删除"
+              ),
+            ]);
+          },
+        },
+      ];
+      return arr;
+    },
   },
   mounted() {
     this.getList();
@@ -257,7 +266,7 @@ export default {
       params.row.editFlag=false
     },
     openAddTaskFlow() {
-      this.$router.push({ name: "TaskFlow" });
+      this.$router.push({ name: "FlowAdd" });
     },
     routerTaskLog(id, name) {
       this.$router.push({ name: "Taskstate", query: { id, name } });
@@ -265,8 +274,16 @@ export default {
     routerEdit(id) {
       this.$router.push({ name: "TaskFlow", query: { id } });
     },
-    // 删除任务
-
+    // 复制任务
+    async copyTask(task_id, task_name) {
+      let res = await getApi("task/getTaskFlowDetail", { task_id });
+      let taskName = task_name + "_副本";
+      let res2 = await getApi("task/create_task_flow", {
+        task_name: taskName,
+        task_flow_json: res.data.task_flow_json,
+      });
+      this.getList();
+    },
     deleteTask(id) {
       this.$confirm("确实删除吗？", "删除", {
         confirmButtonText: "确定",

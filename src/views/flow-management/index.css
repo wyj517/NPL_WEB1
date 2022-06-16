@@ -10,27 +10,17 @@
   text-align: center;
   z-index: 101;
 }
-.approve-node {
-  display: block;
-  margin: 5px auto;
+.node-box .approve-node{
+  width: 50%;
+  display: inline-block;
   position: relative;
-  color: #fff;
-  height: 40px;
-  width: 160px;
 }
-
 .approve-node .node-shape {
-  border: solid 1px #666;
+  height: 85px;
+  cursor: pointer;
+  /* border: solid 1px #ccc; */
 }
 
-.approve-node.node-polygon {
-  height: 90px;
-}
-.approve-node.node-apply,
-.approve-node.node-ellipse,
-.approve-node.node-finish {
-  height: 50px;
-}
 .node-panel {
   padding: 10px;
 }
@@ -57,20 +47,12 @@
 .node-label {
   position: absolute;
   font-size: 12px;
-  top: 50%;
   left: 50%;
+  bottom: 0px;
   width: 100%;
   transform: translate(-50%, -50%);
   cursor: pointer;
   color: #333;
-}
-.node-polygon .node-label {
-  transform: rotate(-45deg);
-}
-.node-circle .node-label {
-}
-s .node-jugement .node-label {
-  margin-top: 15px;
 }
 .property-panel {
   position: absolute;
