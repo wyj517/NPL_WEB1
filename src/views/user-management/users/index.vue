@@ -76,6 +76,7 @@
                 label-position="top"
                 inline
                 class="demo-table-expand"
+
               >
                 <el-form-item label="所属角色">
                   <div
@@ -158,7 +159,8 @@
       v-drawer-drag
       :title="users.id?'编辑用户':'新增用户'"
       :visible.sync="drawer"
-      :modal="false"
+      :modal="true"
+      :modal-append-to-body="false"
       :direction="direction"
     >
       <el-scrollbar class="page-scroll">

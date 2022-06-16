@@ -70,3 +70,11 @@ export function getTaskLog(data){
     data
   })
 }
+//更新任务流
+export function updateTaskFlow(data){
+  return request({
+    url:"task/updateTaskFlow",
+    method:"post",
+    data
+  })
+}
