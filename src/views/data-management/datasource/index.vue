@@ -48,7 +48,7 @@
               />
             </el-select>
           </el-form-item>
-          <el-form-item label="数据库类型" size="small" label-width="150px" prop="ds_type">
+          <el-form-item label="数据库类型" size="small" label-width="150px" prop="ds_type" v-if="ruleForm.data_source_type!=='EXCEL'">
             <el-select
               v-model="ruleForm.ds_type"
               placeholder="请选择数据库类型"
