@@ -59,17 +59,17 @@ export const asyncRoutes = [
     },
     children: [
       {
+        path: 'datasource',
+        component: () => import('@/views/data-management/datasource/index'),
+        name: 'Datasource',
+        meta: { title: '数据源管理', icon: 'savedatasour', affix: true }
+      },
+      {
         path: 'dataset',
         component: () => import('@/views/data-management/dataset/index'),
         name: 'Dataset',
         meta: { title: '数据集管理', icon: 'dataset', affix: true }
       },
-      {
-        path: 'datasource',
-        component: () => import('@/views/data-management/datasource/index'),
-        name: 'Datasource',
-        meta: { title: '数据源管理', icon: 'savedatasour', affix: true }
-      }
     ]
   },
   // 任务
@@ -91,11 +91,18 @@ export const asyncRoutes = [
         children: []
       },
       {
+        path: 'flow-add',
+        component: () => import('@/views/flow-management/add.vue'),
+        name: 'FlowAdd',
+        hidden: true,
+        meta: { title: '添加流程图', icon: 'link', affix: true }
+      },
+      {
         path: 'taskresult',
         component: () => import('@/views/task-management/taskresult/index'),
         name: 'Taskresult',
         hidden: true,
-        meta: { title: '任务执行结果', icon: 'link', affix: true }
+        meta: { title: '任务执行结果2', icon: 'link', affix: true }
       },
       {
         path: 'taskstate',
@@ -117,13 +124,6 @@ export const asyncRoutes = [
         hidden: true,
         meta: { title: '任务流程', icon: 'count', affix: true }
       },
-      // {
-      //   path: 'task-test',
-      //   component: () => import('@/views/flow-management/components/node-panel.js'),
-      //   name: 'TaskTest',
-      //   hidden: true,
-      //   meta: { title: '任务流程', icon: 'count', affix: true }
-      // },
     ]
   },
   // 用户管理
@@ -133,7 +133,7 @@ export const asyncRoutes = [
     name: 'userManage',
     redirect: '/user/userlist',
     meta: {
-      title: '人员管理',
+      title: '系统管理',
       icon: 'usermanages'
     },
     children: [

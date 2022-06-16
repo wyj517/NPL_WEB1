@@ -81,9 +81,13 @@ import NodePanel from "./components/node-panel.jsx";
 import { themeApprove, approveNodes, defaultData } from "./components/config";
 import "@logicflow/core/dist/style/index.css";
 import "@logicflow/extension/lib/style/index.css";
-import RegisteNode from "./components/registerNode";
+import RegisteNode from "./components/node/RegisterNode";
+import RegisterControl from "./components/registerControl";
 import { getApi } from "@/api/database";
 import excel from "@/utils/excel";
+import FlowTemplate from "@/assets/flow-template";
+import flowTemplate from "@/assets/flow-template";
+
 let lf = {};
 export default {
   data() {
@@ -102,6 +106,7 @@ export default {
       tableData: [],
       tableColumn: [],
       totalPage: 0,
+      task_type: this.$route.query.type,
     };
   },
   components: {
@@ -118,12 +123,12 @@ export default {
       let task_id = this.$route.query.id;
       if (task_id) {
         let { data } = await getApi("task/getTaskFlowDetail", { task_id });
-        this.nodeData = data.task_flow_json;
+        this.nodeData = data.task_flow_json || {edges:[]};
         let resLog = await getApi("task/getNodeStatusAndLog", { task_id });
         // console.log(resLog);
         resLog.data.status.map((it) => {
           this.nodeData.edges.map((li) => {
-            if (it.node_id == li.targetNodeId) {
+            if (it.node_id == li.sourceNodeId) {
               li.status = it.status;
             }
           });
@@ -148,7 +153,7 @@ export default {
         this.taskId = data.id;
       } else {
         // 初始化默认效果
-        this.nodeData = defaultData;
+        this.nodeData = flowTemplate[this.task_type -1].graph;
       }
       initFlow(this);
     },
@@ -166,7 +171,7 @@ export default {
         task_id: this.taskId,
       };
       let { data } = await getApi("task/get_nodes_result", params);
-      console.log(data);
+      // console.log(data);
       this.exportExcelFu(data, this.tableColumn);
     },
     // 导出参数
@@ -198,6 +203,9 @@ export default {
         task_id: this.taskId,
       };
       let { data, counts } = await getApi("task/get_nodes_result", params);
+      if (Object.keys(data).length == 0) {
+        data = [];
+      }
       this.totalPage = counts;
       let tempObj = {};
       this.tableColumn = [];
@@ -268,9 +276,9 @@ const initFlow = (than) => {
     grid: {
       size: 10,
       visible: true,
-      type: "mesh",
+      type: "dot",
       config: {
-        color: "#f3f3f3", // 设置网格的颜色
+        color: "#eee", // 设置网格的颜色
       },
     },
     keyboard: { enabled: true },
@@ -279,31 +287,10 @@ const initFlow = (than) => {
   lf = new LogicFlow({
     ...config,
     container: document.querySelector("#graph"),
-    plugins: [Control, Menu],
+    plugins: [Control, Menu, SelectionSelect],
   });
 
-  lf.extension.control.addItem({
-    iconClass: "custom-minimap",
-    title: "",
-    text: "保存",
-    onClick: (lf, ev) => {
-      than.saveFlow();
-      than.nodeData = lf.getGraphData();
-    },
-  });
-
-  lf.extension.menu.setMenuConfig({
-    nodeMenu: [
-      {
-        text: "删除",
-        callback(node) {
-          lf.deleteNode(node.id);
-        },
-      },
-    ], // 覆盖默认的节点右键菜单
-    edgeMenu: false, // 删除默认的边右键菜单
-    graphMenu: [], // 覆盖默认的边右键菜单，与false表现一样
-  });
+  RegisterControl(lf, than);
 
   if (than.taskId) {
     lf.extension.menu.addMenuConfig({
@@ -315,28 +302,10 @@ const initFlow = (than) => {
             than.reActionNode(than.taskId, node.id);
           },
         },
-        {
-          text: "执行结果",
-          callback(node) {
-            than.selectNode = node;
-            than.openNodeDetail();
-          },
-        },
       ],
     });
   }
-  RegisteNode(lf);
-  lf.on("element:click", ({ data }) => {
-    console.log(data);
-    than.selectNode = data;
-    than.nodeData = lf.getGraphData();
-  });
-  lf.on("connection:not-allowed", (data) => {
-    Message.error(data.msg);
-  });
-  lf.on("edge:add", async (data) => {
-    // console.log(lf.getGraphData());
-  });
+  RegisteNode(lf, than);
 
   lf.render(than.nodeData);
   than.lf = lf;
@@ -357,6 +326,14 @@ const initFlow = (than) => {
   background: url("../../icons/save.png");
   background-size: contain;
 }
+.custom-delete {
+  background: url("../../icons/delete.png");
+  background-size: contain;
+}
+.custom-selection {
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAAH6ji2bAAAABGdBTUEAALGPC/xhBQAAAOVJREFUOBGtVMENwzAIjKP++2026ETdpv10iy7WFbqFyyW6GBywLCv5gI+Dw2Bluj1znuSjhb99Gkn6QILDY2imo60p8nsnc9bEo3+QJ+AKHfMdZHnl78wyTnyHZD53Zzx73MRSgYvnqgCUHj6gwdck7Zsp1VOrz0Uz8NbKunzAW+Gu4fYW28bUYutYlzSa7B84Fh7d1kjLwhcSdYAYrdkMQVpsBr5XgDGuXwQfQr0y9zwLda+DUYXLaGKdd2ZTtvbolaO87pdo24hP7ov16N0zArH1ur3iwJpXxm+v7oAJNR4JEP8DoAuSFEkYH7cAAAAASUVORK5CYII=)
+    50% no-repeat;
+}
 .pagination {
   margin: 10px 0 20px 0;
   text-align: right;
@@ -369,8 +346,8 @@ const initFlow = (than) => {
   position: absolute;
   top: 20px;
   right: 60px;
-  &.el-button.is-loading{
-      position: absolute;
+  &.el-button.is-loading {
+    position: absolute;
   }
 }
 </style>

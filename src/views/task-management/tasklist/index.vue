@@ -98,10 +98,24 @@ export default {
         },
         {
           label: "操作",
-          width: "160",
+          width: "200",
           fixed: "right",
           render: (h, { row }) => {
             return h("div", [
+              // h(
+              //   "el-button",
+              //   {
+              //     props: {
+              //       type: "text",
+              //     },
+              //     on: {
+              //       click: () => {
+              //         this.routerTaskLog(row.id, row.datas_name);
+              //       },
+              //     },
+              //   },
+              //   "执行日志"
+              // ),
               h(
                 "el-button",
                 {
@@ -110,12 +124,13 @@ export default {
                   },
                   on: {
                     click: () => {
-                      this.routerTaskLog(row.id, row.datas_name);
+                      this.copyTask(row.id, row.task_name);
                     },
                   },
                 },
-                "执行日志"
+                "复制"
               ),
+
               h(
                 "el-button",
                 {
@@ -156,7 +171,7 @@ export default {
   },
   methods: {
     openAddTaskFlow() {
-      this.$router.push({ name: "TaskFlow" });
+      this.$router.push({ name: "FlowAdd" });
     },
     routerTaskLog(id, name) {
       this.$router.push({ name: "Taskstate", query: { id, name } });
@@ -164,8 +179,16 @@ export default {
     routerEdit(id) {
       this.$router.push({ name: "TaskFlow", query: { id } });
     },
-    // 删除任务
-
+    // 复制任务
+    async copyTask(task_id, task_name) {
+      let res = await getApi("task/getTaskFlowDetail", { task_id });
+      let taskName = task_name + "_副本";
+      let res2 = await getApi("task/create_task_flow", {
+        task_name: taskName,
+        task_flow_json: res.data.task_flow_json,
+      });
+      this.getList();
+    },
     deleteTask(id) {
       this.$confirm("确实删除吗？", "删除", {
         confirmButtonText: "确定",

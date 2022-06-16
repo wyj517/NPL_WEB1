@@ -19,24 +19,24 @@
         </el-select>
       </li>
       <li v-if="selectNode.properties.type == 'wf_segment'">
-        <p>分词类型数量：</p>
+        <!-- <p>分词类型数量：</p>
         <p>
           <el-input
             v-model="segmentInt"
             type="Number"
             @change="updateParams($event, 2)"
           />
-        </p>
+        </p> -->
       </li>
       <li v-if="selectNode.properties.type == 'wf_vector'">
-        <p>向量化类型数量：</p>
+        <!-- <p>向量化类型数量：</p>
         <p>
           <el-input
             v-model="vectorInt"
             type="Number"
             @change="updateParams($event, 2)"
           />
-        </p>
+        </p> -->
       </li>
       <li v-if="selectNode.properties.type == 'wf_classify'">
         <p>文本分类类型数量：</p>
@@ -68,6 +68,7 @@
           />
         </p>
       </li>
+
       <li v-if="selectNode.properties.type == 'wf_keyword'">
         <p>关键字提取类型数量：</p>
         <p>
@@ -124,48 +125,19 @@
       </li>
       <li v-if="selectNode.properties.type == 'wf_combine'">
         <p>数据合并参数:</p>
-        <el-form
-          label-position="right"
-          label-width="100px"
-          :model="formCombine"
+        <el-select
+          v-model="formCombine"
+          placeholder="请选择数据集"
+          @change="updateParams($event, 1)"
         >
-          <div
-            class="db-item"
-            v-for="(item, index) in formCombine.combineList"
-            :key="index"
+          <el-option
+            v-for="item in datasetOptions"
+            :key="item.id"
+            :label="item.datas_name"
+            :value="item.id"
           >
-            <el-form-item label="数据库类型">
-              <el-select v-model="item.dbtype" placeholder="请选择数据库类型">
-                <el-option label="mysql" value="mysql"></el-option>
-                <el-option label="oracle" value="oracle"></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="数据库地址">
-              <el-input v-model="item.host"></el-input>
-            </el-form-item>
-            <el-form-item label="数据库端口">
-              <el-input v-model="item.port"></el-input>
-            </el-form-item>
-            <el-form-item label="数据库用户名">
-              <el-input v-model="item.user"></el-input>
-            </el-form-item>
-            <el-form-item label="数据库库名">
-              <el-input v-model="item.db"></el-input>
-            </el-form-item>
-            <el-form-item label="数据库表名">
-              <el-input v-model="item.table"></el-input>
-            </el-form-item>
-            <el-form-item label="where语句">
-              <el-input v-model="item.sql" type="textarea"></el-input>
-            </el-form-item>
-            <el-button @click.prevent="removeDomain(item)" size="small"
-              >删除</el-button
-            >
-          </div>
-        </el-form>
-        <el-button type="primary" @click="addCombine" size="small"
-          >新增</el-button
-        >
+          </el-option>
+        </el-select>
       </li>
     </ul>
   </section>
@@ -185,13 +157,13 @@ export default {
       classifyInt: "",
       clusterInt: "",
       combineAna: {},
-      keyword:{},
+      keyword: {},
       datasetOptions: [],
       arrNer: [],
       arrFilter: [],
       wordOptions: ["PER", "LOC", "TIME", "ORG"],
       filterOptions: [],
-      formCombine: { combineList: [{ dbtype: "mysql" }] },
+      formCombine: "",
     };
   },
   watch: {
@@ -199,47 +171,39 @@ export default {
       console.log("selectNode", newValue);
 
       let properties = newValue.properties;
-      let type = newValue.properties.type
-      if(type == "wf_corpus"){
-          this.datsetId = properties.dataset_id
-      }else if (type == "wf_segment" ) {
-          this.segmentInt = properties.num
-      }else if(type == "wf_vector"){
-          this.vectorInt = properties.num
-      }else if(type == "wf_classify"){
-        this.classifyInt = properties.num
-      }else if(type == "wf_cluster"){
-        this.clusterInt = properties.num
-      }else if(type == "wf_combineAna"){
-        this.combineAna = properties.num
-      }else if (type =="wf_keyword") {
-        this.keyword = properties 
-      }else if (type =="wf_ner") {
-        this.arrNer = properties.typeList
-      }else if(type == "wf_filter"){
-        this.arrFilter =[]
-        properties.filters=properties.filters || []
-        properties.filters.map(item=>{
+      let type = newValue.properties.type;
+      if (type == "wf_corpus") {
+        this.datsetId = properties.dataset_id;
+      } else if (type == "wf_segment") {
+        this.segmentInt = properties.num;
+      } else if (type == "wf_vector") {
+        this.vectorInt = properties.num;
+      } else if (type == "wf_classify") {
+        this.classifyInt = properties.num;
+      } else if (type == "wf_cluster") {
+        this.clusterInt = properties.num;
+      } else if (type == "wf_combineAna") {
+        this.combineAna = properties.num;
+      } else if (type == "wf_keyword") {
+        this.keyword = properties;
+      } else if (type == "wf_ner") {
+        this.arrNer = properties.typeList;
+      } else if (type == "wf_filter") {
+        this.arrFilter = [];
+        properties.filters = properties.filters || [];
+        properties.filters.map((item) => {
           if (item.isNull == 1) {
-            this.arrFilter.push(item.field)
+            this.arrFilter.push(item.field);
           }
-        })
-      }else if(type == "wf_combine"){
-        this.formCombine.combineList= properties.combineList || []
+        });
+      } else if (type == "wf_combine") {
+        this.formCombine  = properties.dataset_id;
       }
 
-    // 获取下拉类别
+      // 获取下拉类别
       if (type == "wf_filter" || type == "wf_combine") {
         this.getFilterOptions(newValue.id);
       }
-    },
-    formCombine: {
-      deep: true,
-      handler(updateData) {
-        let tempStr = JSON.stringify(updateData.combineList);
-        let combineList = JSON.parse(tempStr);
-        this.$parent.updateProperty(this.selectNode.id, { combineList });
-      },
     },
   },
   methods: {
@@ -250,17 +214,6 @@ export default {
           pre_type: proType,
         });
         this.filterOptions = data;
-      }
-    },
-    addCombine() {
-      console.log(this.formCombine.combineList);
-      this.formCombine.combineList.push({ dbtype: "mysql" });
-      console.log(this.formCombine.combineList);
-    },
-    removeDomain(item) {
-      var index = this.formCombine.combineList.indexOf(item);
-      if (index !== -1) {
-        this.formCombine.combineList.splice(index, 1);
       }
     },
     async getDataSet() {
@@ -284,11 +237,9 @@ export default {
       } else if (type == 6) {
         // 关键字获取
         keyword = this.keyword;
-      }
-      else if (type == 4) {
+      } else if (type == 4) {
         updateData.typeList = value;
       } else if (type == 5) {
-        console.log(value);
         let arrField = this.filterOptions.map((item) => {
           return {
             field: item,
