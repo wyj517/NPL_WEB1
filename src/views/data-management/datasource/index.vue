@@ -28,6 +28,7 @@
       :title="dialogtitle"
       :visible.sync="drawer"
       :direction="direction"
+      :modal="false"
       custom-class="demo-drawer"
       class="drawer"
     >
@@ -71,7 +72,7 @@
           >
             <el-input v-model="ruleForm.ds_name" placeholder="请输入数据源名称" />
           </el-form-item>
-          <el-form-item label="描述" label-width="150px" size="small" prop="des">
+          <el-form-item label="描述" label-width="150px" size="small">
             <el-input v-model="ruleForm.des" placeholder="请输入描述" />
           </el-form-item>
           <el-form-item
@@ -107,7 +108,7 @@
           </el-form-item>
         </el-form>
         <span>
-        <el-button type="primary" class="conn" @click="startSource(ruleForm.id)">测试连接</el-button></span>
+        <el-button type="primary" class="conn" @click="startSource(ruleForm.id)"  v-if="ruleForm.data_source_type!=='EXCEL'">测试连接</el-button></span>
         <div style="text-align: center;margin-top: 20px" v-if="ruleForm.data_source_type==='EXCEL'">
           <el-upload
             class="upload-demo"
@@ -193,9 +194,6 @@ export default {
         ],
         password: [
           { required: true, message: "密码不能为空", trigger: "blur" },
-        ],
-        des: [
-          { required: true, message: "描述不能为空", trigger: "blur" },
         ]
       },
     };
