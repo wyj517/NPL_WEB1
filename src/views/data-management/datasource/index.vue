@@ -123,6 +123,9 @@
             <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
           </el-upload>
         </div>
+        <div v-if="ruleForm.data_source_type==='EXCEL'">
+          <el-link type="primary" style="position: absolute;right: 50px" @click="downloadExcel">模板下载</el-link>
+        </div>
         <div class="demo-drawer__footer">
           <el-button @click="drawer = false">取 消</el-button>
           <el-button type="primary" @click="handleAdd">确 定</el-button>
@@ -386,6 +389,25 @@ export default {
       // message 弹出消息
       this.$message.warning("导入失败！");
       console.log(res)
+    },
+    downloadExcel () {
+      import('@/utils/ExportExcelUtil').then(excel => {
+        const filterVal = ['id', 'doc']
+        const tHeader = ['id', 'doc']
+        const errList = [{id:1,doc:'text1'},{id:2,doc:'text2'}]
+        const data = this.formatModelJson(filterVal, errList)
+        excel.export_json_to_excel({
+          header: tHeader,
+          data,
+          filename: 'template'
+        })
+      })
+    },
+    formatModelJson (filterVal, list) {
+      console.log(list)
+      return list.map(v => filterVal.map(j => {
+        return v[j]
+      }))
     },
   },
 };
