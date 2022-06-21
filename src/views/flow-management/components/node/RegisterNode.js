@@ -1,4 +1,8 @@
 import IconNode from "./IconNode";
+import {
+  PolylineEdge,
+  PolylineEdgeModel,
+} from "@logicflow/core";
 export default function RegisteNode(lf) {
   class StartNode extends IconNode.view {
     getImageHref() {
@@ -190,5 +194,68 @@ export default function RegisteNode(lf) {
     view: DataRect3,
     model: IconNode.model,
   });
+
+  // 线条属性
+  class CustomEdge extends PolylineEdge {}
+  class CustomEdgeModel extends PolylineEdgeModel {
+    getEdgeStyle() {
+      const style = super.getEdgeStyle();
+      style.stroke = "#C5C6D5";
+      //  style.strokeDasharray = "3 3";
+      return style;
+    }
+    getTextStyle() {
+      const style = super.getTextStyle();
+      style.color = "#666";
+      return style;
+    }
+  }
+  // 默认连接线
+  lf.register({
+    type: "polyline",
+    view: CustomEdge,
+    model: CustomEdgeModel,
+  });
+
+  class ErrorEdge extends PolylineEdge {}
+  class ErrorEdgeModel extends PolylineEdgeModel {
+    getEdgeStyle() {
+      const style = super.getEdgeStyle();
+      style.stroke = "red";
+      return style;
+    }
+    getTextStyle() {
+      const style = super.getTextStyle();
+      style.color = "red";
+      return style;
+    }
+  }
+  // 执行失败连接线
+  lf.register({
+    type: "polyline-error",
+    view: ErrorEdge,
+    model: ErrorEdgeModel,
+  });
+
+  class SuccessEdge extends PolylineEdge {}
+  class SuccessEdgeModel extends PolylineEdgeModel {
+    getEdgeStyle() {
+      const style = super.getEdgeStyle();
+      style.stroke = "green";
+      return style;
+    }
+    getTextStyle() {
+      const style = super.getTextStyle();
+      style.color = "green";
+      return style;
+    }
+  }
+  // 执行成功连接线
+  lf.register({
+    type: "polyline-success",
+    view: SuccessEdge,
+    model: SuccessEdgeModel,
+  });
+
   // -----------------
 }
