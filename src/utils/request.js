@@ -80,7 +80,7 @@ service.interceptors.response.use(
         return res.data || {};
       } else {
         Message({
-          type: "error",
+          // type: "error",
           message: res.data.msg,
         });
         return res.data || {};
@@ -91,8 +91,7 @@ service.interceptors.response.use(
     let errRes = error.response?.data || "";
     console.log("err" + error); // for debug
     Message({
-      message: errRes.detail || "请求超时",
-      type: "error",
+      message: errRes.detail || "接口错误",
       duration: 5 * 1000,
     });
     return Promise.reject(error);

@@ -58,9 +58,6 @@
             </el-button>
           </el-form>
         </el-tab-pane>
-        <el-tab-pane label="二维码登录" name="second">
-          <div style="height: 310px">施工中</div>
-        </el-tab-pane>
       </el-tabs>
     </div>
   </div>

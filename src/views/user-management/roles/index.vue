@@ -1,53 +1,24 @@
 <template>
   <div style="padding: 20px">
-    <ListHeader
-      title="角色名称"
-      buttonTitle="角色"
-      @handle-create="openDialog()"
-    />
-    <BaseTable
-      v-loading="loading"
-      :height="height"
-      :columns="columns"
-      :data="tableData"
-    />
+    <ListHeader title="角色名称" buttonTitle="角色" @handle-create="openDialog()" />
+    <BaseTable v-loading="loading" :height="height" :columns="columns" :data="tableData" />
 
     <el-dialog title="角色信息" :visible.sync="dialogVisible" width="35%">
       <main>
         <div class="role_center">
           <div>
-            <el-form
-              ref="ruleForm"
-              label-position="right"
-              label-width="100px"
-              :model="ruleForm"
-              :rules="rule"
-            >
+            <el-form ref="ruleForm" label-position="right" label-width="100px" :model="ruleForm" :rules="rule">
               <el-form-item label="角色名称" prop="role_name">
-                <el-input
-                  v-model="ruleForm.role_name"
-                  placeholder="请输入角色名称"
-                />
+                <el-input v-model="ruleForm.role_name" placeholder="请输入角色名称" />
               </el-form-item>
               <el-form-item label="角色备注" prop="remarks">
-                <el-input
-                  v-model="ruleForm.remarks"
-                  placeholder="请输入角色备注"
-                />
+                <el-input v-model="ruleForm.remarks" placeholder="请输入角色备注" />
               </el-form-item>
             </el-form>
           </div>
           <div>
-            <el-tree
-              :data="treeData"
-              show-checkbox
-              node-key="name"
-              :check-strictly="true"
-              :default-expanded-keys="[]"
-              :default-checked-keys="menusId"
-              :props="defaultProps"
-              ref="tree"
-            >
+            <el-tree :data="treeData" show-checkbox node-key="name" :check-strictly="true" :default-expanded-keys="[]"
+              :default-checked-keys="menusId" :props="defaultProps" ref="tree">
             </el-tree>
           </div>
         </div>
@@ -150,6 +121,34 @@ export default {
             {
               name: "Roles",
               label: "角色管理",
+            },
+          ],
+        },
+        {
+          name: "Material",
+          label: "语料和模型",
+          children: [
+            {
+              name: "Corpus",
+              label: "语料管理",
+            },
+            {
+              name: "Model",
+              label: "模型管理",
+            },
+          ],
+        },
+        {
+          name: "TextApi",
+          label: "文本分类接口",
+          children: [
+            {
+              name: "SingleText",
+              label: "单文本分类",
+            },
+            {
+              name: "BatchText",
+              label: "批量文本分类",
             },
           ],
         },
