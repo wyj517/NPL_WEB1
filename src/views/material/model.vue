@@ -10,7 +10,7 @@
             </div>
             <div class="li-body">
               <dd>
-                <h4>模型参数</h4>
+                <h4><img src="@/assets/model-icon1.png" />模型参数</h4>
                 <p>algorithm:{{ item.algorithm }}</p>
                 <p>booster:{{ item.booster }}</p>
                 <p>colsample_bytree:{{ item.colsample_bytree }}</p>
@@ -26,7 +26,7 @@
 
               </dd>
               <dd>
-                <h4>训练语料</h4>
+                <h4><img src="@/assets/model-icon2.png" />训练语料</h4>
                 <p>count:{{ item.count }}</p>
                 <p>distribution</p>
                 <div class="distribution">
@@ -129,6 +129,11 @@ export default {
 
         .li-body {
           display: flex;
+
+          img {
+            vertical-align: middle;
+            margin-right: 10px;
+          }
 
           dd {
             flex: 1;

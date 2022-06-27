@@ -141,14 +141,14 @@ export const asyncRoutes = [
         path: 'corpus',
         component: () => import('@/views/material/corpus.vue'),
         name: 'Corpus',
-        meta: { title: '语料管理', icon: 'users', affix: true },
+        meta: { title: '语料管理', icon: 'corpus', affix: true },
         children: [],
       },
       {
         path: 'model',
         component: () => import('@/views/material/model.vue'),
         name: 'Model',
-        meta: { title: '模型管理', icon: 'role', affix: true },
+        meta: { title: '模型管理', icon: 'model', affix: true },
       }
     ]
   },
@@ -160,21 +160,21 @@ export const asyncRoutes = [
     redirect: '/text_api/single',
     meta: {
       title: '文本分类接口',
-      icon: 'usermanages'
+      icon: 'text-type'
     },
     children: [
       {
         path: 'single',
         component: () => import('@/views/text-api/single-text.vue'),
         name: 'SingleText',
-        meta: { title: '单文本分类', icon: 'users', affix: true },
+        meta: { title: '单文本分类', icon: 'single-text', affix: true },
         children: [],
       },
       {
         path: 'batch',
         component: () => import('@/views/text-api/batch-text.vue'),
         name: 'BatchText',
-        meta: { title: '多文本分类', icon: 'role', affix: true },
+        meta: { title: '多文本分类', icon: 'batch-text', affix: true },
       }
     ]
   },
