@@ -30,7 +30,7 @@
             </ul>
             <el-button slot="reference" type="primary" size="small" class="tags batchTags">批量标签</el-button>
           </el-popover>
-          <el-button type="primary" size="small" @click="toAnalysis" class="screen" >统计</el-button>
+<!--          <el-button type="primary" size="small" @click="toAnalysis" class="screen" >统计</el-button>-->
         </div>
       </div>
     </div>
@@ -42,7 +42,7 @@
         <el-table-column prop="doc" label="内容描述" />
         <el-table-column prop="manual_tag" label="标签" width="150">
           <template slot-scope="scope">
-            <el-select v-model="scope.row.manual_tag" placeholder="请选择" filterable allow-create
+            <el-select v-model="scope.row.tag" placeholder="请选择" filterable allow-create
               @change="updateClassTag(0, scope.row.id, scope.row.manual_tag)">
               <el-option v-for="(item, index) in TagOptions" :key="index" :label="item" :value="item" />
             </el-select>
@@ -92,8 +92,8 @@
 </template>
 
 <script>
-import { getTaskResult, getClassID, updateLabel, manualTags } from "@/api/task";
-import { createTask, getType } from "@/api/dataset";
+import { getData,getManual,update } from "@/api/corpus";
+
 import excel from "@/utils/excel";
 let staticSel = false;
 export default {
@@ -139,9 +139,7 @@ export default {
   computed: {},
   mounted() {
     this.getResult();
-    this.getClass();
-    this.getManual();
-    this.getTaskType();
+    this.getTag();
   },
   methods: {
     // 分析
@@ -189,18 +187,7 @@ export default {
       this.page.currentPage = val;
       this.getResult();
     },
-    //获取参数类型
-    getTaskType() {
-      getType().then((res) => {
-        for (let i = 0; i < res.data.length; i++) {
-          this.DataOption.push({
-            value: res.data[i].task_type,
-            label: res.data[i].task_type_name,
-          });
-          this.params_json = res.data[i].params_json;
-        }
-      });
-    },
+
 
     //获取任务执行结果列表
     getResult() {
@@ -208,14 +195,11 @@ export default {
         page: this.page.currentPage,
         page_size: this.page.pageSize,
         total_flg: true,
-        task_id: this.$route.query.id,
-        dataset_id: this.$route.query.dataset_id,
-        class_id: this.Typevalue,
         manual_tag: this.manual_tag,
         doc: this.findContent,
       };
       this.isLoading = true;
-      getTaskResult(params).then((res) => {
+      getData(params).then((res) => {
         this.tableData = res.counts ? res.data : [];
         this.isLoading = false;
         this.page.total = res.counts;
@@ -257,24 +241,11 @@ export default {
       }
     },
 
-    //获取下拉classid列表
-    getClass() {
-      let params = {
-        dataset_id: this.$route.query.dataset_id,
-      };
-      getClassID(params).then((res) => {
-        for (let i = 0; i < res.data.class_ids.length; i++) {
-          this.TypeOptions.push(res.data.class_ids[i]);
-        }
-      });
-    },
+
 
     //获取最终标签列表
-    getManual() {
-      let params = {
-        dataset_id: this.$route.query.dataset_id,
-      };
-      manualTags(params).then((res) => {
+    getTag() {
+      getManual().then((res) => {
         this.TagOptions = res.data.manual_tags;
       });
     },
@@ -284,15 +255,13 @@ export default {
       //flg 1批量 0单改
       if (tag || this.Tagvalue) {
         let params = {
-          dataset_id: this.$route.query.dataset_id,
           label_ids: flg ? this.selectedIDs : [id],
           manual_tag: tag,
           is_total: this.is_total,
           tag: "",
-          class_id: this.Typevalue,
           doc: "",
         };
-        updateLabel(params).then((res) => {
+        update(params).then((res) => {
           if (res.success) {
             this.$message.success(res.msg);
             // this.addTag(tag);
