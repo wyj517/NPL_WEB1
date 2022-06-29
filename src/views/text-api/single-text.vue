@@ -3,6 +3,10 @@
     <div class="con-body">
       <div class="text-top">
         <div class="test-btn" @click="inifData">测试</div>
+        <el-select v-model="scheme" class="scheme-input" placeholder="Select" size="small">
+          <el-option label="xgboost" value="xgboost" />
+          <el-option label="lightgbm" value="lightgbm" />
+        </el-select>
         <input type="text" class="text-input" v-model="text" placeholder="输入测试语料" />
       </div>
       <div class="text-moudle">
@@ -36,12 +40,13 @@ export default {
   data() {
     return {
       text: "",
+      scheme: "xgboost",
       resultHtml: ""
     }
   },
   methods: {
     async inifData() {
-      let res = await getApi("hotline/submit_single", { doc: this.text })
+      let res = await getApi("hotline/submit_single", { doc: this.text, scheme: this.scheme })
       this.resultHtml = syntaxHighlight(res)
       // console.log(this.resultHtml);
       // console.log(res);
@@ -61,12 +66,14 @@ export default {
   top: 0;
   background: #f0f2f8;
   height: 100%;
+  overflow: auto;
 
   .con-body {
     width: 860px;
     margin: 10px auto;
     background: white;
     padding: 10px 95px;
+    height: 100%;
   }
 
   .text-top {
@@ -84,6 +91,13 @@ export default {
       border: none;
       outline: none;
       background: none;
+    }
+
+    .scheme-input {
+      position: absolute;
+      width: 100px;
+      top: 4px;
+      right: 100px;
     }
 
     .test-btn {
@@ -104,7 +118,7 @@ export default {
 
   .text-moudle {
     margin-top: 20px;
-
+    margin-bottom: 20px;
     h3 {
       font-size: 14px;
       margin-bottom: 10px;

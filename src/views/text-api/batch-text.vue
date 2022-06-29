@@ -2,7 +2,11 @@
   <section class="con">
     <div class="con-body">
       <div class="text-top">
-        <div class="test-btn" @click="inifData" >测试</div>
+        <div class="test-btn" @click="inifData">测试</div>
+        <el-select v-model="scheme" class="scheme-input" placeholder="Select" size="small">
+          <el-option label="xgboost" value="xgboost" />
+          <el-option label="lightgbm" value="lightgbm" />
+        </el-select>
         <input type="text" class="text-input" v-model="text" placeholder="输入测试语料,多个关键字逗号隔开" />
       </div>
       <div class="text-moudle">
@@ -20,7 +24,7 @@
       <div class="text-moudle">
         <h3>⽂本分类接⼝协议</h3>
         <div class="m-body">
-          <iframe src="/iframe/batch-text.html" frameborder="0" width="100%" height="440px"></iframe>
+          <iframe src="/iframe/batch-text.html" frameborder="0" width="100%" height="400px"></iframe>
         </div>
       </div>
 
@@ -36,15 +40,16 @@ export default {
   data() {
     return {
       text: "",
+      scheme: "xgboost",
       resultHtml: ""
     }
   },
   methods: {
     async inifData() {
       let str = this.text
-      let overStr = str.replace(/，/ig,',')
+      let overStr = str.replace(/，/ig, ',')
       let arr = overStr.split(",")
-      let res = await getApi("hotline/submit_batch", { docs:arr })
+      let res = await getApi("hotline/submit_batch", { docs: arr, scheme: this.scheme })
       this.resultHtml = syntaxHighlight(res)
       // console.log(this.resultHtml);
       // console.log(res);
@@ -64,12 +69,14 @@ export default {
   top: 0;
   background: #f0f2f8;
   height: 100%;
+  overflow: auto;
 
   .con-body {
     width: 860px;
     margin: 10px auto;
     background: white;
     padding: 10px 95px;
+    height: 100%;
   }
 
   .text-top {
@@ -87,6 +94,13 @@ export default {
       border: none;
       outline: none;
       background: none;
+    }
+
+    .scheme-input {
+      position: absolute;
+      width: 100px;
+      top: 4px;
+      right: 100px;
     }
 
     .test-btn {
@@ -107,7 +121,7 @@ export default {
 
   .text-moudle {
     margin-top: 20px;
-
+    margin-bottom: 20px;
     h3 {
       font-size: 14px;
       margin-bottom: 10px;
