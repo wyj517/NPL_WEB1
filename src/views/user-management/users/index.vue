@@ -1,5 +1,5 @@
 <template>
-  <div class="main">
+  <div class="User_main">
     <el-row
       :gutter="20"
       type="flex"
@@ -7,19 +7,19 @@
     >
       <el-col :span="4">
         <div class="organ">
-          <el-input
-            v-model="departName"
-            placeholder="请输入内容"
-            style="margin-bottom: 20px"
-          >
-            <template slot="append">
-              <el-button
-                @click="getOrgList"
-              >
-                查询
-              </el-button>
-            </template>
-          </el-input>
+<!--          <el-input-->
+<!--            v-model="departName"-->
+<!--            placeholder="请输入内容"-->
+<!--            style="margin-bottom: 20px"-->
+<!--          >-->
+<!--            <template slot="append">-->
+<!--              <el-button-->
+<!--                @click="getOrgList"-->
+<!--              >-->
+<!--                查询-->
+<!--              </el-button>-->
+<!--            </template>-->
+<!--          </el-input>-->
           <svg-icon icon-class="tree" />
           <span
             class="organ_text"
@@ -76,7 +76,6 @@
                 label-position="top"
                 inline
                 class="demo-table-expand"
-
               >
                 <el-form-item label="所属角色">
                   <div
@@ -161,101 +160,105 @@
       :visible.sync="drawer"
       :modal="true"
       :modal-append-to-body="false"
+      :wrapper-closable="false"
       :direction="direction"
     >
-      <el-scrollbar class="page-scroll">
-        <el-form
-          ref="Form"
-          label-position="top"
-          label-width="80px"
-          :model="users"
-          :rules="rule"
-        >
-          <el-form-item
-            label="用户账号"
-            prop="username"
+        <el-scrollbar class="page-scroll">
+          <el-form
+            ref="Form"
+            label-position="top"
+            label-width="80px"
+            :model="users"
+            :rules="rule"
           >
-            <el-input
-              v-model="users.username"
-              placeholder="请输入"
-            />
-          </el-form-item>
-          <el-form-item
-            label="手机号码"
-            prop="phone_number"
-          >
-            <el-input
-              v-model="users.phone_number"
-              placeholder="请输入"
-            />
-          </el-form-item>
-          <el-form-item
-            label="所属组织"
-            prop="org_id"
-          >
-            <el-select
-              v-model="users.org_name"
-              placeholder="请选择"
-              :popper-append-to-body="false"
-              style="width: 100%"
+            <el-form-item
+              label="用户名称"
+              prop="username"
             >
-              <el-option
-                v-for="item in organOptions"
-                :key="item.id"
-                :label="item.org_name"
-                :value="item.id"
+              <el-input
+                v-model="users.username"
+                placeholder="请输入"
               />
-            </el-select>
-          </el-form-item>
-          <el-form-item
-            label="名称"
-            prop="full_name"
-          >
-            <el-input
-              v-model="users.full_name"
-              placeholder="请输入"
-            />
-          </el-form-item>
-          <el-form-item
-            label="密码"
-            prop="password"
-            v-if="this.users.id===''"
-          >
-            <el-input
-              v-model="users.password"
-              placeholder="请输入"
-            />
-          </el-form-item>
-          <el-form-item label="角色">
-            <el-select
-              v-model="RoleValue"
-              placeholder="请选择"
-              :popper-append-to-body="false"
-              style="width: 100%"
+            </el-form-item>
+            <el-form-item
+              label="姓名"
+              prop="full_name"
             >
-              <el-option
-                v-for="item in RoleOptions"
-                :key="item.id"
-                :label="item.role_name"
-                :value="item.id"
+              <el-input
+                v-model="users.full_name"
+                placeholder="请输入"
               />
-            </el-select>
-          </el-form-item>
-        </el-form>
-        <div class="demo-drawer__footer">
-          <el-button
-            @click="drawer = false"
-          >
-            取 消
-          </el-button>
-          <el-button
-            type="primary"
-            @click="insertUser"
-          >
-            确 定
-          </el-button>
-        </div>
-      </el-scrollbar>
+            </el-form-item>
+            <el-form-item
+              label="密码"
+              prop="password"
+              v-if="this.users.id===''"
+            >
+              <el-input
+                v-model="users.password"
+                placeholder="请输入"
+              />
+            </el-form-item>
+            <el-form-item
+              label="手机号码"
+              prop="phone_number"
+            >
+              <el-input
+                v-model="users.phone_number"
+                placeholder="请输入"
+              />
+            </el-form-item>
+            <el-form-item
+              label="所属组织"
+              prop="org_id"
+            >
+              <el-select
+                v-model="users.org_name"
+                placeholder="请选择"
+                :popper-append-to-body="false"
+                style="width: 100%"
+              >
+                <el-option
+                  v-for="item in organOptions"
+                  :key="item.id"
+                  :label="item.org_name"
+                  :value="item.id"
+                />
+              </el-select>
+            </el-form-item>
+            <el-form-item label="角色">
+              <el-select
+                v-model="RoleValue"
+                placeholder="请选择"
+                :popper-append-to-body="false"
+                multiple
+                style="width: 100%"
+              >
+                <el-option
+                  v-for="item in RoleOptions"
+                  :key="item.id"
+                  :label="item.role_name"
+                  :value="item.id"
+                />
+              </el-select>
+            </el-form-item>
+            <el-form-item>
+              <div class="demo-drawer__footer">
+                <el-button
+                  @click="drawer = false"
+                >
+                  取 消
+                </el-button>
+                <el-button
+                  type="primary"
+                  @click="insertUser()"
+                >
+                  确 定
+                </el-button>
+              </div>
+            </el-form-item>
+          </el-form>
+        </el-scrollbar>
     </el-drawer>
     <el-dialog
       title="修改密码"
@@ -342,9 +345,9 @@ export default {
         is_active: true,
         org_name: '',
         email: '',
-        access_ip: ''
+        access_ip: '',
+        role:''
       },
-
       values: {
         id: '',
         username: '',
@@ -399,11 +402,23 @@ export default {
         this.$refs['Form'].clearValidate()
       })
       this.getOrgList()
-      this.RoleValue = ''
       if (data) {
-        this.users = data
+        let params = {
+          record_id: data.id
+        }
+        getUserRole(params).then(res => {
+          if (res.data!=''){
+            this.RoleValue = res.data.map(item => {
+              return item.id;
+            })
+          }else {
+            this.RoleValue=''
+          }
+        })
+        this.users = Object.assign({}, data)
       } else {
         this.users = Object.assign({}, this.values)
+        this.RoleValue=''
       }
     },
     //获取组织树
@@ -446,37 +461,43 @@ export default {
 
     //添加角色 或者 编辑角色
     insertUser() {
-      let roles=[]
-      roles.push(this.RoleValue)
+      console.log(this.RoleValue)
       let params = {
         id: this.users.id,
         username: this.users.username,
         full_name: this.users.full_name,
         phone_number: this.users.phone_number,
-        org_id: this.users.org_id,
+        org_id: this.users.org_name,
         email: this.users.email,
         is_active: this.users.is_active,
         access_ip: this.users.access_ip,
         password: this.users.password,
-        role_ids: roles
+        role_ids: this.RoleValue
       }
-      if (this.users.id === '') {
-        register(params).then(res => {
-          if (res.success) {
-            this.$message.success(res.msg)
-          }
-        })
-        this.drawer = false
-        this.getUserList()
-      } else {
-        addUser(params).then(res => {
-          if (res.success) {
-            this.users.password ? this.changeWord(this.users.id, this.users.password) : this.$message.success(res.msg)
+
+      this.$refs["Form"].validate((valid) => {
+        if (valid) {
+          if (this.users.id === '') {
+            register(params).then(res => {
+              if (res.success) {
+                this.$message.success(res.msg)
+              }
+            })
             this.drawer = false
+            console.log('register')
             this.getUserList()
+          } else {
+            addUser(params).then(res => {
+              if (res.success) {
+                this.users.password ? this.changeWord(this.users.id, this.users.password) : this.$message.success(res.msg)
+                this.drawer = false
+                console.log('addUser')
+                this.getUserList()
+              }
+            })
           }
-        })
-      }
+        }
+      });
     },
     //修改角色状态
     changeState(data) {
@@ -548,11 +569,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.main {
+.User_main {
   /*display: flex;*/
   /*flex-direction: row;*/
   height: 100%;
-  position: fixed;
+  //position: fixed;
 }
 
 .organ {

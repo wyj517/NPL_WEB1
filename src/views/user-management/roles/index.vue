@@ -1,6 +1,6 @@
 <template>
   <div style="padding: 20px">
-    <ListHeader title="角色名称" buttonTitle="角色" @handle-create="openDialog()" />
+    <ListHeader title="角色名称" buttonTitle="角色" @handle-create="openDialog()"  :showTitle="false"/>
     <BaseTable v-loading="loading" :height="height" :columns="columns" :data="tableData" />
 
     <el-dialog title="角色信息" :visible.sync="dialogVisible" width="35%">
@@ -228,9 +228,9 @@ export default {
     columns() {
       const arr = [
         // 表格列项
-        { label: "id", key: "id", width: "150" },
+
         { label: "角色名称", key: "role_name" },
-        { label: "角色等级", key: "lvl" },
+
         { label: "备注", key: "remarks" },
         {
           label: "操作",

@@ -4,6 +4,8 @@
     v-drawerDrag
     :visible.sync="dialogVisible"
     :direction="direction"
+    :modal="true"
+    :wrapper-closable="false"
   >
     <el-scrollbar class="page-scroll">
     <main>

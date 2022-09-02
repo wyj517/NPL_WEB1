@@ -28,7 +28,8 @@
       :title="dialogtitle"
       :visible.sync="drawer"
       :direction="direction"
-      :modal="false"
+      :modal="true"
+      :wrapper-closable="false"
       custom-class="demo-drawer"
       class="drawer"
     >
@@ -108,19 +109,20 @@
           </el-form-item>
         </el-form>
         <span>
-        <el-button type="primary" class="conn" @click="startSource(ruleForm.id)"  v-if="ruleForm.data_source_type!=='EXCEL'">测试连接</el-button></span>
+        <el-button type="primary" class="conn" @click="startSource(ruleForm.id)"  v-if="ruleForm.data_source_type!=='EXCEL'" >测试连接</el-button></span>
         <div style="text-align: center;margin-top: 20px" v-if="ruleForm.data_source_type==='EXCEL'">
           <el-upload
             class="upload-demo"
             drag
             :action="`${BASEURL}/ds/upload_excel_file`"
+            accept=".xls,.xlsx"
             :headers="headers"
-
             :on-success="onSuccess"
             :on-error="onError"
             :multiple="false">
             <i class="el-icon-upload"></i>
             <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+            <div slot="tip" class="el-upload__tip">只能上传excel文件</div>
           </el-upload>
         </div>
         <div v-if="ruleForm.data_source_type==='EXCEL'">
@@ -168,6 +170,7 @@ export default {
         query_str: "",
         total: 0,
       },
+      // filters:[{ text: 'MYSQL', value: 'MYSQL' }, { text: 'ORACLE', value: 'ORACLE' }, { text: 'SQLServer', value: 'SQLServer' }],
       // total:'',
       search: "",
       dialogtitle: "",
@@ -207,7 +210,14 @@ export default {
         // 表格列项
         { label: "数据源名称", key: "ds_name", width: "150" },
         { label: "描述", key: "des" },
-        { label: "数据源类型", key: "ds_type", width: "150" },
+        { label: "数据源类型", key: "data_source_type", width: "150" },
+        {
+          label: "数据库类型",
+          key: "ds_type",
+          width: "150",
+          // type:'dropDown',
+          // filters:this.filters
+        },
         { label: "连接串", key: "conn_str" },
         {
           label: "操作",
@@ -278,7 +288,7 @@ export default {
       const data = {
         ds_id: id,
       };
-      this.ruleForm = this.tableData[index - 1];
+      this.ruleForm = Object.assign({}, this.tableData[index - 1])
     },
     addSource() {
       // 新增
@@ -333,8 +343,8 @@ export default {
         query_str: str || "",
       };
       sourceList(params).then((res) => {
-        this.tableData = res.data;
-        this.page.total = res.data.counts;
+        this.tableData = res.data || [];
+        this.page.total = res.counts;
       });
     },
     deleteSource(id) {},
@@ -371,16 +381,27 @@ export default {
         user_name: dataObj.user_name,
         password: dataObj.password,
       };
-
+      const loading = this.$loading({
+        lock: true,
+        text: 'Loading',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      });
       sourceTest(data).then((res) => {
+        loading.close();
         if (res.success) {
           this.$message.success(res.msg);
         }
-      });
+      }).catch((err=>{
+        loading.close();
+      }));
     },
 
-    onSuccess(res) {
+    onSuccess(res,file,fileList) {
       // message 弹出消息
+      if (fileList.length > 1) {
+        fileList.splice(0, 1);
+      }
       this.$message.success("导入成功！");
       this.excel_table=res.data.file_name
       console.log(this.excel_table)

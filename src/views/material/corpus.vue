@@ -4,11 +4,21 @@
       <div class="left">
         <div class="content">
           <span style="margin-right: 15px">关键字搜索</span>
-          <el-input v-model="findContent" placeholder="输入关键字" style="width: 150px" @change="getResult" size="small" />
+          <el-input v-model="findContent" placeholder="输入关键字" style="width: 150px" @input="getResult" size="small" />
         </div>
         <div class="tag">
           <span style="margin-right: 15px">标签</span>
-          <el-input v-model="manual_tag" placeholder="输入内容" style="width: 150px" @change="getResult" size="small" />
+          <el-autocomplete
+            class="inline-input"
+            v-model="manual_tag"
+            :fetch-suggestions="querySearch"
+            placeholder="请输入内容"
+            @select="getResult"
+            @input="getResult"
+            style="width: 150px;height: 32px"
+
+          ></el-autocomplete>
+
         </div>
         <div>
           <el-button type="primary" @click="getResult" size="small" class="screen">搜索</el-button>
@@ -35,9 +45,18 @@
       </div>
     </div>
     <div class="main" style="margin-top: 50px">
-      <el-table ref="multipleTable" v-loading="isLoading" :data="tableData" tooltip-effect="dark" style="width: 100%"
+      <el-table
+        ref="multipleTable"
+        v-loading="isLoading"
+        :data="tableData"
+        tooltip-effect="dark"
+        style="width: 100%"
+        :header-cell-style="{background:'#f6f6f6'}"
         @selection-change="handleSelectionChange">
-        <el-table-column type="selection" width="55" />
+        <el-table-column
+          type="selection"
+          width="55">
+        </el-table-column>
         <el-table-column prop="id" label="数据ID" width="120" />
         <el-table-column prop="doc" label="内容描述" />
         <el-table-column prop="manual_tag" label="标签" width="150">
@@ -65,29 +84,29 @@
       </span>
     </el-dialog>
 
-    <el-dialog :visible.sync="dialogAnalysis" title="基本信息" width="400px" top="20vh" class="detail" :modal="false"
-      :close-on-click-modal="false">
-      <main>
-        <el-form label-position="right" label-width="100px">
-          <el-form-item label="任务类型">
-            <el-select v-model="DataValue" placeholder="请选择" style="width: 100%">
-              <el-option v-for="(item, index) in DataOption" :key="index" :label="item.label" :value="item.value" />
-            </el-select>
-          </el-form-item>
-          <el-form-item label="任务参数" class="taskpara">
-            <div>
-              <span class="taskdes">({{ this.params_json[0].des }})</span>
-              <el-input v-model="para.num" placeholer="请输入参数值" />
-            </div>
-          </el-form-item>
-        </el-form>
-      </main>
+<!--    <el-dialog :visible.sync="dialogAnalysis" title="基本信息" width="400px" top="20vh" class="detail" :modal="false"-->
+<!--      :close-on-click-modal="false">-->
+<!--      <main>-->
+<!--        <el-form label-position="right" label-width="100px">-->
+<!--          <el-form-item label="任务类型">-->
+<!--            <el-select v-model="DataValue" placeholder="请选择" style="width: 100%">-->
+<!--              <el-option v-for="(item, index) in DataOption" :key="index" :label="item.label" :value="item.value" />-->
+<!--            </el-select>-->
+<!--          </el-form-item>-->
+<!--          <el-form-item label="任务参数" class="taskpara">-->
+<!--            <div>-->
+<!--              <span class="taskdes">({{ this.params_json[0].des }})</span>-->
+<!--              <el-input v-model="para.num" placeholer="请输入参数值" />-->
+<!--            </div>-->
+<!--          </el-form-item>-->
+<!--        </el-form>-->
+<!--      </main>-->
 
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogAnalysis = false" size="small" class="cancel">取 消</el-button>
-        <el-button type="primary" @click="reAnalyze" size="small" class="rethink">确 定</el-button>
-      </span>
-    </el-dialog>
+<!--      <span slot="footer" class="dialog-footer">-->
+<!--        <el-button @click="dialogAnalysis = false" size="small" class="cancel">取 消</el-button>-->
+<!--        <el-button type="primary" @click="reAnalyze" size="small" class="rethink">确 定</el-button>-->
+<!--      </span>-->
+<!--    </el-dialog>-->
   </div>
 </template>
 
@@ -156,6 +175,7 @@ export default {
         ids.push(item.id);
       });
       this.selectedIDs = ids;
+      console.log(this.selectedIDs)
     },
     addTag(val) {
       let flag = true;
@@ -301,31 +321,39 @@ export default {
       }
     },
     //重新分析
-    reAnalyze() {
-      if (this.is_total) {
-        this.selectedIDs = [];
-      }
-      let params = {
-        dataset_id: this.$route.query.dataset_id,
-        task_name: this.$route.query.task_name,
-        task_type: this.$route.query.task_type || this.DataValue,
-        params_json: this.$route.query.params_json || this.para,
-        label_ids: this.selectedIDs || [],
-        class_id: this.Typevalue,
-        doc: this.findContent,
-        last_task_id: this.$route.query.last_task_id,
-        is_total: this.is_total,
-      };
-      createTask(params).then((res) => {
-        if (res.success) {
-          this.$message.success(res.msg);
-          this.dialogAnalysis = false;
-          this.$router.push({
-            path: "tasklist",
-            query: { dataset_id: this.$route.query.dataset_id },
-          });
-        }
+    // reAnalyze() {
+    //   if (this.is_total) {
+    //     this.selectedIDs = [];
+    //   }
+    //   let params = {
+    //     dataset_id: this.$route.query.dataset_id,
+    //     task_name: this.$route.query.task_name,
+    //     task_type: this.$route.query.task_type || this.DataValue,
+    //     params_json: this.$route.query.params_json || this.para,
+    //     label_ids: this.selectedIDs || [],
+    //     class_id: this.Typevalue,
+    //     doc: this.findContent,
+    //     last_task_id: this.$route.query.last_task_id,
+    //     is_total: this.is_total,
+    //   };
+    //   createTask(params).then((res) => {
+    //     if (res.success) {
+    //       this.$message.success(res.msg);
+    //       this.dialogAnalysis = false;
+    //       this.$router.push({
+    //         path: "tasklist",
+    //         query: { dataset_id: this.$route.query.dataset_id },
+    //       });
+    //     }
+    //   });
+    // },
+    querySearch(queryString, cb) {
+      let allInfos= this.TagOptions.map((terminal) => {
+        return {
+          value: terminal
+        };
       });
+      cb(allInfos);
     },
   },
 };
@@ -350,6 +378,9 @@ export default {
 
     .tag {
       margin: 0 20px;
+      ::v-deep.el-input__inner{
+        height: 32px !important;
+      }
     }
   }
 }
@@ -432,5 +463,8 @@ export default {
 }
 .batchTags{
   margin-right: 20px;
+}
+::v-deep thead.has-gutter .el-checkbox{
+  display: flex;
 }
 </style>

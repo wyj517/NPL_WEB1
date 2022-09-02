@@ -5,6 +5,7 @@
       :show-create="true"
       :search="search"
       @handle-search="getList"
+      @handle-inputSearch="getList"
       @handle-create="openAddTaskFlow"
     />
 <!--    <BaseTable-->
@@ -31,12 +32,6 @@
         </template>
       </el-table-column>
       <el-table-column
-        prop="datas_name"
-        header-align="center"
-        align="center"
-        label="数据集名称">
-      </el-table-column>
-      <el-table-column
         header-align="center"
         align="center"
         label="执行状态"
@@ -54,7 +49,7 @@
         width="180"
       >
         <template slot-scope="scope">
-          <span>{{scope.row.update_time}}</span>
+          <span>{{formatDate(scope.row.update_time)}}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -337,6 +332,9 @@ export default {
         this.executionNum = res.cntRun;
         this.page.total = res.counts;
       });
+    },
+    formatDate(time){
+      return formatDates(time)
     },
   },
 };

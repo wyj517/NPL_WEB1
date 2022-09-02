@@ -2,11 +2,11 @@
   <div class="operation-area">
     <div class="title">
       <div>
-        <span style="font-size: 14px">
+        <span style="font-size: 14px" v-show="showTitle">
           {{ title === '' ? $route.meta.title : title }}：
         </span>
-        <el-input v-model="find" placeholder="输入关键字" size="small" style="width: 200px" @input="createInputSearch" />
-        <el-button v-if="showSearch" type="primary" size="small" style="margin-left: 20px" plain @click="createSearch">
+        <el-input v-model="find" v-show="showTitle" placeholder="输入关键字" size="small" style="width: 200px" @input="createInputSearch" />
+        <el-button v-if="showSearch" v-show="showTitle" type="primary" size="small" style="margin-left: 20px" plain @click="createSearch">
           搜索
         </el-button>
       </div>
@@ -39,6 +39,10 @@
 export default {
   name: 'ListHeader',
   props: {
+    showTitle:{
+      type: Boolean,
+      default: true
+    },
     showSearch: {
       type: Boolean,
       default: true
